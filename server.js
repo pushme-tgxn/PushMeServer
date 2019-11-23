@@ -1,13 +1,12 @@
-import express from 'express';
-import Expo from 'expo-server-sdk';
-
+const express = require("express");
+const { Expo } = require('expo-server-sdk');
 const app = express();
 const expo = new Expo();
 
 let savedPushTokens = [];
 const PORT_NUMBER = 3000;
 
-const handlePushTokens = (message) => {
+const handlePushTokens = message => {
   // Create the messages that you want to send to clents
   let notifications = [];
   for (let pushToken of savedPushTokens) {
@@ -22,11 +21,11 @@ const handlePushTokens = (message) => {
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications.html)
     notifications.push({
       to: pushToken,
-      sound: 'default',
-      title: 'Message received!',
+      sound: "default",
+      title: "Message received!",
       body: message,
-      data: { message },
-    })
+      data: { message }
+    });
   }
 
   // The Expo push notification service accepts batches of notifications so
@@ -49,27 +48,27 @@ const handlePushTokens = (message) => {
       }
     }
   })();
-}
+};
 
-const saveToken = (token) => {
+const saveToken = token => {
   if (savedPushTokens.indexOf(token === -1)) {
     savedPushTokens.push(token);
   }
-}
+};
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Push Notification Server Running');
+app.get("/", (req, res) => {
+  res.send("Push Notification Server Running");
 });
 
-app.post('/token', (req, res) => {
+app.post("/token", (req, res) => {
   saveToken(req.body.token.value);
   console.log(`Received push token, ${req.body.token.value}`);
   res.send(`Received push token, ${req.body.token.value}`);
 });
 
-app.post('/message', (req, res) => {
+app.post("/message", (req, res) => {
   handlePushTokens(req.body.message);
   console.log(`Received message, ${req.body.message}`);
   res.send(`Received message, ${req.body.message}`);
