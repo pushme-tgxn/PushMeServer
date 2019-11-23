@@ -10,7 +10,9 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "esm": "^3.2.25",
+    "expo-server-sdk": "^3.4.0",
+    "express": "^4.17.1"
   },
   "engines": {
     "node": "8.x"
