@@ -55,7 +55,9 @@ const handlePushTokens = ({title, body}) => {
 };
 
 const saveToken = token => {
-  if (savedPushTokens.indexOf(token === -1)) {
+  console.log(token, savedPushTokens)
+  const exists = savedPushTokens.find(t => t === token)
+  if (!exists) {
     savedPushTokens.push(token);
   }
 };
