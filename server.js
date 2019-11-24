@@ -2,11 +2,15 @@ const express = require("express");
 const { Expo } = require('expo-server-sdk');
 const app = express();
 const expo = new Expo();
+const cors = require('cors')
 
+
+
+app.use(cors());
 let savedPushTokens = [];
 const PORT_NUMBER = 3000;
 
-const handlePushTokens = message => {
+const handlePushTokens = ({title, body}) => {
   // Create the messages that you want to send to clents
   let notifications = [];
   for (let pushToken of savedPushTokens) {
@@ -22,9 +26,9 @@ const handlePushTokens = message => {
     notifications.push({
       to: pushToken,
       sound: "default",
-      title: "Message received!",
-      body: message,
-      data: { message }
+      title: title,
+      body: body,
+      data: { body }
     });
   }
 
@@ -69,9 +73,9 @@ app.post("/token", (req, res) => {
 });
 
 app.post("/message", (req, res) => {
-  handlePushTokens(req.body.message);
-  console.log(`Received message, ${req.body.message}`);
-  res.send(`Received message, ${req.body.message}`);
+  handlePushTokens(req.body);
+  console.log(`Received message, with title: ${req.body.title}`);
+  res.send(`Received message, with title: ${req.body.title}`);
 });
 
 app.listen(PORT_NUMBER, () => {
