@@ -1,16 +1,14 @@
 const express = require("express");
-const { Expo } = require('expo-server-sdk');
+const { Expo } = require("expo-server-sdk");
 const app = express();
 const expo = new Expo();
-const cors = require('cors')
-
-
+const cors = require("cors");
 
 app.use(cors());
 let savedPushTokens = [];
 const PORT_NUMBER = 3000;
 
-const handlePushTokens = ({title, body}) => {
+const handlePushTokens = ({ title, body }) => {
   // Create the messages that you want to send to clents
   let notifications = [];
   for (let pushToken of savedPushTokens) {
@@ -55,8 +53,8 @@ const handlePushTokens = ({title, body}) => {
 };
 
 const saveToken = token => {
-  console.log(token, savedPushTokens)
-  const exists = savedPushTokens.find(t => t === token)
+  console.log(token, savedPushTokens);
+  const exists = savedPushTokens.find(t => t === token);
   if (!exists) {
     savedPushTokens.push(token);
   }
