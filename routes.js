@@ -25,10 +25,10 @@ router.get("/list", async (request, response) => {
   response.status(200).send(JSON.stringify(tokenList));
 });
 
-router.post("/token", async (request, response) => {
-  console.log(`Received push token, ${request.body.token.value}`);
+router.post("/register", async (request, response) => {
+  console.log(`Received push token, ${request.body.token}, ${request.body.name}`);
   
-  const savedToken = await saveToken(request.body.token);
+  const savedToken = await saveToken(request.body.token, request.body.name);
 
   response.json({
     success: savedToken
@@ -36,6 +36,13 @@ router.post("/token", async (request, response) => {
 });
 
 router.post("/push", async (request, response) => {
+  const pushes = await triggerPush(request.body);
+
+  console.log(`Received message, with title: ${request.body.title}`);
+  response.send(`Received message, with title: ${request.body.title}`);
+});
+
+router.post("/push/:tokenId", async (request, response) => {
   const pushes = await triggerPush(request.body);
 
   console.log(`Received message, with title: ${request.body.title}`);
