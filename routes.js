@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 
 const router = express.Router();
 
-const db = require("./models/index.js");
 const {
   saveToken,
   listTokens,
@@ -34,7 +33,7 @@ router.post("/token", async (request, response) => {
   response.send(`Received push token, ${request.body.token.value}`);
 });
 
-router.post("/message", async (request, response) => {
+router.post("/push", async (request, response) => {
   const pushes = await triggerPush(request.body);
 
   console.log(`Received message, with title: ${request.body.title}`);

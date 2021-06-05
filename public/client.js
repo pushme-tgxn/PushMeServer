@@ -12,10 +12,27 @@ const dreamsForm = document.forms[0];
 
 const dreamInput = dreamsForm.elements;
 
+const sendPush = async (title, desc, body = {}) => {
+  const rawResponse = await fetch('/push', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ title, desc, body })
+  });
+  const content = await rawResponse.json();
+
+  console.log(content);
+};
+
+
 // a helper function that creates a list item for a given dream
 const appendNewDream = function(dream) {
   const newListItem = document.createElement("li");
   newListItem.innerHTML = dream;
+  
+  
   dreamsList.appendChild(newListItem);
 };
 
@@ -24,16 +41,19 @@ tokens.forEach(function(dream) {
   appendNewDream(dream);
 });
 
-// listen for the form to be submitted and add a new dream when it is
 dreamsForm.onsubmit = function(event) {
-  // stop our form submission from refreshing the page
   event.preventDefault();
-
-  // get dream value and add it to the list
-  tokens.push(dreamInput.value);
-  appendNewDream(dreamInput.value);
-
+  
+  const title = dreamInput["title"].value;
+  const desc = dreamInput["desc"].value;
+  
+  
+  console.log();
+  
+  sendPush(title, desc);
+  
   // reset form
-  dreamInput.value = "";
-  dreamInput.focus();
+  dreamInput["title"].value = "";
+  dreamInput["desc"].value = "";
+  dreamInput["title"].focus();
 };
