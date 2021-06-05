@@ -1,5 +1,14 @@
+const express = require("express");
 
-router.get("/token/list", async (request, response) => {
+const {
+  listTokens,
+  saveToken,
+  removeToken
+} = require("../lib/token.js");
+
+const tokenRouter = express.Router();
+
+tokenRouter.get("/list", async (request, response) => {
   console.log(`get token list`);
   
   const tokenList = await listTokens(request.body.token);
@@ -8,7 +17,7 @@ router.get("/token/list", async (request, response) => {
   response.status(200).send(JSON.stringify(tokenList));
 });
 
-router.post("/token", async (request, response) => {
+tokenRouter.post("/", async (request, response) => {
   console.log(`Received push token, ${request.body.token}, ${request.body.name}`);
   
   const savedToken = await saveToken(request.body.token, request.body.name);
@@ -17,7 +26,7 @@ router.post("/token", async (request, response) => {
     success: savedToken
   });
 });
-router.delete("/token", async (request, response) => {
+tokenRouter.delete("/", async (request, response) => {
   console.log(`Received push token, ${request.body.token}, ${request.body.name}`);
   
   const savedToken = await removeToken(request.body.token);
@@ -26,3 +35,5 @@ router.delete("/token", async (request, response) => {
     success: savedToken
   });
 });
+
+module.exports = tokenRouter;
