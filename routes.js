@@ -4,7 +4,7 @@ const router = express.Router();
 
 const TokenRouter = require("./routes/token.js");
 const PushRouter = require("./routes/push.js");
-// const UserRouter = require("./routes/user.js");
+const UserRouter = require("./routes/user.js");
 
 router.get("/", async (request, response) => {
   console.log("Push Notification Server Running");
@@ -12,7 +12,7 @@ router.get("/", async (request, response) => {
 });
 
 router.use("/token", TokenRouter);
-// router.use("/user", UserRouter);
+router.use("/user", UserRouter);
 router.use("/push", PushRouter);
 
 module.exports = router;
