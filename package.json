@@ -10,10 +10,11 @@
     "expo-server-sdk": "^3.6.0",
     "express": "^4.17.1",
     "cors": "^2.8.5",
-    "sequelize": "^6.6.2"
+    "sequelize": "^6.6.2",
+    "sqlite3": "^5.0.2"
   },
   "engines": {
-    "node": "14.x"
+    "node": "12.x"
   },
   "license": "MIT"
 }
