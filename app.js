@@ -2,10 +2,15 @@ const express = require("express");
 const { Expo } = require("expo-server-sdk");
 const cors = require("cors");
 
+const routes = require('./routes');
+
 const app = express();
 const expo = new Expo();
 
 app.use(cors());
+
+
+
 
 let savedPushTokens = [];
 
@@ -54,26 +59,7 @@ app.use(express.static("public"));
 
 app.use(express.json());
 
-app.get("/", (request, response) => {
-  console.log("Push Notification Server Running");
-  response.sendFile(__dirname + "/views/index.html");
-});
-
-app.post("/token", (request, response) => {
-  
-  saveToken(request.body.token);
-  
-  console.log(`Received push token, ${request.body.token.value}`);
-  response.send(`Received push token, ${request.body.token.value}`);
-});
-
-app.post("/message", (request, response) => {
-  
-  handlePushTokens(request.body);
-  
-  console.log(`Received message, with title: ${request.body.title}`);
-  response.send(`Received message, with title: ${request.body.title}`);
-});
+app.use("/", routes);
 
 app.listen(PORT_NUMBER, () => {
   console.log(`Server Online on Port ${PORT_NUMBER}`);
