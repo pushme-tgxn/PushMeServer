@@ -16,8 +16,9 @@ router.delete('/:id', authorize(), _delete);
 
 module.exports = router;
 
-function authenticate(req, res, next) {
-    userService.authenticate(req.body)
+function authenticate(request, res, next) {
+  console.log(request.body);
+    userService.authenticate(request.body)
         .then(user => res.json(user))
         .catch(next);
 }
