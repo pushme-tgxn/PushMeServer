@@ -6,6 +6,7 @@ const router = express.Router();
 const db = require("./models/index.js");
 const {
   saveToken,
+  listTokens,
   updateToken,
   removeToken,
   triggerPush
@@ -14,6 +15,15 @@ const {
 router.get("/", async (request, response) => {
   console.log("Push Notification Server Running");
   response.sendFile(__dirname + "/views/index.html");
+});
+
+router.get("/list", async (request, response) => {
+  console.log(`get token list`);
+  
+  const tokenList = await listTokens(request.body.token);
+  
+  response.setHeader('Content-Type', 'application/json');
+  response.status(200).send(JSON.stringify(tokenList));
 });
 
 router.post("/token", async (request, response) => {
