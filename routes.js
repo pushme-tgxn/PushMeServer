@@ -17,9 +17,10 @@ router.get("/", async (request, response) => {
 });
 
 router.post("/token", async (request, response) => {
+  console.log(`Received push token, ${request.body.token.value}`);
+  
   saveToken(request.body.token);
 
-  console.log(`Received push token, ${request.body.token.value}`);
   response.send(`Received push token, ${request.body.token.value}`);
 });
 
