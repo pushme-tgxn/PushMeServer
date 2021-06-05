@@ -19,7 +19,7 @@ const sendPush = async (title, desc, body = {}) => {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ title, desc, body })
+    body: JSON.stringify({ title, desc  })
   });
   const content = await rawResponse.json();
 
