@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "migrate": "npx sequelize-cli db:migrate",
+    "drop": "sequelize-cli db:drop",
+    "migrate": "sequelize-cli db:migrate",
     "migrate-test": "NODE_ENV=test npx sequelize-cli db:migrate"
   },
   "dependencies": {
@@ -18,5 +19,8 @@
   "engines": {
     "node": "12.x"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
+  }
 }
