@@ -30,7 +30,9 @@ router.post("/token", async (request, response) => {
   
   const savedToken = await saveToken(request.body.token);
 
-  response.send(`Received push token, ${request.body.token.value}`);
+  response.json({
+    success: savedToken
+  });
 });
 
 router.post("/push", async (request, response) => {
