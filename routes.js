@@ -29,13 +29,13 @@ router.get("/list", async (request, response) => {
 router.post("/token", async (request, response) => {
   console.log(`Received push token, ${request.body.token.value}`);
   
-  saveToken(request.body.token);
+  const savedToken = await saveToken(request.body.token);
 
   response.send(`Received push token, ${request.body.token.value}`);
 });
 
 router.post("/message", async (request, response) => {
-  triggerPush(request.body);
+  const pushes = await triggerPush(request.body);
 
   console.log(`Received message, with title: ${request.body.title}`);
   response.send(`Received message, with title: ${request.body.title}`);
