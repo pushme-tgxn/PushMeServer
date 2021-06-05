@@ -8,7 +8,8 @@ const {
   listTokens,
   updateToken,
   removeToken,
-  triggerPush
+  triggerPush,
+  triggerPushSingle
 } = require("./lib/token.js");
 
 router.get("/", async (request, response) => {
@@ -51,8 +52,10 @@ router.post("/push", async (request, response) => {
   response.send(`Received message, with title: ${request.body.title}`);
 });
 
-router.post("/push/:tokenId", async (request, response) => {
-  const pushes = await triggerPush(request.body);
+router.get("/push/:tokenId", async (request, response) => {
+  
+  console.log(request.params.tokenId)
+  const pushes = await triggerPushSingle(request.params.tokenId, request.body);
 
   console.log(`Received message, with title: ${request.body.title}`);
   response.send(`Received message, with title: ${request.body.title}`);
