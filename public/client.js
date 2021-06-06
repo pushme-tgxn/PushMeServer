@@ -12,14 +12,14 @@ const dreamsForm = document.forms[0];
 
 const dreamInput = dreamsForm.elements;
 
-const sendPush = async (title, desc, body = {}) => {
-  const rawResponse = await fetch('/push', {
+const sendPush = async (title, desc, cat, body = {}) => {
+  const rawResponse = await fetch('/push/all', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ title, desc  })
+    body: JSON.stringify({ title, desc, cat, body  })
   });
   const content = await rawResponse.json();
 
@@ -46,14 +46,14 @@ dreamsForm.onsubmit = function(event) {
   
   const title = dreamInput["title"].value;
   const desc = dreamInput["desc"].value;
+  const category = dreamInput["category"].value;
+  const data = JSON.parse(dreamInput["data"].value);
   
   
   console.log();
   
-  sendPush(title, desc);
+  sendPush(title, desc, category, data);
   
   // reset form
-  dreamInput["title"].value = "";
-  dreamInput["desc"].value = "";
   dreamInput["title"].focus();
 };
