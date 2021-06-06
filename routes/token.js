@@ -6,9 +6,11 @@ const {
   removeToken
 } = require("../lib/token.js");
 
+const authorize = require('../middleware/authorize')
+
 const tokenRouter = express.Router();
 
-tokenRouter.get("/list", async (request, response) => {
+tokenRouter.get("/", authorize(), async (request, response) => {
   console.log(`get token list`);
   
   const tokenList = await listTokens(request.body.token);
@@ -17,7 +19,7 @@ tokenRouter.get("/list", async (request, response) => {
   response.status(200).send(JSON.stringify(tokenList));
 });
 
-tokenRouter.post("/", async (request, response) => {
+tokenRouter.post("/", authorize(), async (request, response) => {
   console.log(`Received push token, ${request.body.token}, ${request.body.name}`);
   
   const savedToken = await saveToken(request.body.token, request.body.name);
@@ -25,8 +27,9 @@ tokenRouter.post("/", async (request, response) => {
   response.json({
     success: savedToken
   });
+  
 });
-tokenRouter.delete("/", async (request, response) => {
+tokenRouter.delete("/", authorize(), async (request, response) => {
   console.log(`Received push token, ${request.body.token}, ${request.body.name}`);
   
   const savedToken = await removeToken(request.body.token);

@@ -11,8 +11,8 @@ router.get("/", async (request, response) => {
   response.sendFile(__dirname + "/views/index.html");
 });
 
-router.use("/token", TokenRouter);
 router.use("/user", UserRouter);
+router.use("/token", TokenRouter);
 router.use("/push", PushRouter);
 
 module.exports = router;
