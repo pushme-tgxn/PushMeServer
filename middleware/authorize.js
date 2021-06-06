@@ -1,5 +1,5 @@
 const jwt = require('express-jwt');
-const secret = process.env.SECRET | "12341337";
+const secret = process.env.SECRET;
 
 const db = require("../models/index.js");
 
