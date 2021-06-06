@@ -5,7 +5,16 @@ const authorize = require('../middleware/authorize')
 const userService = require('../lib/user');
 
 // routes
-router.post('/login', authenticate);
+router.post('/login', async (request, response, next) => {
+  console.log(request.body);
+  try {
+    const user = await userService.authenticate(request.body)
+    response.json(user)
+  } catch(error) {
+    next(error);
+  }
+});
+
 router.post('/register', register);
 
 router.get('/', authorize(), getAll);
