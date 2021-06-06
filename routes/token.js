@@ -29,10 +29,10 @@ tokenRouter.post("/", authorize(), async (request, response) => {
   });
   
 });
-tokenRouter.delete("/", authorize(), async (request, response) => {
-  console.log(`Received push token, ${request.body.token}, ${request.body.name}`);
+tokenRouter.delete("/:tokenId", authorize(), async (request, response) => {
+  console.log(`Received push token, ${request.params.tokenId}, ${request.body.name}`);
   
-  const savedToken = await removeToken(request.body.token);
+  const savedToken = await removeToken(request.params.tokenId);
 
   response.json({
     success: savedToken
