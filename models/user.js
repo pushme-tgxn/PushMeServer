@@ -17,12 +17,12 @@ module.exports = (sequelize, DataTypes) => {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
     username: DataTypes.STRING,
-    password: DataTypes.STRING
+    hash: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',
     defaultScope: {
-        attributes: { exclude: ['password'] }
+        attributes: { exclude: ['hash'] }
     },
     scopes: {
         // include hash with this scope
