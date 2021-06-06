@@ -13,7 +13,9 @@ pushRouter.post("/", authorize(), async (request, response) => {
   const pushes = await triggerPush(request.body);
 
   console.log(`Received message, with title: ${request.body.title}`);
-  response.send(`Received message, with title: ${request.body.title}`);
+  response.json({
+    success:true,
+  });
 });
 
 pushRouter.get("/:tokenId", authorize(), async (request, response) => {
