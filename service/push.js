@@ -105,7 +105,7 @@ const triggerPushSingle = async (toToken, requestBody) => {
 
   console.log("send data", requestBody);
 
-  const { title, desc } = requestBody;
+  const { title, desc, cat, data } = requestBody;
 
   if (!Expo.isExpoPushToken(toToken)) {
     console.error(`Push token ${toToken} is not a valid Expo push token`);
@@ -114,10 +114,10 @@ const triggerPushSingle = async (toToken, requestBody) => {
 
   const pushPayload = {
     to: toToken,
-    title: "Test Push!",
-    body: "This is what a push notifcation would look like@!!!",
-    data: { random: Math.random() },
-    categoryId: `pushme`
+    title: title,
+    body: desc,
+    data: data,
+    categoryId: cat
   };
 
   console.log("payload", pushPayload);
