@@ -12,14 +12,14 @@ const dreamsForm = document.forms[0];
 
 const dreamInput = dreamsForm.elements;
 
-const sendPush = async (title, desc, cat, body = {}) => {
+const sendPush = async (title, desc, cat, data = {}) => {
   const rawResponse = await fetch('/push/all', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ title, desc, cat, body  })
+    body: JSON.stringify({ title, desc, cat, data  })
   });
   const content = await rawResponse.json();
 
