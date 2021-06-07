@@ -1,15 +1,27 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
+const secret = process.env.SECRET;
 
 const authorize = require('../middleware/authorize')
 const userService = require('../lib/user');
 
-// routes
 router.post('/login', async (request, response, next) => {
   console.log(request.body);
   try {
     const user = await userService.authenticate(request.body)
     response.json(user)
+  } catch(error) {
+    next(error);
+  }
+});
+
+router.post('/verify', async (request, response, next) => {
+  console.log(request.body);
+  try {
+    const token = jwt.verify(request.body.token, secret);
+    console.log("token", token);
+    response.json(token)
   } catch(error) {
     next(error);
   }
