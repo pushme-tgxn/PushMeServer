@@ -13,7 +13,7 @@ module.exports = {
         unique: true
       },
       userId: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
