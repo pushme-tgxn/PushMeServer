@@ -17,9 +17,10 @@ router.post('/login', async (request, response, next) => {
 });
 
 router.get('/verify', async (request, response, next) => {
-  console.log("verify", request.body);
+  const token = request.headers.authorization.split(" ")[1];
+  console.log("verify", token);
   try {
-    const token = jwt.verify(request.body, secret);
+    const token = jwt.verify(request.headers.authorization, secret);
     console.log("token verify", token);
     response.json(token)
   } catch(error) {
