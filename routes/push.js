@@ -26,7 +26,8 @@ pushRouter.post("/", authorize(), async (request, response) => {
   const pushes = await triggerPush(request.body);
 
   response.json({
-    success:true,
+    success: true,
+    pushes
   });
 });
 
@@ -35,7 +36,10 @@ pushRouter.get("/:tokenId", authorize(), async (request, response) => {
   
   const pushes = await triggerPushSingle(request.params.tokenId, request.body);
 
-  response.send(`Received message, with title: ${request.body.title}`);
+  response.json({
+    success: true,
+    pushes
+  });
 });
 
 module.exports = pushRouter;
