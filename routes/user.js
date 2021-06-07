@@ -20,9 +20,9 @@ router.get('/verify', async (request, response, next) => {
   const token = request.headers.authorization.split(" ")[1];
   console.log("verify", token);
   try {
-    const token = jwt.verify(request.headers.authorization, secret);
-    console.log("token verify", token);
-    response.json(token)
+    const token1 = jwt.verify(token, secret);
+    console.log("token verify", token1);
+    response.json(token1)
   } catch(error) {
     next(error);
   }
