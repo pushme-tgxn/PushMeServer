@@ -16,10 +16,10 @@ router.post('/login', async (request, response, next) => {
   }
 });
 
-router.post('/verify', async (request, response, next) => {
-  console.log(request.body);
+router.get('/verify', async (request, response, next) => {
+  console.log(request.headers);
   try {
-    const token = jwt.verify(request.body.token, secret);
+    const token = jwt.verify(request.body, secret);
     console.log("token", token);
     response.json(token)
   } catch(error) {
@@ -36,13 +36,6 @@ router.put('/:id', authorize(), update);
 router.delete('/:id', authorize(), _delete);
 
 module.exports = router;
-
-function authenticate(request, res, next) {
-  console.log(request.body);
-    userService.authenticate(request.body)
-        .then(user => res.json(user))
-        .catch(next);
-}
 
 function register(req, res, next) {
     userService.create(req.body)
