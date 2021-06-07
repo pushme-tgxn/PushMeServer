@@ -40,7 +40,7 @@ module.exports = router;
 
 function register(req, res, next) {
     userService.create(req.body)
-        .then(() => res.json({ message: 'Registration successful' }))
+        .then((user) => res.json({ success: true, user, message: 'Registration successful' }))
         .catch(next);
 }
 
