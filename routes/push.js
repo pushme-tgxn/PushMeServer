@@ -3,7 +3,7 @@ const express = require("express");
 const {
   triggerPush,
   triggerPushSingle
-} = require("../lib/token.js");
+} = require("../service/push");
 
 const authorize = require('../middleware/authorize')
 

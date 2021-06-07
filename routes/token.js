@@ -9,7 +9,7 @@ const {
   updateToken,
   findToken,
   removeToken
-} = require("../lib/token.js");
+} = require("../service/token");
 
 const authorize = require("../middleware/authorize");
 
@@ -37,31 +37,24 @@ tokenRouter.post("/", authorize(), async (request, response) => {
   }
 
   const foundToken = await findToken(token);
+  let tokenResult;
   if (!foundToken) {
-    
-    const savedToken = await createToken({
-      userId: 1,
-      token
+    tokenResult = await createToken({
+      userId: request.user.sub,
+      pushToken: token,
+      tokenName: name
     });
-
-    return savedToken;
   } else {
-    const updated = await db.Token.update(
-      {
-        token: pushToken,
-        name: name
-      },
-      { where: { token: pushToken } }
-    );
-const savedToken = await updateToken({
-      userId: 1,
-      token: token
+    tokenResult = await updateToken({
+      userId: request.user.sub,
+      pushToken: token,
+      tokenName: name
     });
-    return updated;
   }
 
   response.json({
-    success: savedToken
+    success: true,
+    tokenResult
   });
 });
 

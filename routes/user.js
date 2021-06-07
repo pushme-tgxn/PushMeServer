@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const secret = process.env.SECRET;
 
 const authorize = require('../middleware/authorize')
-const userService = require('../lib/user');
+const userService = require('../service/user');
 
 router.post('/login', async (request, response, next) => {
   console.log(request.body);
