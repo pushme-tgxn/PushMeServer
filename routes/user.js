@@ -17,10 +17,10 @@ router.post('/login', async (request, response, next) => {
 });
 
 router.get('/verify', async (request, response, next) => {
-  console.log(request.headers);
+  console.log("verify", request.body);
   try {
     const token = jwt.verify(request.body, secret);
-    console.log("token", token);
+    console.log("token verify", token);
     response.json(token)
   } catch(error) {
     next(error);
