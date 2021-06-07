@@ -4,7 +4,7 @@ const expo = new Expo();
 const db = require("../models/index.js");
 
 const createToken = async ({ userId, pushToken, tokenName = "" }) => {
-  console.log(pushToken);
+  console.log("createToken", userId, pushToken, tokenName);
 
   if (!Expo.isExpoPushToken(pushToken)) {
     console.error(`Push token ${pushToken} is not a valid Expo push token`);
@@ -13,13 +13,16 @@ const createToken = async ({ userId, pushToken, tokenName = "" }) => {
 
   const created = await db.Token.create({
     token: pushToken,
-    name: tokenName
+    name: tokenName,
+    userId: userId
   });
 
   return created;
 };
 
 const updateToken = async ({ userId, pushToken, tokenName = "" }) => {
+  console.log("updateToken", userId, pushToken, tokenName);
+
   if (!Expo.isExpoPushToken(pushToken)) {
     console.error(`Push token ${pushToken} is not a valid Expo push token`);
     throw new Error(`Push token ${pushToken} is not a valid Expo push token`);
@@ -28,7 +31,8 @@ const updateToken = async ({ userId, pushToken, tokenName = "" }) => {
   const updated = await db.Token.update(
     {
       token: pushToken,
-      name: tokenName
+      name: tokenName,
+      userId: userId
     },
     { where: { userId, token: pushToken } }
   );

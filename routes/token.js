@@ -1,8 +1,5 @@
 const express = require("express");
 
-const { Expo } = require("expo-server-sdk");
-const expo = new Expo();
-
 const {
   listTokens,
   createToken,
@@ -25,28 +22,20 @@ tokenRouter.get("/", authorize(), async (request, response) => {
 });
 
 tokenRouter.post("/", authorize(), async (request, response) => {
-  console.log(
-    `Received push token, ${request.body.token}, ${request.body.name}`
-  );
-
   const { token, name } = request.body;
-
-  if (!Expo.isExpoPushToken(token)) {
-    console.error(`Push token ${token} is not a valid Expo push token`);
-    throw new Error(`Push token ${token} is not a valid Expo push token`);
-  }
+  console.log(`Received push token, ${token}, ${name}`);
 
   const foundToken = await findToken(token);
   let tokenResult;
   if (!foundToken) {
     tokenResult = await createToken({
-      userId: request.user.sub,
+      userId: request.user.id,
       pushToken: token,
       tokenName: name
     });
   } else {
     tokenResult = await updateToken({
-      userId: request.user.sub,
+      userId: request.user.id,
       pushToken: token,
       tokenName: name
     });
