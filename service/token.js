@@ -34,7 +34,7 @@ const updateToken = async ({ userId, pushToken, tokenName = "" }) => {
       name: tokenName,
       userId: userId
     },
-    { where: { userId, token: pushToken } }
+    { where: { token: pushToken } }
   );
 
   return updated;
