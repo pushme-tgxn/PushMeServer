@@ -40,10 +40,10 @@ pushRouter.post("/:tokenId", authorize(), async (request, response) => {
 
 // update push
 pushRouter.post("/:pushId/response", authorize(), async (request, response) => {
-  console.log(`${pushRouter}: rx`, request.body);
+  console.log(`${pushRouter}: response`, request.body);
 
   const pushes = await updatePush(request.params.pushId, {
-    response: request.body.response,
+    response: JSON.stringify(request.body.response),
   });
 
   response.json({

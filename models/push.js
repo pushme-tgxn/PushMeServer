@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       Push.addScope("defaultScope", {
         // include: [{ model: models.User, as: "senderUser" }],
         // include: [{ model: models.User, as: "targetUser" }],
-        // attributes: { exclude: ["token"] },
+        attributes: {},
       });
 
       Push.addScope("byTarget", (userId) => ({
@@ -35,6 +35,9 @@ module.exports = (sequelize, DataTypes) => {
       senderId: DataTypes.INTEGER,
       targetId: DataTypes.INTEGER,
       pushPayload: DataTypes.STRING,
+      request: DataTypes.STRING,
+      response: DataTypes.STRING,
+      handler: DataTypes.STRING,
     },
     {
       sequelize,

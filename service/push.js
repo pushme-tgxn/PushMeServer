@@ -20,16 +20,21 @@ const createPush = async ({ userId, token, pushPayload }) => {
     throw new Error(`Push token ${token} is not a valid Expo push token`);
   }
 
-  const pushes = await triggerPushSingle(token, pushPayload);
-
   const created = await db.Push.create({
     senderId: 0,
     targetId: userId,
-    pushPayload: JSON.stringify(pushPayload),
-    request: JSON.stringify(pushes),
   });
 
-  return created;
+  pushPayload.data.pushId = created.dataValues.id;
+
+  const request = await triggerPushSingle(token, pushPayload);
+
+  const pushes = await updatePush(created.dataValues.id, {
+    pushPayload: JSON.stringify(pushPayload),
+    request: JSON.stringify(request),
+  });
+
+  return created.dataValues;
 };
 
 const getPush = async (pushId) => {

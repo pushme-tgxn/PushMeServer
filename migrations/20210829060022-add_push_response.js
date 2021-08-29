@@ -2,14 +2,14 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn("Push", "response", Sequelize.STRING);
-    await queryInterface.addColumn("Push", "request", Sequelize.STRING);
-    await queryInterface.addColumn("Push", "handler", Sequelize.STRING);
+    await queryInterface.addColumn("Pushes", "response", Sequelize.STRING);
+    await queryInterface.addColumn("Pushes", "request", Sequelize.STRING);
+    await queryInterface.addColumn("Pushes", "handler", Sequelize.STRING);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn("Push", "response");
-    await queryInterface.removeColumn("Push", "request");
-    await queryInterface.removeColumn("Push", "handler");
+    await queryInterface.removeColumn("Pushes", "response");
+    await queryInterface.removeColumn("Pushes", "request");
+    await queryInterface.removeColumn("Pushes", "handler");
   },
 };
