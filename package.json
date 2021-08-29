@@ -4,25 +4,27 @@
   "description": "Push Service Proxy",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "drop": "sequelize-cli db:drop",
     "migrate": "sequelize-cli db:migrate",
     "migrate-test": "NODE_ENV=test npx sequelize-cli db:migrate"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "expo-server-sdk": "^3.6.0",
     "express": "^4.17.1",
-    "cors": "^2.8.5",
-    "sequelize": "^6.6.2",
-    "sqlite3": "^5.0.2",
     "express-jwt": "^6.0.0",
-    "bcryptjs": "^2.4.3"
+    "sequelize": "^6.6.2",
+    "sqlite3": "^5.0.2"
   },
   "engines": {
     "node": "12.x"
   },
   "license": "MIT",
   "devDependencies": {
+    "nodemon": "^2.0.12",
     "sequelize-cli": "^6.2.0"
   }
 }

@@ -5,7 +5,7 @@ const {
   createToken,
   updateToken,
   findToken,
-  removeToken
+  removeToken,
 } = require("../service/token");
 
 const authorize = require("../middleware/authorize");
@@ -15,7 +15,7 @@ const tokenRouter = express.Router();
 tokenRouter.get("/", authorize(), async (request, response) => {
   console.log(`get token list`);
 
-  const tokenList = await listTokens(request.body.token);
+  const tokenList = await listTokens(request.user.id);
 
   response.setHeader("Content-Type", "application/json");
   response.status(200).send(JSON.stringify(tokenList));
@@ -31,19 +31,19 @@ tokenRouter.post("/", authorize(), async (request, response) => {
     tokenResult = await createToken({
       userId: request.user.id,
       pushToken: token,
-      tokenName: name
+      tokenName: name,
     });
   } else {
     tokenResult = await updateToken({
       userId: request.user.id,
       pushToken: token,
-      tokenName: name
+      tokenName: name,
     });
   }
 
   response.json({
     success: true,
-    tokenResult
+    tokenResult,
   });
 });
 
@@ -55,7 +55,7 @@ tokenRouter.delete("/:tokenId", authorize(), async (request, response) => {
   const savedToken = await removeToken(request.params.tokenId);
 
   response.json({
-    success: savedToken
+    success: savedToken,
   });
 });
 

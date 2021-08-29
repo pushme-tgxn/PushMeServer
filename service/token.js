@@ -14,7 +14,7 @@ const createToken = async ({ userId, pushToken, tokenName = "" }) => {
   const created = await db.Token.create({
     token: pushToken,
     name: tokenName,
-    userId: userId
+    userId: userId,
   });
 
   return created;
@@ -32,7 +32,7 @@ const updateToken = async ({ userId, pushToken, tokenName = "" }) => {
     {
       token: pushToken,
       name: tokenName,
-      userId: userId
+      userId: userId,
     },
     { where: { token: pushToken } }
   );
@@ -40,26 +40,34 @@ const updateToken = async ({ userId, pushToken, tokenName = "" }) => {
   return updated;
 };
 
-const listTokens = async () => {
-  const tokens = await db.Token.findAll();
+const listTokens = async (userId) => {
+  const tokens = await db.Token.scope({ method: ["byUser", userId] }).findAll();
   return tokens;
 };
 
-const findToken = async pushToken => {
+const getToken = async (tokenId) => {
+  const tokens = await db.Token.scope({
+    method: ["withToken", tokenId],
+  }).findOne();
+  return tokens;
+};
+
+const findToken = async (pushToken) => {
   const tokens = await db.Token.findOne({ where: { token: pushToken } });
   return tokens;
 };
 
-const removeToken = async pushToken => {
+const removeToken = async (pushToken) => {
   const removed = await db.Token.destroy({ where: { token: pushToken } });
 
   return removed;
 };
 
 module.exports = {
+  getToken,
   findToken,
   createToken,
   updateToken,
   listTokens,
-  removeToken
+  removeToken,
 };

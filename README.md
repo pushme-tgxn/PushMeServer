@@ -1,12 +1,36 @@
 Welcome to PushMe
 =================
 
-## Expo App
+## User
+User registration, contains username, password hash and email
 
-View the [Expo Snack](https://snack.expo.io/@tgxn/pushme).
+- user select default token for pushes from apps (or override per-app)
+
+if no default, select earliest registered token
 
 
-Made by [Glitch](https://glitch.com/)
--------------------
+## Token
+List of registered push tokens, contains userid, token and name
 
-\ ゜o゜)ノ
+
+## Push
+List of push messages sent to any users, used for history and auditing actions.
+
+When pushing a message, the message is stored in the database, and the push is sent to the selected users.
+
+- categoryIdent
+- title
+- description
+
+## Application
+
+- App Namespace (ie. `net.tgxn.pushme`)
+- Catergories (register to app users)
+- Users (registered with consent screen to send push)
+- Push
+
+## Categories
+
+- Name
+- CategoryKey
+- CategoryData

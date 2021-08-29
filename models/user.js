@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -11,22 +9,28 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      User.hasMany(models.Token, { as: "tokens", foreignKey: "userId" });
+      User.hasMany(models.Push, { as: "userPushes", foreignKey: "targetId" });
     }
-  };
-  User.init({
-    email: DataTypes.STRING,
-    username: DataTypes.STRING,
-    hash: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'User',
-    defaultScope: {
-        attributes: { exclude: ['hash'] }
+  }
+  User.init(
+    {
+      email: DataTypes.STRING,
+      username: DataTypes.STRING,
+      hash: DataTypes.STRING,
     },
-    scopes: {
+    {
+      sequelize,
+      modelName: "User",
+      defaultScope: {
+        attributes: { exclude: ["hash"] },
+      },
+      scopes: {
         // include hash with this scope
-        withHash: { attributes: {}, }
+        withHash: { attributes: {} },
+      },
     }
-    });
+  );
   return User;
 };
