@@ -25,20 +25,49 @@ tokenRouter.post("/", authorize(), async (request, response) => {
   const { token, name } = request.body;
   console.log(`Received push token, ${token}, ${name}`);
 
+  const updatePayload = {
+    userId: request.user.id,
+    token: token,
+  };
+
+  if (name) {
+    updatePayload.name = name;
+  }
+
   const foundToken = await findToken(token);
+
   let tokenResult;
   if (!foundToken) {
-    tokenResult = await createToken({
-      userId: request.user.id,
-      pushToken: token,
-      tokenName: name,
-    });
+    tokenResult = await createToken(updatePayload);
   } else {
-    tokenResult = await updateToken({
-      userId: request.user.id,
-      pushToken: token,
-      tokenName: name,
-    });
+    tokenResult = await updateToken(foundToken.id, updatePayload);
+  }
+
+  response.json({
+    success: true,
+    tokenResult,
+  });
+});
+
+tokenRouter.post("/:tokenId", authorize(), async (request, response) => {
+  const { token, name } = request.body;
+  console.log(`Received push token, ${token}, ${name}`);
+
+  const updatePayload = {
+    userId: request.user.id,
+    token: token,
+  };
+  if (name) {
+    updatePayload.name = name;
+  }
+
+  const foundToken = await findToken(token);
+
+  let tokenResult;
+  if (!foundToken) {
+    throw new Error("Token not found");
+  } else {
+    tokenResult = await updateToken(request.params.tokenId, updatePayload);
   }
 
   response.json({

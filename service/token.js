@@ -3,38 +3,36 @@ const expo = new Expo();
 
 const db = require("../models/index.js");
 
-const createToken = async ({ userId, pushToken, tokenName = "" }) => {
-  console.log("createToken", userId, pushToken, tokenName);
+const createToken = async (createTokenData) => {
+  console.log("createToken", createTokenData);
 
-  if (!Expo.isExpoPushToken(pushToken)) {
-    console.error(`Push token ${pushToken} is not a valid Expo push token`);
-    throw new Error(`Push token ${pushToken} is not a valid Expo push token`);
+  if (!Expo.isExpoPushToken(createTokenData.token)) {
+    console.error(
+      `Push token ${createTokenData.token} is not a valid Expo push token`
+    );
+    throw new Error(
+      `Push token ${createTokenData.token} is not a valid Expo push token`
+    );
   }
 
-  const created = await db.Token.create({
-    token: pushToken,
-    name: tokenName,
-    userId: userId,
-  });
+  const created = await db.Token.create(createTokenData);
 
   return created;
 };
 
-const updateToken = async ({ userId, pushToken, tokenName = "" }) => {
-  console.log("updateToken", userId, pushToken, tokenName);
+const updateToken = async (tokenId, { userId, token, name }) => {
+  console.log("updateToken", userId, token, name);
 
-  if (!Expo.isExpoPushToken(pushToken)) {
-    console.error(`Push token ${pushToken} is not a valid Expo push token`);
-    throw new Error(`Push token ${pushToken} is not a valid Expo push token`);
+  if (!Expo.isExpoPushToken(token)) {
+    console.error(`Push token ${token} is not a valid Expo push token`);
+    throw new Error(`Push token ${token} is not a valid Expo push token`);
   }
 
   const updated = await db.Token.update(
+    { userId, token, name },
     {
-      token: pushToken,
-      name: tokenName,
-      userId: userId,
-    },
-    { where: { token: pushToken } }
+      where: { id: tokenId },
+    }
   );
 
   return updated;
