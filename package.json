@@ -1,13 +1,12 @@
 {
-  "name": "push-manager",
+  "name": "pushme-server",
   "version": "1.0.0",
-  "description": "Push Service Proxy",
+  "description": "Push Service backend",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "drop": "sequelize-cli db:drop",
-    "migrate": "sequelize-cli db:migrate",
-    "migrate-test": "NODE_ENV=test npx sequelize-cli db:migrate"
+    "build": "sequelize-cli db:migrate"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -17,15 +16,15 @@
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "pg": "^8.7.1",
-    "sequelize": "^6.6.2",
-    "sqlite3": "^5.0.2"
+    "sequelize": "^6.6.2"
   },
   "engines": {
-    "node": "12.x"
+    "node": "14.x"
   },
   "license": "MIT",
   "devDependencies": {
     "nodemon": "^2.0.12",
+    "sqlite3": "^5.0.2",
     "sequelize-cli": "^6.2.0"
   }
 }
