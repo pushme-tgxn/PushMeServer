@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs');
 const db = require("../models/index.js");
 
 const secret = process.env.SECRET;
-console.log(secret);
 
 async function authenticate({ username, password }) {
     const user = await db.User.scope('withHash').findOne({ where: { username } });
