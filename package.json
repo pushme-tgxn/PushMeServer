@@ -7,8 +7,7 @@
     "start": "node server.js",
     "debug": "nodemon server.js",
     "drop": "sequelize-cli db:drop",
-    "migrate": "sequelize-cli db:migrate",
-    "heroku-postbuild": "sequelize-cli db:migrate",
+    "heroku-postbuild": "npx sequelize-cli db:migrate",
     "migrate-test": "NODE_ENV=test npx sequelize-cli db:migrate"
   },
   "dependencies": {
