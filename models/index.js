@@ -2,16 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
 
-const { configure } = require('sequelize-pg-utilities')
-const config = require(__dirname + "/../config/config.js");
+const env = process.env.NODE_ENV || "development";
+const config = require(__dirname + "/../config/config.js")[env];
 
-const { name, user, password, options } = configure(config)
-
-// const env = process.env.NODE_ENV || "development";
-// const config = require(__dirname + "/../config/config.js")[env];
-
-const sequelize = new Sequelize({ name, user, password, options });
-console.log("sequelize", { name, user, password, options });
+const sequelize = new Sequelize(config);
+console.log("sequelize", config, sequelize);
 
 const db = {};
 
