@@ -2,24 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
 
-// heroku config
-let sequelize;
-if (process.env.DATABASE_URL) {
-  // the application is executed on Heroku ... use the postgres
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: "postgres",
-    protocol: "postgres",
-    dialectOptions: {
-      ssl: true,
-    },
-    logging: true,
-  });
-} else {
-  // local config
-  const env = process.env.NODE_ENV || "development";
-  const config = require(__dirname + "/../config/config.json")[env];
-  sequelize = new Sequelize(config);
-}
+const env = process.env.NODE_ENV || "development";
+const config = require(__dirname + "/../config/config.js")[env];
+const sequelize = new Sequelize(config);
 
 const db = {};
 
