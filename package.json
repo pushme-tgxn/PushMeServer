@@ -1,11 +1,11 @@
 {
   "name": "pushme-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Push Service backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "debug": "nodemon server.js",
+    "debug": "nodemon --trace-warnings server.js",
     "drop": "sequelize-cli db:drop",
     "heroku-postbuild": "npx sequelize-cli db:migrate",
     "migrate-test": "NODE_ENV=test npx sequelize-cli db:migrate"
