@@ -5,8 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "debug": "nodemon server.js",
     "drop": "sequelize-cli db:drop",
-    "build": "sequelize-cli db:migrate"
+    "migrate": "sequelize-cli db:migrate",
+    "heroku-postbuild": "sequelize-cli db:migrate",
+    "migrate-test": "NODE_ENV=test npx sequelize-cli db:migrate"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -19,7 +22,7 @@
     "sequelize": "^6.6.2"
   },
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "license": "MIT",
   "devDependencies": {
