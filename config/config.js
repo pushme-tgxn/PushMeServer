@@ -4,7 +4,7 @@ module.exports = {
     storage: "./.data/development_sqlite.db",
   },
   production: {
-    use_env_variable: "DATABASE_URL",
+    url: process.env.DATABASE_URL,
     dialect: "postgres",
     dialectOptions: {
       ssl: {
@@ -12,6 +12,6 @@ module.exports = {
         rejectUnauthorized: false,
       },
     },
-    logging: false,
+    // logging: false,
   },
 };
