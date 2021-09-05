@@ -1,14 +1,10 @@
-FROM node:16-alpine
+FROM node:14-alpine
 
 RUN mkdir -p /opt/app
 WORKDIR /opt/app
 COPY . .
 
-RUN npm install
-
-RUN adduser -S app
-RUN chown -R app /opt/app
-USER app
+RUN npm install --production
 
 EXPOSE 3000
 CMD [ "npm", "run", "debug" ]

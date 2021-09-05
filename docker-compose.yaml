@@ -1,14 +1,16 @@
-version: "3.7"
+version: "3.5"
+
 services:
   postgres:
-    image: postgres
+    image: postgres:13.4-buster
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./data:/var/lib/postgresql/data
 
-  addressbook:
+  pushme:
+    image: pushme_server:local
     build:
       context: .
     environment:
