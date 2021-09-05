@@ -12,12 +12,15 @@ module.exports = (sequelize, DataTypes) => {
 
       Token.belongsTo(models.User, { as: "user", foreignKey: "userId" });
 
+      Token.hasMany(models.Webhook, { as: "webhooks", foreignKey: "tokenId" });
+
       Token.addScope("defaultScope", {
-        // include: [{ model: models.User, as: "user" }],
+        // include: [{ model: models.Webhook, as: "webhook" }],
         attributes: { exclude: ["token"] },
       });
 
       Token.addScope("byUser", (userId) => ({
+        include: [{ model: models.Webhook, as: "webhooks" }],
         where: { userId },
         attributes: {},
       }));

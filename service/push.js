@@ -1,12 +1,12 @@
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 
-const db = require("../models/index.js");
+const { Push } = require("../models/index.js");
 
 const { triggerPush, triggerPushSingle } = require("../lib/push");
 
 const listPushes = async (userId) => {
-  const tokens = await db.Push.scope({
+  const tokens = await Push.scope({
     method: ["byTarget", userId],
   }).findAll();
   return tokens;
@@ -20,7 +20,7 @@ const createPush = async ({ userId, token, pushPayload }) => {
     throw new Error(`Push token ${token} is not a valid Expo push token`);
   }
 
-  const created = await db.Push.create({
+  const created = await Push.create({
     senderId: 0,
     targetId: userId,
   });
@@ -29,7 +29,7 @@ const createPush = async ({ userId, token, pushPayload }) => {
 
   const request = await triggerPushSingle(token, pushPayload);
 
-  const pushes = await updatePush(created.dataValues.id, {
+  await updatePush(created.dataValues.id, {
     pushPayload: JSON.stringify(pushPayload),
     request: JSON.stringify(request),
   });
@@ -38,7 +38,7 @@ const createPush = async ({ userId, token, pushPayload }) => {
 };
 
 const getPush = async (pushId) => {
-  const push = await db.Push.findOne({
+  const push = await Push.findOne({
     where: { id: pushId },
   });
   return push;
@@ -46,7 +46,7 @@ const getPush = async (pushId) => {
 
 const updatePush = async (pushId, updateData) => {
   console.log("updatePush", pushId, updateData);
-  const updated = await db.Push.update(updateData, { where: { id: pushId } });
+  const updated = await Push.update(updateData, { where: { id: pushId } });
   return updated;
 };
 

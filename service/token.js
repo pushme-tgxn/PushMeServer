@@ -1,7 +1,7 @@
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 
-const db = require("../models/index.js");
+const { Token } = require("../models/index.js");
 
 const createToken = async (createTokenData) => {
   console.log("createToken", createTokenData);
@@ -15,7 +15,7 @@ const createToken = async (createTokenData) => {
     );
   }
 
-  const created = await db.Token.create(createTokenData);
+  const created = await Token.create(createTokenData);
 
   return created;
 };
@@ -28,7 +28,7 @@ const updateToken = async (tokenId, { userId, token, name }) => {
     throw new Error(`Push token ${token} is not a valid Expo push token`);
   }
 
-  const updated = await db.Token.update(
+  const updated = await Token.update(
     { userId, token, name },
     {
       where: { id: tokenId },
@@ -39,24 +39,24 @@ const updateToken = async (tokenId, { userId, token, name }) => {
 };
 
 const listTokens = async (userId) => {
-  const tokens = await db.Token.scope({ method: ["byUser", userId] }).findAll();
+  const tokens = await Token.scope({ method: ["byUser", userId] }).findAll();
   return tokens;
 };
 
 const getToken = async (tokenId) => {
-  const tokens = await db.Token.scope({
+  const tokens = await Token.scope({
     method: ["withToken", tokenId],
   }).findOne();
   return tokens;
 };
 
 const findToken = async (pushToken) => {
-  const tokens = await db.Token.findOne({ where: { token: pushToken } });
+  const tokens = await Token.findOne({ where: { token: pushToken } });
   return tokens;
 };
 
 const removeToken = async (pushToken) => {
-  const removed = await db.Token.destroy({ where: { token: pushToken } });
+  const removed = await Token.destroy({ where: { token: pushToken } });
 
   return removed;
 };
