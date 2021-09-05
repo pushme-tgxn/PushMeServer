@@ -1,6 +1,8 @@
 Welcome to PushMe
 =================
 
+`docker-compose exec pushme npx sequelize-cli db:migrate`
+
 ## User
 User registration, contains username, password hash and email
 

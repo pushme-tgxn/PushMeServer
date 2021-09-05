@@ -1,5 +1,9 @@
 version: "3.5"
 
+networks:
+  pushme-net:
+    name: pushme-net
+
 services:
   postgres:
     image: postgres:13.4-buster
@@ -8,6 +12,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./data:/var/lib/postgresql/data
+    networks:
+      - pushme-net
 
   pushme:
     image: pushme_server:local
@@ -16,7 +22,5 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-    depends_on:
-      - postgres
-    ports:
-      - "3000:3000"
+    networks:
+      - pushme-net
