@@ -37,9 +37,10 @@ async function create(params) {
   }
 
   console.log("create", params);
-
+  
   // save user
   const createdUser = await User.create(params);
+  console.log("createdUser", createdUser);
   return createdUser;
 }
 
