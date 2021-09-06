@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       token: DataTypes.STRING,
       name: DataTypes.STRING,
-      // userId: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
     },
     {
       sequelize,
