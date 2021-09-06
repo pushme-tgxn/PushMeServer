@@ -10,45 +10,73 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Submit Push</title>
-    <meta name="description" content="A cool thing made with Glitch">
-    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PushMe - Submit Push</title>
+    <meta name="description" content="PushMe - Submit Push" />
+    <link
+      id="favicon"
+      rel="icon"
+      href="https://glitch.com/edit/favicon-app.ico"
+      type="image/x-icon"
+    />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
-    
+    <link rel="stylesheet" href="/style.css" />
+
     <!-- import the webpage's client-side javascript file -->
     <script src="/client.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>
-        Push Me
-      </h1>
+      <h1>Push Me</h1>
     </header>
 
     <main>
-     
       <form>
-        <input name="title" type="text" maxlength="100" placeholder="Title" value="Test NotiFy!">
-        <input name="desc" type="text" maxlength="100" placeholder="Description" value="This is a test notification!">
-        <input name="category" type="text" maxlength="100" placeholder="Category" value="default">
-        <input name="data" type="text" maxlength="100" placeholder="Data" value="{}">
+        <input
+          name="secretKey"
+          type="text"
+          maxlength="100"
+          placeholder="secretKey"
+          value=""
+        />
+
+        <input
+          name="title"
+          type="text"
+          maxlength="100"
+          placeholder="Title"
+          value="Test NotiFy!"
+        />
+        <input
+          name="desc"
+          type="text"
+          maxlength="100"
+          placeholder="Description"
+          value="This is a test notification!"
+        />
+        <input
+          name="category"
+          type="text"
+          maxlength="100"
+          placeholder="Category"
+          value="default"
+        />
+        <textarea
+          name="data"
+          type="text"
+          maxlength="100"
+          placeholder="Data"
+          value="{}"
+        ></textarea>
         <button type="submit" id="submit-dream">Submit</button>
       </form>
-      
+
       <section class="tokens">
         <ul id="tokens"></ul>
       </section>
     </main>
-
-    <!-- include the Glitch button to show what the webpage is about and
-          to make it easier for folks to view source and remix -->
-    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
-    <script src="https://button.glitch.me/button.js"></script>
-
   </body>
 </html>
