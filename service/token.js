@@ -39,7 +39,10 @@ const updateToken = async (tokenId, { userId, token, name }) => {
 };
 
 const listTokens = async (userId) => {
-  const tokens = await Token.scope({ method: ["byUser", userId] }).findAll();
+  console.log(`listTokens`, userId);
+  const tokens = await Token.scope({
+    method: ["byUser", userId],
+  }).findAll();
   return tokens;
 };
 

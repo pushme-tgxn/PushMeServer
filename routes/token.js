@@ -13,7 +13,7 @@ const authorize = require("../middleware/authorize");
 const tokenRouter = express.Router();
 
 tokenRouter.get("/", authorize(), async (request, response) => {
-  console.log(`get token list`);
+  console.log(`get token list`, request.user);
 
   const tokenList = await listTokens(request.user.id);
 

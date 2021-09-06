@@ -7,6 +7,7 @@ networks:
 services:
   postgres:
     image: postgres:13.4-buster
+    user: 1000:100
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -19,6 +20,8 @@ services:
     image: pushme_server:local
     build:
       context: .
+    depends_on:
+      - postgres
     environment:
       NODE_ENV: production
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
