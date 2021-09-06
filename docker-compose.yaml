@@ -5,14 +5,16 @@ networks:
     name: pushme-net
 
 services:
-  postgres:
-    image: postgres:13.4-buster
-    user: 1000:100
+  mariadb:
+    image: ghcr.io/linuxserver/mariadb
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./.data:/config
+    restart: unless-stopped
     networks:
       - pushme-net
 
@@ -21,9 +23,10 @@ services:
     build:
       context: .
     depends_on:
-      - postgres
+      - mariadb
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      DATABASE_URL: mariadb://${DB_USER}:${DB_PASSWORD}@mariadb:3306/${DB_DATABASE}
     networks:
       - pushme-net
+    restart: unless-stopped

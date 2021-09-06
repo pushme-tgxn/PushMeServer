@@ -58,6 +58,9 @@ webhookRouter.delete("/:webhookId", authorize(), async (request, response) => {
 // push to a webhook
 webhookRouter.post("/push/:secretKey", async (request, response) => {
   const webhook = await getWebhookBySecretKey(request.params.secretKey);
+  if (!webhook) {
+    throw new Error("Webhook key does not exist");
+  }
   console.log("webhook", webhook);
 
   const createRequest = await createWebhookRequest(webhook.id, request.body);

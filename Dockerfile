@@ -1,10 +1,13 @@
 FROM node:14-alpine
 
-RUN mkdir -p /opt/app
-WORKDIR /opt/app
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm ci --only=production
+
 COPY . .
 
-RUN npm install
-
 EXPOSE 3000
-CMD [ "npm", "run", "debug" ]
+CMD [ "node", "server.js" ]
