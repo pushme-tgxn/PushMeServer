@@ -48,35 +48,38 @@
           type="text"
           maxlength="100"
           placeholder="Title"
-          value="Test NotiFy!"
+          value="PushMe Test!"
         />
+
         <input
-          name="desc"
+          name="body"
           type="text"
           maxlength="100"
-          placeholder="Description"
-          value="This is a test notification!"
+          placeholder="Body"
+          value="This is a test; please ignore."
         />
-        <input
-          name="category"
-          type="text"
-          maxlength="100"
-          placeholder="Category"
-          value="default"
-        />
-        <textarea
-          name="data"
-          type="text"
-          maxlength="100"
-          placeholder="Data"
-          value="{}"
-        ></textarea>
+
+        <select name="intent">
+          <option value="default">Default</option>
+          <optgroup label="Buttons">
+            <option value="button.yes_no">button.yes_no</option>
+            <option value="button.approve_deny">button.approve_deny</option>
+            <option value="button.acknowledge">button.acknowledge</option>
+            <option value="button.open_link">button.open_link</option>
+          </optgroup>
+          <optgroup label="Input Fields">
+            <option value="input.submit">input.submit</option>
+            <option value="input.reply">input.reply</option>
+            <option value="input.approve_deny">input.approve_deny</option>
+          </optgroup>
+        </select>
+
+        <textarea name="data" placeholder="Data">{}</textarea>
+
         <button type="submit" id="submit-dream">Submit</button>
       </form>
 
-      <section class="tokens">
-        <ul id="tokens"></ul>
-      </section>
+      <section id="requests"></section>
     </main>
   </body>
 </html>

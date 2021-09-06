@@ -11,7 +11,7 @@ body {
 }
 
 h1 {
-  font-style: italic;
+  font-style: bold;
   color: #373fff;
 }
 
@@ -29,11 +29,13 @@ form {
   background-color: cyan;
   display: inline-block;
   width: 100%;
-  max-width: 340px;
+  max-width: 500px;
   border-radius: 3px;
 }
 
-input {
+input,
+textarea,
+select {
   display: block;
   margin-bottom: 10px;
   padding: 5px;
@@ -68,4 +70,36 @@ footer {
   margin-top: 50px;
   padding-top: 25px;
   border-top: 1px solid lightgrey;
+}
+
+section {
+  margin-bottom: 25px;
+  display: block;
+  width: 100%;
+  max-width: 800px;
+}
+
+.request {
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: rgb(0, 255, 13);
+  display: inline-block;
+  width: 100%;
+  max-width: 800px;
+  border-radius: 5px;
+}
+.request.pending {
+  background-color: rgb(255, 238, 0);
+}
+
+.list-request {
+  list-style-type: disclosure-open;
+}
+
+.list-response {
+  list-style-type: disclosure-closed;
+}
+
+::marker {
+  padding-left: 20px;
 }
