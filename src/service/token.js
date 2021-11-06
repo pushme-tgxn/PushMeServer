@@ -1,7 +1,7 @@
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 
-const { Token } = require("../models/index.js");
+const { Token } = require("../../models/index.js");
 
 const createToken = async (createTokenData) => {
   console.log("createToken", createTokenData);

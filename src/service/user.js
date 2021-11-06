@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const bcrypt = require("bcryptjs");
 
-const { User } = require("../models/index.js");
+const { User } = require("../../models/index.js");
 
 const secret = process.env.SECRET;
 
@@ -37,7 +37,7 @@ async function create(params) {
   }
 
   console.log("create", params);
-  
+
   // save user
   const createdUser = await User.create(params);
   console.log("createdUser", createdUser);

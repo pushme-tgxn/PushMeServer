@@ -3,7 +3,7 @@ const expo = new Expo();
 
 const { v4: uuidv4 } = require("uuid");
 
-const { Webhook, WebhookRequest } = require("../models/index.js");
+const { Webhook, WebhookRequest } = require("../../models/index.js");
 
 const createWebhook = async (tokenId) => {
   const createData = {
