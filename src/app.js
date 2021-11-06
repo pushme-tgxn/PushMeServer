@@ -13,7 +13,7 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use("/", routes);
 
-// global error handler
+// global error handler last
 app.use(errorHandler);
 
 module.exports = app;

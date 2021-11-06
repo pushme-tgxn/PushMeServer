@@ -1,4 +1,4 @@
-Welcome to PushMe
+Welcome to PushMe Server!
 =================
 
 ## setup `.env` file
@@ -9,6 +9,12 @@ copy .evn.example
 
 ### setup db
 `docker-compose exec pushme npx sequelize-cli db:migrate`
+
+## TODO
+- bug where error handelr sometimes doesn't send any response?
+- nice dark theme / clean light theme
+
+
 
 # Optional `docker-compose.override.yml` for User ID and Traefik
 ```yaml

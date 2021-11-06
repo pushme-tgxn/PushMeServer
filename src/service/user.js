@@ -2,9 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const bcrypt = require("bcryptjs");
 
-const { User } = require("../../models/index.js");
-
-const secret = process.env.SECRET;
+const { User, UserAuthMethod } = require("../../models/index.js");
 
 async function authenticate({ username, password }) {
   const user = await User.scope("withHash").findOne({ where: { username } });
@@ -13,8 +11,41 @@ async function authenticate({ username, password }) {
     throw "Username or password is incorrect";
 
   // authentication successful
-  const token = jwt.sign({ sub: user.id }, secret, { expiresIn: "7d" });
+  const token = generateToken(userId);
   return { ...omitHash(user.get()), token };
+}
+
+async function loginAuthMethod(method, methodIdent) {
+  let userAuthMethod = await UserAuthMethod.findOne({
+    where: { method, methodIdent },
+  });
+
+  let userRecord, userId;
+  if (!userAuthMethod) {
+    // throw "Username does not exist";
+    userRecord = await User.create({}).dataValues;
+    userAuthMethod = await UserAuthMethod.create({
+      userId: userRecord.id,
+      method,
+      methodIdent,
+    });
+    userId = userRecord.id;
+  } else {
+    userId = userAuthMethod.userId;
+    userRecord = await getUser(userAuthMethod.userId).;
+  }
+
+  console.log("sigining userAuthMethod", userId, userAuthMethod);
+
+  // authentication successful
+  const token = generateToken(userId);
+  return { ...omitHash(userRecord), token };
+}
+
+function generateToken(userId) {
+  const secret = process.env.SECRET;
+
+  return jwt.sign({ sub: userId }, secret, { expiresIn: "7d" });
 }
 
 async function getAll() {
@@ -88,6 +119,7 @@ function omitHash(user) {
 
 module.exports = {
   authenticate,
+  loginAuthMethod,
   getAll,
   getById,
   create,
