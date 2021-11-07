@@ -31,7 +31,11 @@ router.post("/token", async (request, response, next) => {
     request.body.accessToken
   );
 
-  const userLoggedIn = await loginAuthMethod("google", googleUserInfo.id);
+  const userLoggedIn = await loginAuthMethod(
+    "google",
+    googleUserInfo.id,
+    googleUserInfo
+  );
   if (userLoggedIn) {
     return response.json({ success: true, user: userLoggedIn });
   }

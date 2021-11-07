@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       method: DataTypes.STRING,
       methodIdent: DataTypes.STRING,
+      methodData: DataTypes.STRING,
       userId: DataTypes.INTEGER,
     },
     {

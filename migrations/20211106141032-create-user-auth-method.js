@@ -17,6 +17,9 @@ module.exports = {
       methodIdent: {
         type: Sequelize.STRING,
       },
+      methodData: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
