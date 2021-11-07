@@ -8,10 +8,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-
       User.hasMany(models.Token, { as: "tokens", foreignKey: "userId" });
       User.hasMany(models.Push, { as: "userPushes", foreignKey: "targetId" });
+
+      User.hasMany(models.UserAuthMethod, {
+        as: "authMethods",
+        foreignKey: "userId",
+      });
     }
   }
   User.init(

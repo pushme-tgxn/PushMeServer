@@ -17,7 +17,7 @@ const webhookRouter = express.Router();
 
 const { triggerPush, triggerPushSingle } = require("../lib/push");
 
-const { Push } = require("../models/index.js");
+const { Push } = require("../../models/index.js");
 
 // create
 webhookRouter.post("/", authorize(), async (request, response) => {

@@ -1,7 +1,7 @@
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 
-const { Push } = require("../models/index.js");
+const { Push } = require("../../models/index.js");
 
 const { triggerPush, triggerPushSingle } = require("../lib/push");
 
