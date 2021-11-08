@@ -11,7 +11,7 @@ async function authenticate({ username, password }) {
     throw "Username or password is incorrect";
 
   // authentication successful
-  const token = generateToken(userId);
+  const token = generateToken(user.id);
   return { ...omitHash(user.get()), token };
 }
 
@@ -110,8 +110,8 @@ async function _delete(id) {
 
 // helper functions
 
-async function getUser(id) {
-  const user = await User.findByPk(id);
+async function getUser(id, scope = "default") {
+  const user = await User.scope(scope).findByPk(id);
   if (!user) throw "User not found";
   return user;
 }
