@@ -49,7 +49,7 @@ tokenRouter.post("/", authorize(), async (request, response) => {
   });
 });
 
-tokenRouter.post("/:tokenId", authorize(), async (request, response) => {
+tokenRouter.post("/:tokenId", authorize(), async (request, response, next) => {
   const { token, name } = request.body;
   console.log(`Received push token, ${token}, ${name}`);
 
@@ -65,7 +65,7 @@ tokenRouter.post("/:tokenId", authorize(), async (request, response) => {
 
   let tokenResult;
   if (!foundToken) {
-    throw new Error("Token not found");
+    return next(new Error("Token not found"));
   } else {
     tokenResult = await updateToken(request.params.tokenId, updatePayload);
   }
