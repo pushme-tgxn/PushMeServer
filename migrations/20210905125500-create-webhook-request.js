@@ -12,10 +12,10 @@ module.exports = {
         type: Sequelize.STRING,
       },
       webhookRequest: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       callbackResponse: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,

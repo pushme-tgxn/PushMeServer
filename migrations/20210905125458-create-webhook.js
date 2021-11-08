@@ -13,9 +13,10 @@ module.exports = {
       },
       secretKey: {
         type: Sequelize.STRING,
+        unique: true,
       },
       callbackUrl: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,

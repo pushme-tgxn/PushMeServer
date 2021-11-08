@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       pushPayload: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,
