@@ -15,6 +15,8 @@ function authorize() {
       // get user with id from token 'sub' (subject) property
       const user = await User.findByPk(req.user.sub);
 
+      console.log("attempted auth", req.user);
+
       // check user still exists
       if (!user)
         return res
