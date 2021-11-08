@@ -12,10 +12,10 @@ function authorize() {
 
     // attach full user record to request object
     async (req, res, next) => {
+      console.log("attempted auth", req.user);
+
       // get user with id from token 'sub' (subject) property
       const user = await User.findByPk(req.user.sub);
-
-      console.log("attempted auth", req.user);
 
       // check user still exists
       if (!user)
