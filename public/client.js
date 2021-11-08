@@ -18,7 +18,7 @@ const sendPush = async (secretKey, title, body, intent, data = {}) => {
   let ul = document.createElement("ul");
   div.append(ul);
 
-  const pushPayload = { title, body, intent, data };
+  const pushPayload = { title, body, categoryId: intent, data };
 
   let requestLi = document.createElement("li");
   requestLi.className = "list-request";
