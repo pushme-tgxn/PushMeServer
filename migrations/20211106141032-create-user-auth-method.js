@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       methodData: {
-        type: Sequelize.STRING,
+        type: Sequelize.LONGTEXT,
       },
       createdAt: {
         allowNull: false,
