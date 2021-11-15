@@ -10,15 +10,12 @@ copy `.env.example`
 ### setup db
 `docker-compose exec pushme npx sequelize-cli db:migrate`
 
-
 ### view logs
 `docker-compose logs -f pushme`
 
 
 ### full docker recreate
 `docker-compose stop && sudo rm ./.data/ -R && docker-compose up --build -d && docker-compose exec pushme npx sequelize-cli db:migrate`
-
-
 
 # Optional `docker-compose.override.yml` for User ID and Traefik
 ```yaml

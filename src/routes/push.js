@@ -1,46 +1,69 @@
 const express = require("express");
 
-const { listPushes, createPush, updatePush } = require("../service/push");
-const { getToken } = require("../service/token");
+// const { createPush, updatePush } = require("../service/push");
+// const { getDevice } = require("../service/device");
+const { getTopicBySecretKey } = require("../service/topic");
 
 const authorize = require("../middleware/authorize");
 
-const pushRouter = express.Router();
+const router = express.Router();
 
-// GET LIST OF HISTORY PUSHES
-pushRouter.get("/", authorize(), async (request, response) => {
-  console.log(`get push list`);
+// // push to a token (create push)
+// pushRouter.post("/:tokenId", authorize(), async (request, response) => {
+//   console.log(`${pushRouter}: rx`, request.body);
 
-  const pushList = await listPushes(request.user.id);
+//   // find the requested token id
+//   const tokenData = await getDevice(request.params.tokenId);
 
-  response.setHeader("Content-Type", "application/json");
-  response.status(200).send(JSON.stringify(pushList));
-});
+//   const createdPush = await createPush({
+//     userId: request.user.id,
+//     token: tokenData.token,
+//     pushPayload: request.body,
+//   });
 
-// push to a token (create push)
-pushRouter.post("/:tokenId", authorize(), async (request, response) => {
-  console.log(`${pushRouter}: rx`, request.body);
+//   console.log("tokenData", tokenData, createdPush);
 
-  // find the requested token id
-  const tokenData = await getToken(request.params.tokenId);
+//   response.json({
+//     success: true,
+//     createdPush,
+//   });
+// });
 
-  const createdPush = await createPush({
-    userId: request.user.id,
-    token: tokenData.token,
-    pushPayload: request.body,
+router.post("/:topicSecret", async (request, response, next) => {
+  const foundTopic = await getTopicBySecretKey(request.params.topicSecret);
+  if (!foundTopic) {
+    return next(new Error("Topic secret key does not exist"));
+  }
+  console.log("foundTopic", foundTopic);
+
+  // const createRequest = await createWebhookRequest(webhook.id, request.body);
+
+  const created = await Push.create({
+    senderId: 0,
+    targetId: webhook.token.userId,
   });
 
-  console.log("tokenData", tokenData, createdPush);
+  const pushPayload = request.body;
+  pushPayload.data = {};
+  pushPayload.data.pushId = created.dataValues.id;
+
+  const requested = await triggerPushSingle(webhook.token.token, pushPayload);
+
+  await updatePush(created.dataValues.id, {
+    pushPayload: JSON.stringify(pushPayload),
+    request: JSON.stringify(requested),
+  });
 
   response.json({
     success: true,
-    createdPush,
+    // createRequest,
+    requested,
   });
 });
 
 // update push
-pushRouter.post("/:pushId/response", authorize(), async (request, response) => {
-  console.log(`${pushRouter}: response`, request.body);
+router.post("/:pushId/response", authorize(), async (request, response) => {
+  console.log(`${router}: response`, request.body);
 
   const pushes = await updatePush(request.params.pushId, {
     response: JSON.stringify(request.body.response),
@@ -52,4 +75,4 @@ pushRouter.post("/:pushId/response", authorize(), async (request, response) => {
   });
 });
 
-module.exports = pushRouter;
+module.exports = router;

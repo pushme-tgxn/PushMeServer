@@ -8,8 +8,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-
       Push.belongsTo(models.User, { as: "senderUser", foreignKey: "senderId" });
       Push.belongsTo(models.User, { as: "targetUser", foreignKey: "targetId" });
 
@@ -32,11 +30,15 @@ module.exports = (sequelize, DataTypes) => {
   }
   Push.init(
     {
-      senderId: DataTypes.INTEGER,
-      targetId: DataTypes.INTEGER,
-      pushPayload: DataTypes.STRING,
-      request: DataTypes.STRING,
-      response: DataTypes.STRING,
+      // senderId: DataTypes.INTEGER,
+      targetUserId: DataTypes.INTEGER,
+      pushTitle: DataTypes.STRING,
+      pushBody: DataTypes.STRING,
+      pushCategory: DataTypes.STRING,
+      callbackUrl: DataTypes.STRING,
+      // pushPayload: DataTypes.STRING,
+      requestedData: DataTypes.STRING,
+      responseData: DataTypes.STRING,
       handler: DataTypes.STRING,
     },
     {

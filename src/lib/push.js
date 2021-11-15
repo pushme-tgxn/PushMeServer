@@ -1,12 +1,12 @@
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 
-const { listTokens } = require("../service/token");
-
+// const { listDevices } = require("../service/device");
+/* 
 const triggerPush = async (requestBody) => {
   let notifications = [];
 
-  const tokens = await listTokens();
+  const tokens = await listDevices();
 
   console.log("send data", requestBody);
 
@@ -30,11 +30,9 @@ const triggerPush = async (requestBody) => {
 
   sendNotificationsArray(notifications);
 };
-
+ */
 const triggerPushSingle = async (toToken, requestBody) => {
-  let notifications = [];
-
-  // console.log("send data", requestBody);
+  console.log("triggerPushSingle", toToken, requestBody);
 
   if (!Expo.isExpoPushToken(toToken)) {
     console.error(`Push token ${toToken} is not a valid Expo push token`);
@@ -46,11 +44,7 @@ const triggerPushSingle = async (toToken, requestBody) => {
     ...requestBody,
   };
 
-  // console.log("payload", pushPayload);
-
-  notifications.push(pushPayload);
-
-  const response = await sendNotificationsArray(notifications);
+  const response = await sendNotificationsArray([pushPayload]);
   return response;
 };
 
@@ -113,6 +107,6 @@ const sendNotificationsArray = async (notifications) => {
 };
 
 module.exports = {
-  triggerPush,
+  // triggerPush,
   triggerPushSingle,
 };

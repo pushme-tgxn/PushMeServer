@@ -1,18 +1,30 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Applications", {
+    await queryInterface.createTable("Pushes", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
-        type: Sequelize.STRING,
+      senderId: {
+        type: Sequelize.INTEGER,
       },
-      customCategories: {
+      targetId: {
+        type: Sequelize.INTEGER,
+      },
+      pushPayload: {
         type: Sequelize.TEXT,
+      },
+      response: {
+        type: Sequelize.TEXT,
+      },
+      request: {
+        type: Sequelize.TEXT,
+      },
+      handler: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
@@ -25,6 +37,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Applications");
+    await queryInterface.dropTable("Pushes");
   },
 };
