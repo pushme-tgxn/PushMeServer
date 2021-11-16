@@ -3,21 +3,29 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Topic extends Model {
     static associate(models) {
-      Topic.hasMany(models.Device, { as: "devices" });
+      Topic.belongsToMany(models.Device, {
+        as: "devices",
+        through: "TopicDevices",
+      });
 
-      // Device.hasMany(models.Topic, {
-      //   as: "topics",
-      //   foreignKey: "deviceId",
-      // });
+      Topic.addScope("defaultScope", {
+        // include: [{ model: models.Device, as: "devices" }],
+        attributes: { exclude: ["secretKey"] },
+      });
+
+      Topic.addScope("withDevices", {
+        include: [{ model: models.Device, as: "devices" }],
+        attributes: {},
+      });
 
       Topic.addScope("byUser", (userId) => ({
-        // include: [{ model: models.Topic, as: "topics" }],
+        include: [{ model: models.Device, as: "devices" }],
         where: { userId },
         attributes: {},
       }));
 
       Topic.addScope("bySecret", (secretKey) => ({
-        include: [{ model: models.Device, as: "device", attributes: {} }],
+        include: [{ model: models.Device, as: "devices" }],
         where: { secretKey },
         attributes: {},
       }));
@@ -26,7 +34,6 @@ module.exports = (sequelize, DataTypes) => {
   Topic.init(
     {
       userId: DataTypes.INTEGER,
-      // deviceId: DataTypes.STRING,
       secretKey: DataTypes.STRING,
       callbackUrl: DataTypes.STRING,
     },

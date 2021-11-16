@@ -19,8 +19,8 @@ const createDevice = async (createDeviceData) => {
   return created;
 };
 
-const updateDevice = async (deviceId, { token, name }) => {
-  console.log("updateDevice", userId, token, name);
+const updateDevice = async ({ token, name }) => {
+  console.log("updateDevice", token, name);
 
   if (!Expo.isExpoPushToken(token)) {
     console.error(`Push token ${token} is not a valid Expo push token`);
@@ -30,7 +30,7 @@ const updateDevice = async (deviceId, { token, name }) => {
   const updated = await Device.update(
     { token, name },
     {
-      where: { id: deviceId },
+      where: { token: token },
     }
   );
   return updated;

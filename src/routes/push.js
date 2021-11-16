@@ -1,10 +1,13 @@
 const express = require("express");
 
-// const { createPush, updatePush } = require("../service/push");
-// const { getDevice } = require("../service/device");
-const { getTopicBySecretKey } = require("../service/topic");
-
 const authorize = require("../middleware/authorize");
+
+const { getTopicBySecretKey, getTopic } = require("../service/topic");
+const { getDevice } = require("../service/device");
+const { updatePush } = require("../service/push");
+const { triggerMultiPush } = require("../lib/push");
+
+const { Push } = require("../../models/index.js");
 
 const router = express.Router();
 
@@ -30,26 +33,36 @@ const router = express.Router();
 // });
 
 router.post("/:topicSecret", async (request, response, next) => {
+  const pushPayload = request.body;
+
   const foundTopic = await getTopicBySecretKey(request.params.topicSecret);
   if (!foundTopic) {
     return next(new Error("Topic secret key does not exist"));
   }
-  console.log("foundTopic", foundTopic);
+  console.log("foundTopic", request.params.topicSecret, foundTopic.dataValues);
 
-  // const createRequest = await createWebhookRequest(webhook.id, request.body);
-
-  const created = await Push.create({
-    senderId: 0,
-    targetId: webhook.token.userId,
+  const createdPush = await Push.create({
+    targetUserId: foundTopic.dataValues.userId,
+    pushData: JSON.stringify(request.body),
   });
+  console.log("createdPush", pushPayload, createdPush);
 
-  const pushPayload = request.body;
+  // attach data payload for callback
   pushPayload.data = {};
-  pushPayload.data.pushId = created.dataValues.id;
+  pushPayload.data.pushId = createdPush.dataValues.id;
 
-  const requested = await triggerPushSingle(webhook.token.token, pushPayload);
+  const deviceTokens = [];
+  for (const item in foundTopic.dataValues.devices) {
+    const device = foundTopic.dataValues.devices[item];
+    const tokenData = await getDevice(device.dataValues.id);
+    console.log("device", item, tokenData.dataValues.token);
+    deviceTokens.push(tokenData.dataValues.token);
+  }
 
-  await updatePush(created.dataValues.id, {
+  const requested = await triggerMultiPush(deviceTokens, pushPayload);
+  console.log("requested", requested);
+
+  await updatePush(createdPush.dataValues.id, {
     pushPayload: JSON.stringify(pushPayload),
     request: JSON.stringify(requested),
   });

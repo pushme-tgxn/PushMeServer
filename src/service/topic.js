@@ -20,22 +20,31 @@ const createTopic = async (userId, deviceIds) => {
   const createData = {
     userId: userId,
     secretKey: uuidv4(),
-    deviceIds,
+    // devices: deviceIds,
   };
 
-  return await Topic.create(createData);
+  const createdTopic = await Topic.create(createData);
+  createdTopic.addDevices(deviceIds);
+  return createdTopic;
 };
 
 const updateTopic = async (topicId, { deviceIds, callbackUrl }) => {
-  const result = await Topic.update(
-    { callbackUrl, devices: deviceIds },
-    {
-      where: { id: topicId },
-    }
-  );
+  const topic = await Topic.scope("withDevices").findOne({
+    where: { id: topicId },
+  });
 
-  console.log("updateTopic", deviceIds, callbackUrl, result);
-  return result;
+  if (!topic) {
+    throw new Error("Topic not found");
+  }
+
+  topic.update({ callbackUrl, devices: deviceIds });
+
+  // topic.TopicDevices.DeviceId
+  topic.setDevices(deviceIds);
+  topic.save();
+
+  console.log("updateTopic", deviceIds, callbackUrl, topic);
+  return topic;
 };
 
 const deleteTopic = async (topicId) => {
@@ -48,7 +57,17 @@ const getTopicBySecretKey = async (topicSecret) => {
   }).findOne();
 };
 
+const getTopic = async (topicId) => {
+  console.log(`getTopic`, topicId);
+
+  const topic = await Topic.scope("withDevices").findOne({
+    where: { id: topicId },
+  });
+  return topic;
+};
+
 module.exports = {
+  getTopic,
   listTopics,
   createTopic,
   updateTopic,

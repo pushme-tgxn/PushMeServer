@@ -18,51 +18,67 @@ const router = express.Router();
 
 // const { Push } = require("../../models/index.js");
 
-router.get("/", authorize(), async (request, response) => {
-  console.log(`listTopics`, request.user);
+router.get("/", authorize(), async (request, response, next) => {
+  try {
+    console.log(`listTopics`, request.user);
 
-  const topicList = await listTopics(request.user.id);
+    const topicList = await listTopics(request.user.id);
 
-  response.json({
-    success: true,
-    topics: topicList,
-  });
+    response.json({
+      success: true,
+      topics: topicList,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // create
-router.post("/", authorize(), async (request, response) => {
-  const { deviceIds } = request.body;
+router.post("/", authorize(), async (request, response, next) => {
+  try {
+    const { deviceIds } = request.body;
 
-  let webhookResult = await createTopic(request.user.id, deviceIds);
-  response.json({
-    success: true,
-    topic: webhookResult,
-  });
+    let webhookResult = await createTopic(request.user.id, deviceIds);
+    response.json({
+      success: true,
+      topic: webhookResult,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // update
-router.post("/:topicId", authorize(), async (request, response) => {
-  console.log(`${router}: response`, request.body);
+router.post("/:topicId", authorize(), async (request, response, next) => {
+  try {
+    console.log(`${router}: response`, request.body);
 
-  const updatedTopic = await updateTopic(request.params.topicId, {
-    deviceIds: request.body.deviceIds,
-    callbackUrl: request.body.callbackUrl,
-  });
-  response.json({
-    success: true,
-    topic: updatedTopic,
-  });
+    const updatedTopic = await updateTopic(request.params.topicId, {
+      deviceIds: request.body.deviceIds,
+      callbackUrl: request.body.callbackUrl,
+    });
+    response.json({
+      success: true,
+      topic: updatedTopic,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // delete
-router.delete("/:topicId", authorize(), async (request, response) => {
-  console.log(`delete, ${request.params.topicId}`);
+router.delete("/:topicId", authorize(), async (request, response, next) => {
+  try {
+    console.log(`delete, ${request.params.topicId}`);
 
-  const savedToken = await deleteTopic(request.params.topicId);
+    const savedToken = await deleteTopic(request.params.topicId);
 
-  response.json({
-    success: savedToken,
-  });
+    response.json({
+      success: savedToken,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

@@ -24,13 +24,18 @@ router.get("/", authorize(), async (request, response) => {
   });
 });
 
+// upsert device
 router.post("/", authorize(), async (request, response, next) => {
   const { token, name } = request.body;
   console.log(`Received push token, ${token}, ${name}`);
 
   const foundDevice = await findDeviceByToken(token);
   if (foundDevice) {
-    return next(new Error("Device already registered!"));
+    const deviceResult = await updateDevice({ token, name });
+    return response.json({
+      success: true,
+      device: deviceResult,
+    });
   }
 
   const deviceResult = await createDevice({
@@ -60,10 +65,7 @@ router.post("/:deviceId", authorize(), async (request, response, next) => {
     return next(new Error("Device not found"));
   }
 
-  const deviceResult = await updateDevice(
-    request.params.deviceId,
-    updatePayload
-  );
+  const deviceResult = await updateDevice(updatePayload);
   response.json({
     success: true,
     device: deviceResult,

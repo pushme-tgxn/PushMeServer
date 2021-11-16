@@ -2,14 +2,12 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Push extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      Push.belongsTo(models.User, { as: "senderUser", foreignKey: "senderId" });
-      Push.belongsTo(models.User, { as: "targetUser", foreignKey: "targetId" });
+      // Push.belongsTo(models.User, { as: "senderUser", foreignKey: "senderId" });
+      Push.belongsTo(models.User, {
+        as: "targetUser",
+        foreignKey: "targetUserId",
+      });
 
       Push.addScope("defaultScope", {
         // include: [{ model: models.User, as: "senderUser" }],
@@ -17,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         attributes: {},
       });
 
-      Push.addScope("byTarget", (userId) => ({
-        where: { targetId: userId },
+      Push.addScope("byTargetUser", (userId) => ({
+        where: { targetUserId: userId },
         // attributes: {},
       }));
 
@@ -32,14 +30,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       // senderId: DataTypes.INTEGER,
       targetUserId: DataTypes.INTEGER,
-      pushTitle: DataTypes.STRING,
-      pushBody: DataTypes.STRING,
-      pushCategory: DataTypes.STRING,
-      callbackUrl: DataTypes.STRING,
-      // pushPayload: DataTypes.STRING,
-      requestedData: DataTypes.STRING,
-      responseData: DataTypes.STRING,
-      handler: DataTypes.STRING,
+      pushData: DataTypes.TEXT,
+      pushPayload: DataTypes.TEXT,
+      serviceRequest: DataTypes.TEXT,
+      serviceResponse: DataTypes.TEXT,
+      // handler: DataTypes.TEXT,
     },
     {
       sequelize,

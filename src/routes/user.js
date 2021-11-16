@@ -38,10 +38,10 @@ router.get("/", authorize(), async (request, response, next) => {
     console.log("token verify", token1);
     // response.json(token1);
     response.json({
+      success: true,
       user: request.user,
       ureq: request.UserReq,
       token1,
-      message: "You are logged in",
     });
   } catch (error) {
     next(error);
@@ -54,9 +54,12 @@ router.get("/history", authorize(), async (request, response) => {
   console.log(`get push list`);
 
   const pushList = await listPushes(request.user.id);
-
-  response.setHeader("Content-Type", "application/json");
-  response.status(200).send(JSON.stringify(pushList));
+  response.json({
+    success: true,
+    pushes: pushList,
+  });
+  // response.setHeader("Content-Type", "application/json");
+  // response.status(200).send(JSON.stringify(pushList));
 });
 
 module.exports = router;

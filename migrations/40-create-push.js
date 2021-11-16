@@ -8,23 +8,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      senderId: {
+      targetUserId: {
         type: Sequelize.INTEGER,
       },
-      targetId: {
-        type: Sequelize.INTEGER,
+      pushData: {
+        type: Sequelize.TEXT,
       },
       pushPayload: {
         type: Sequelize.TEXT,
       },
-      response: {
+      serviceRequest: {
         type: Sequelize.TEXT,
       },
-      request: {
+      serviceResponse: {
         type: Sequelize.TEXT,
-      },
-      handler: {
-        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

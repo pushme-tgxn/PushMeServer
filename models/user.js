@@ -4,7 +4,10 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.hasMany(models.Device, { as: "devices", foreignKey: "userId" });
-      User.hasMany(models.Push, { as: "userPushes", foreignKey: "targetId" });
+      User.hasMany(models.Push, {
+        as: "userPushes",
+        foreignKey: "targetUserId",
+      });
 
       User.hasMany(models.UserAuthMethod, {
         as: "authMethods",

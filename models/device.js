@@ -5,18 +5,30 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Device.belongsTo(models.User, { as: "user", foreignKey: "userId" });
 
-      // Device.hasMany(models.Topic, {
-      //   as: "topics",
-      //   foreignKey: "deviceId",
-      // });
+      Device.belongsToMany(models.Topic, {
+        as: "topics",
+        through: "TopicDevices",
+      });
 
       Device.addScope("defaultScope", {
-        // include: [{ model: models.Topic, as: "topic" }],
+        // include: [
+        //   {
+        //     model: models.Topic,
+        //     as: "topics",
+        //     // attributes: { exclude: ["devices"] },
+        //   },
+        // ],
         attributes: { exclude: ["token"] },
       });
 
       Device.addScope("byUser", (userId) => ({
-        // include: [{ model: models.Topic, as: "topics" }],
+        include: [
+          {
+            model: models.Topic,
+            as: "topics",
+            // attributes: { exclude: ["devices"] },
+          },
+        ],
         where: { userId },
         attributes: {},
       }));
