@@ -28,7 +28,7 @@ const createTopic = async (userId, deviceIds) => {
   return createdTopic;
 };
 
-const updateTopic = async (topicId, { deviceIds, callbackUrl }) => {
+const updateTopic = async (topicId, { name, deviceIds, callbackUrl }) => {
   const topic = await Topic.scope("withDevices").findOne({
     where: { id: topicId },
   });
@@ -37,11 +37,13 @@ const updateTopic = async (topicId, { deviceIds, callbackUrl }) => {
     throw new Error("Topic not found");
   }
 
-  topic.update({ callbackUrl, devices: deviceIds });
+  await topic.update({ callbackUrl });
 
   // topic.TopicDevices.DeviceId
-  topic.setDevices(deviceIds);
-  topic.save();
+  console.log(`updateTopic`, topicId, deviceIds);
+  await topic.setDevices(deviceIds);
+
+  await topic.save();
 
   console.log("updateTopic", deviceIds, callbackUrl, topic);
   return topic;

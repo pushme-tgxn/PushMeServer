@@ -3,6 +3,7 @@ const express = require("express");
 const authorize = require("../middleware/authorize");
 
 const {
+  getTopic,
   listTopics,
   createTopic,
   updateTopic,
@@ -27,6 +28,20 @@ router.get("/", authorize(), async (request, response, next) => {
     response.json({
       success: true,
       topics: topicList,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/:topicId", authorize(), async (request, response, next) => {
+  try {
+    console.log(`listTopics`, request.user);
+
+    const topic = await getTopic(request.params.topicId);
+    response.json({
+      success: true,
+      topic,
     });
   } catch (error) {
     next(error);

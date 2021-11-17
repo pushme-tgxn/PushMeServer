@@ -24,6 +24,20 @@ router.get("/", authorize(), async (request, response) => {
   });
 });
 
+router.get("/:deviceId", authorize(), async (request, response) => {
+  console.log(`listDevices`, request.user);
+
+  const foundDevice = await getDevice(request.params.deviceId);
+  if (!foundDevice) {
+    return next(new Error("Device not found"));
+  }
+
+  response.json({
+    success: true,
+    device: foundDevice,
+  });
+});
+
 // upsert device
 router.post("/", authorize(), async (request, response, next) => {
   const { token, name } = request.body;

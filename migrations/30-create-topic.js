@@ -11,12 +11,15 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
       },
+      name: {
+        type: Sequelize.STRING,
+      },
       secretKey: {
         type: Sequelize.STRING,
         unique: true,
       },
       callbackUrl: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,

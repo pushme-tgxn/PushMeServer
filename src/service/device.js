@@ -48,9 +48,7 @@ const listDevices = async (userId) => {
 const getDevice = async (deviceId) => {
   console.log(`getDevice`, deviceId);
 
-  const device = await Device.scope({
-    method: ["byDeviceId", deviceId],
-  }).findOne();
+  const device = await Device.scope("withTopics").findByPk(deviceId);
   return device;
 };
 

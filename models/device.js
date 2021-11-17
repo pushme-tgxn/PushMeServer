@@ -21,6 +21,17 @@ module.exports = (sequelize, DataTypes) => {
         attributes: { exclude: ["token"] },
       });
 
+      Device.addScope("withTopics", () => ({
+        include: [
+          {
+            model: models.Topic,
+            as: "topics",
+            // attributes: { exclude: ["devices"] },
+          },
+        ],
+        attributes: {},
+      }));
+
       Device.addScope("byUser", (userId) => ({
         include: [
           {

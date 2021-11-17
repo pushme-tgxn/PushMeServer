@@ -34,8 +34,9 @@ module.exports = (sequelize, DataTypes) => {
   Topic.init(
     {
       userId: DataTypes.INTEGER,
+      name: DataTypes.STRING,
       secretKey: DataTypes.STRING,
-      callbackUrl: DataTypes.STRING,
+      callbackUrl: DataTypes.TEXT,
     },
     {
       sequelize,
