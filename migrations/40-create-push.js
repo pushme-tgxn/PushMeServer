@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      pushIdent: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
       targetUserId: {
         type: Sequelize.INTEGER,
       },
