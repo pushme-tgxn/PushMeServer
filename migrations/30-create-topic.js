@@ -18,9 +18,6 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true,
       },
-      callbackUrl: {
-        type: Sequelize.TEXT,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

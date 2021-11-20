@@ -36,7 +36,6 @@ module.exports = (sequelize, DataTypes) => {
       userId: DataTypes.INTEGER,
       name: DataTypes.STRING,
       secretKey: DataTypes.STRING,
-      callbackUrl: DataTypes.TEXT,
     },
     {
       sequelize,

@@ -20,7 +20,6 @@ const createTopic = async (userId, deviceIds) => {
   const createData = {
     userId: userId,
     secretKey: uuidv4(),
-    // devices: deviceIds,
   };
 
   const createdTopic = await Topic.create(createData);
@@ -34,7 +33,7 @@ const updateTopic = async (topicId, requestBody) => {
   if (requestBody.deviceIds) {
     deviceIds = requestBody.deviceIds;
   }
-  const allowedFields = ["name", "callbackUrl"];
+  const allowedFields = ["name"];
   Object.keys(requestBody).forEach((key) => {
     if (allowedFields.indexOf(key) !== -1) delete requestBody[key];
   });
