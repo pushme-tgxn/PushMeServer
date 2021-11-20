@@ -2,11 +2,6 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class UserAuthMethod extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       UserAuthMethod.belongsTo(models.User, {
         as: "user",
@@ -18,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
           {
             model: models.User,
             as: "user",
-            attributes: { exclude: ["token"] },
+            attributes: { exclude: ["methodSecret"] },
           },
         ],
       });
@@ -26,14 +21,19 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserAuthMethod.init(
     {
+      userId: DataTypes.INTEGER,
       method: DataTypes.STRING,
       methodIdent: DataTypes.STRING,
-      methodData: DataTypes.STRING,
-      userId: DataTypes.INTEGER,
+      methodSecret: DataTypes.TEXT,
+      methodData: DataTypes.TEXT,
     },
     {
       sequelize,
       modelName: "UserAuthMethod",
+      scopes: {
+        // include secret with this scope
+        withSecret: { attributes: {} },
+      },
     }
   );
   return UserAuthMethod;

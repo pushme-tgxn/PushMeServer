@@ -12,7 +12,7 @@ const dreamInput = dreamsForm.elements;
 const sendPush = async (secretKey, title, body, intent, data = {}) => {
   let div = document.createElement("div");
   div.className = "request pending";
-  div.textContent = `POST /webhook/push/${secretKey}`;
+  div.textContent = `POST /push/${secretKey}`;
   dreamsList.prepend(div);
 
   let ul = document.createElement("ul");
@@ -25,7 +25,7 @@ const sendPush = async (secretKey, title, body, intent, data = {}) => {
   requestLi.textContent = JSON.stringify(pushPayload);
   ul.append(requestLi);
 
-  const rawResponse = await fetch(`/webhook/push/${secretKey}`, {
+  const rawResponse = await fetch(`/push/${secretKey}`, {
     method: "POST",
     headers: {
       Accept: "application/json",

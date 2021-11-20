@@ -7,7 +7,7 @@ const { triggerPush, triggerPushSingle } = require("../lib/push");
 
 const listPushes = async (userId) => {
   const tokens = await Push.scope({
-    method: ["byTarget", userId],
+    method: ["byTargetUser", userId],
   }).findAll();
   return tokens;
 };
@@ -48,6 +48,27 @@ const updatePush = async (pushId, updateData) => {
   console.log("updatePush", pushId, updateData);
   const updated = await Push.update(updateData, { where: { id: pushId } });
   return updated;
+};
+
+const createWebhookRequest = async (webhookId, requestPayload) => {
+  const createData = {
+    webhookId,
+    webhookRequest: JSON.stringify(requestPayload),
+  };
+  console.log("createWebhookRequest", createData);
+
+  return await WebhookRequest.create(createData);
+};
+
+const setCallbackResponse = async (webhookRequestId, callbackResponse) => {
+  console.log("setCallbackResponse", webhookRequestId, callbackResponse);
+
+  return await WebhookRequest.update(
+    { callbackResponse },
+    {
+      where: { id: webhookRequestId },
+    }
+  );
 };
 
 module.exports = {

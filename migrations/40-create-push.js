@@ -1,21 +1,30 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Webhooks", {
+    await queryInterface.createTable("Pushes", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      tokenId: {
-        type: Sequelize.STRING,
-      },
-      secretKey: {
+      pushIdent: {
         type: Sequelize.STRING,
         unique: true,
       },
-      callbackUrl: {
+      targetUserId: {
+        type: Sequelize.INTEGER,
+      },
+      pushData: {
+        type: Sequelize.TEXT,
+      },
+      pushPayload: {
+        type: Sequelize.TEXT,
+      },
+      serviceRequest: {
+        type: Sequelize.TEXT,
+      },
+      serviceResponse: {
         type: Sequelize.TEXT,
       },
       createdAt: {
@@ -29,6 +38,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Webhooks");
+    await queryInterface.dropTable("Pushes");
   },
 };

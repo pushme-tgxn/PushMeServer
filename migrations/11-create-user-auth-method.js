@@ -1,20 +1,29 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("WebhookRequests", {
+    await queryInterface.createTable("UserAuthMethods", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      webhookId: {
-        type: Sequelize.STRING,
+      userId: {
+        type: Sequelize.INTEGER,
+        unique: true,
       },
-      webhookRequest: {
+      method: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
+      methodIdent: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
+      methodSecret: {
         type: Sequelize.TEXT,
       },
-      callbackResponse: {
+      methodData: {
         type: Sequelize.TEXT,
       },
       createdAt: {
@@ -28,6 +37,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("WebhookRequests");
+    await queryInterface.dropTable("UserAuthMethods");
   },
 };

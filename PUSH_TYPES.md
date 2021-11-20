@@ -1,0 +1,122 @@
+# Push Types
+
+## Simple Push
+
+Simple push just has a message and a title.
+No action will be performed on click.
+
+Request:
+POST `/webhook/push/{{webhookSecret}}`
+```json
+{
+    title: "Notification Title", // required
+    body: "Desc / Body", // required
+    callback_url: "https://example.pushme.tgxn.net/some_callback_url" // optional
+}
+```
+
+Response:
+```json
+{
+    success: true,
+    push_ref: "000000000-00000-00000-0000000"
+}
+```
+
+## Interactive Push
+
+Interactive push requires a type pre-defined within the application, the following actions are inbuilt and provide an action for each of the options listed.
+
+This can call an outbound web service to acknowledge or action noticiations.
+
+**Webhook Payload**
+```json
+{
+    title: "Notification Title", // required
+    body: "Desc / Body", // optional
+    callback_url: "https://example.pushme.tgxn.net/some_callback_url", // optional
+    category_id: "categoryId" // required
+}
+```
+
+### Category IDs `categoryId`
+
+#### `button.yes_no` - Buttons: Yes / No
+Callback Format
+
+```json
+{
+    pushId: "000000000-00000-00000-0000000",
+    category_id: "button.yes_no",
+    userText: "uesrs text"
+}
+```
+
+#### `button.approve_deny` - Buttons: Approve / Deny
+#### `button.acknowledge` - Button: Acknowledge
+
+Callback Format
+```json
+{
+    pushId: "000000000-00000-00000-0000000",
+    category_id: "button.acknowledge",
+    clicked: true
+}
+```
+
+#### `button.open_link` - Button: Open Link
+
+Request:
+POST `/webhook/push/{{webhookSecret}}`
+```json
+{
+    title: "Notification Title", // required
+    body: "Desc / Body", // optional
+    callback_url: "https://example.pushme.tgxn.net/some_callback_url", // optional
+    category_id: "button.open_link", // required
+    link_url: "https://example.pushme.tgxn.net/" // required
+}
+```
+
+Callback Format
+```json
+{
+    pushId: "000000000-00000-00000-0000000",
+    category_id: "button.open_link",
+    clicked: true
+}
+```
+
+#### `input.submit` - Input Field: Submit
+#### `input.reply` - Input Field: Reply
+#### `input.approve_deny` - Input Field: Approve / Deny
+
+Request:
+POST `/webhook/push/{{webhookSecret}}`
+```json
+{
+    title: "Notification Title", // required
+    body: "Desc / Body", // optional
+    callback_url: "https://example.pushme.tgxn.net/some_callback_url", // optional
+    categoryId: "button.yes_no" // required
+}
+```
+
+Response:
+```json
+{
+    success: true,
+    pushId: "000000000-00000-00000-0000000"
+}
+```
+
+
+### Callback Format
+
+```json
+{
+    pushId: "000000000-00000-00000-0000000",
+    actionIdent: "reply",
+    userText: "uesrs text"
+}
+```

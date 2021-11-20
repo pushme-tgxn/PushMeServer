@@ -31,10 +31,11 @@ fs.readdirSync(__dirname)
   });
 
 // run associations
-Object.keys(db).forEach((modelName) => {
+Object.keys(db).forEach(async (modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
+  await sequelize.sync();
 });
 
 db.sequelize = sequelize;
