@@ -1,6 +1,6 @@
 const express = require("express");
 
-const authorize = require("../middleware/authorize");
+const { authorize } = require("../middleware/authorize");
 
 const {
   createDevice,

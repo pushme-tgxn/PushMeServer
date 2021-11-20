@@ -2,7 +2,7 @@ const express = require("express");
 
 const { v4: uuidv4 } = require("uuid");
 
-const authorize = require("../middleware/authorize");
+const { authorize } = require("../middleware/authorize");
 
 const { getTopicBySecretKey, getTopic } = require("../service/topic");
 const { getDevice } = require("../service/device");

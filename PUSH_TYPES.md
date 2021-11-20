@@ -47,7 +47,7 @@ Callback Format
 ```json
 {
     pushId: "000000000-00000-00000-0000000",
-    category_id: "button.yes_no",
+    categoryId: "button.yes_no",
     userText: "uesrs text"
 }
 ```
@@ -59,7 +59,7 @@ Callback Format
 ```json
 {
     pushId: "000000000-00000-00000-0000000",
-    category_id: "button.acknowledge",
+    categoryId: "button.acknowledge",
     clicked: true
 }
 ```
@@ -72,9 +72,8 @@ POST `/webhook/push/{{webhookSecret}}`
 {
     title: "Notification Title", // required
     body: "Desc / Body", // optional
-    callback_url: "https://example.pushme.tgxn.net/some_callback_url", // optional
-    category_id: "button.open_link", // required
-    link_url: "https://example.pushme.tgxn.net/" // required
+    categoryId: "button.open_link", // required
+    linkUrl: "https://example.pushme.tgxn.net/", // required
 }
 ```
 
@@ -82,7 +81,6 @@ Callback Format
 ```json
 {
     pushId: "000000000-00000-00000-0000000",
-    category_id: "button.open_link",
     clicked: true
 }
 ```
@@ -97,7 +95,6 @@ POST `/webhook/push/{{webhookSecret}}`
 {
     title: "Notification Title", // required
     body: "Desc / Body", // optional
-    callback_url: "https://example.pushme.tgxn.net/some_callback_url", // optional
     categoryId: "button.yes_no" // required
 }
 ```
@@ -105,8 +102,8 @@ POST `/webhook/push/{{webhookSecret}}`
 Response:
 ```json
 {
+    pushId: "000000000-00000-00000-0000000",
     success: true,
-    pushId: "000000000-00000-00000-0000000"
 }
 ```
 
@@ -116,7 +113,6 @@ Response:
 ```json
 {
     pushId: "000000000-00000-00000-0000000",
-    actionIdent: "reply",
     userText: "uesrs text"
 }
 ```

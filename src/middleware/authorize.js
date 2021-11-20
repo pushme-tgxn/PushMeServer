@@ -30,4 +30,4 @@ function authorize() {
   ];
 }
 
-module.exports = authorize;
+module.exports = { authorize };
