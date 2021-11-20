@@ -28,24 +28,33 @@ const createTopic = async (userId, deviceIds) => {
   return createdTopic;
 };
 
-const updateTopic = async (topicId, { name, deviceIds, callbackUrl }) => {
+const updateTopic = async (topicId, requestBody) => {
+  let deviceIds = false;
+  if (requestBody.deviceIds) {
+    deviceIds = requestBody.deviceIds;
+  }
+  const allowedFields = ["name", "callbackUrl"];
+  Object.keys(requestBody).forEach((key) => {
+    if (allowedFields.indexOf(key) !== -1) delete requestBody[key];
+  });
+
   const topic = await Topic.scope("withDevices").findOne({
     where: { id: topicId },
   });
-
   if (!topic) {
     throw new Error("Topic not found");
   }
 
-  await topic.update({ callbackUrl });
+  await topic.update(requestBody);
 
-  // topic.TopicDevices.DeviceId
-  console.log(`updateTopic`, topicId, deviceIds);
-  await topic.setDevices(deviceIds);
+  if (deviceIds) {
+    console.log(`updateTopic`, topicId, deviceIds);
+    await topic.setDevices(deviceIds);
+  }
 
   await topic.save();
 
-  console.log("updateTopic", deviceIds, callbackUrl, topic);
+  console.log("updateTopic", deviceIds, topic);
   return topic;
 };
 

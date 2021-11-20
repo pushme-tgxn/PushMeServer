@@ -68,10 +68,10 @@ router.post("/:topicId", authorize(), async (request, response, next) => {
   try {
     console.log(`${router}: response`, request.body);
 
-    const updatedTopic = await updateTopic(request.params.topicId, {
-      deviceIds: request.body.deviceIds,
-      callbackUrl: request.body.callbackUrl,
-    });
+    const updatedTopic = await updateTopic(
+      request.params.topicId,
+      request.body
+    );
     response.json({
       success: true,
       topic: updatedTopic,
