@@ -4,17 +4,6 @@ const bcrypt = require("bcryptjs");
 
 const { User, UserAuthMethod } = require("../../models/index.js");
 
-// async function authenticate({ username, password }) {
-//   const user = await User.scope("withHash").findOne({ where: { username } });
-
-//   if (!user || !(await bcrypt.compare(password, user.hash)))
-//     throw "Username or password is incorrect";
-
-//   // authentication successful
-//   const token = generateToken(user.id);
-//   return { ...omitHash(user.get()), token };
-// }
-
 async function loginAuthPair(email, password) {
   // const user = await User.scope("withHash").findOne({ where: { username } });
 

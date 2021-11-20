@@ -5,13 +5,74 @@ const { v4: uuidv4 } = require("uuid");
 
 const { Topic } = require("../../models/index.js");
 
-const listTopics = async (userId) => {
-  console.log(`listTopics`, userId);
+const listTopics = async (request, response, next) => {
+  try {
+    console.log(`listTopics`, request.user.id);
 
-  const topics = await Topic.scope({
-    method: ["byUser", userId],
-  }).findAll();
-  return topics;
+    const topics = await Topic.scope({
+      method: ["byUser", request.user.id],
+    }).findAll();
+
+    response.json({
+      success: true,
+      topics,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const getTopicForUser = async (request, response, next) => {
+  try {
+    const topic = await getTopic(request.params.topicId);
+    response.json({
+      success: true,
+      topic,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const createUserTopic = async (request, response, next) => {
+  try {
+    const { deviceIds } = request.body;
+
+    let webhookResult = await createTopic(request.user.id, deviceIds);
+    response.json({
+      success: true,
+      topic: webhookResult,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const updateUserTopic = async (request, response, next) => {
+  try {
+    console.log(`response`, request.body);
+
+    const updatedTopic = await updateTopic(
+      request.params.topicId,
+      request.body
+    );
+    response.json({
+      success: true,
+      topic: updatedTopic,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const deleteUserTopic = async (request, response, next) => {
+  try {
+    console.log(`delete, ${request.params.topicId}`);
+
+    const savedToken = await deleteTopic(request.params.topicId);
+
+    response.json({
+      success: savedToken,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const createTopic = async (userId, deviceIds) => {
@@ -78,10 +139,10 @@ const getTopic = async (topicId) => {
 };
 
 module.exports = {
-  getTopic,
   listTopics,
-  createTopic,
-  updateTopic,
-  deleteTopic,
+  getTopicForUser,
+  createUserTopic,
+  updateUserTopic,
+  deleteUserTopic,
   getTopicBySecretKey,
 };

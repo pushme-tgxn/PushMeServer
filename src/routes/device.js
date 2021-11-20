@@ -14,8 +14,6 @@ const {
 const router = express.Router();
 
 router.get("/", authorize(), async (request, response) => {
-  console.log(`listDevices`, request.user);
-
   const deviceList = await listDevices(request.user.id);
 
   response.json({
@@ -38,12 +36,36 @@ router.get("/:deviceId", authorize(), async (request, response) => {
   });
 });
 
+// create device
+router.post("/create", authorize(), async (request, response, next) => {
+  const { token, name } = request.body;
+  console.log(`Received push token, ${token}, ${name}`);
+
+  const foundDevice = await findDeviceByToken(request.user.id, token);
+  if (foundDevice) {
+    return response.json({
+      success: false,
+      message: "Device already exists",
+    });
+  }
+
+  const deviceResult = await createDevice({
+    userId: request.user.id,
+    token,
+    name,
+  });
+  response.json({
+    success: true,
+    device: deviceResult,
+  });
+});
+
 // upsert device
 router.post("/", authorize(), async (request, response, next) => {
   const { token, name } = request.body;
   console.log(`Received push token, ${token}, ${name}`);
 
-  const foundDevice = await findDeviceByToken(token);
+  const foundDevice = await findDeviceByToken(request.user.id, token);
   if (foundDevice) {
     const deviceResult = await updateDevice({ token, name });
     return response.json({
@@ -55,7 +77,7 @@ router.post("/", authorize(), async (request, response, next) => {
   const deviceResult = await createDevice({
     userId: request.user.id,
     token,
-    name,
+    name, // include name on create
   });
   response.json({
     success: true,

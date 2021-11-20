@@ -59,8 +59,8 @@ const removeDevice = async (deviceId) => {
   return removed;
 };
 
-const findDeviceByToken = async (pushToken) => {
-  const device = await Device.findOne({ where: { token: pushToken } });
+const findDeviceByToken = async (userId, pushToken) => {
+  const device = await Device.findOne({ where: { userId, token: pushToken } });
   return device;
 };
 
