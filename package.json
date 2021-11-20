@@ -16,6 +16,7 @@
     "expo-server-sdk": "^3.6.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
+    "express-ws": "^5.0.2",
     "googleapis": "^89.0.0",
     "mariadb": "^2.5.5",
     "sequelize": "^6.9.0",

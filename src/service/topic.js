@@ -25,6 +25,7 @@ const createTopic = async (userId, deviceIds) => {
 
   const createdTopic = await Topic.create(createData);
   createdTopic.addDevices(deviceIds);
+
   return createdTopic;
 };
 

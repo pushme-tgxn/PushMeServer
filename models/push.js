@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Push.init(
     {
-      // senderId: DataTypes.INTEGER,
+      pushIdent: DataTypes.STRING,
       targetUserId: DataTypes.INTEGER,
       pushData: DataTypes.TEXT,
       pushPayload: DataTypes.TEXT,
