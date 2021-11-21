@@ -3,7 +3,7 @@ const expo = new Expo();
 
 const { v4: uuidv4 } = require("uuid");
 
-const { Push } = require("../../models/index.js");
+const { Push, PushResponse } = require("../../models/index.js");
 
 const { triggerMultiPush, triggerPushSingle } = require("../lib/push");
 
@@ -68,15 +68,28 @@ const createPushRequest = async (request, response, next) => {
 };
 
 const recordPushResponse = async (request, response) => {
-  console.log(`response`, request.body);
+  const push = await getPushByIdent(request.params.pushIdent);
 
-  const push = await updatePushByIdent(request.params.pushIdent, {
-    serviceResponse: JSON.stringify(request.body.response),
-  });
+  const created = await PushResponse.create(
+    {
+      pushId: push.id,
+      serviceResponse: JSON.stringify(request.body.response),
+    },
+    {
+      return: true,
+      raw: true,
+    }
+  );
+
+  console.log("created", created);
+
+  // const push = await updatePushByIdent(request.params.pushIdent, {
+  //   serviceResponse: JSON.stringify(request.body.response),
+  // });
 
   response.json({
     success: true,
-    push,
+    created,
   });
 
   postPoll(request.params.pushIdent, push);
@@ -143,7 +156,7 @@ const getPush = async (pushId) => {
 };
 
 const getPushByIdent = async (pushIdent) => {
-  const push = await Push.findOne({
+  const push = await Push.scope("withResponses").findOne({
     where: { pushIdent },
   });
   return push;

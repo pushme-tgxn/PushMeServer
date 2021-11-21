@@ -9,8 +9,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "targetUserId",
       });
 
+      Push.hasMany(models.PushResponse, {
+        foreignKey: "pushId",
+      });
+
       Push.addScope("defaultScope", {
         // include: [{ model: models.User, as: "senderUser" }],
+        // include: [{ model: models.User, as: "targetUser" }],
+        attributes: {},
+      });
+
+      Push.addScope("withResponses", {
+        include: [{ model: models.PushResponse, as: "pushResponses" }],
         // include: [{ model: models.User, as: "targetUser" }],
         attributes: {},
       });
@@ -33,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       pushData: DataTypes.TEXT,
       pushPayload: DataTypes.TEXT,
       serviceRequest: DataTypes.TEXT,
-      serviceResponse: DataTypes.TEXT,
+      // serviceResponse: DataTypes.TEXT,
       // handler: DataTypes.TEXT,
     },
     {

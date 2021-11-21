@@ -10,15 +10,12 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
-        unique: true,
       },
       method: {
         type: Sequelize.STRING,
-        unique: true,
       },
       methodIdent: {
         type: Sequelize.STRING,
-        unique: true,
       },
       methodSecret: {
         type: Sequelize.TEXT,
@@ -34,6 +31,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+    });
+    await queryInterface.addConstraint("UserAuthMethods", {
+      type: "UNIQUE",
+      fields: ["userId", "method", "methodIdent"],
+      name: "user_method_ident",
     });
   },
   down: async (queryInterface, Sequelize) => {

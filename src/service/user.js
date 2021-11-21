@@ -34,6 +34,7 @@ async function createEmailAuth(email, password) {
     raw: true,
     nest: true,
   });
+  console.log("userAuthMethod", userAuthMethod);
 
   // validate
   if (userAuthMethod) {

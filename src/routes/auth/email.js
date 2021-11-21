@@ -25,6 +25,7 @@ router.post("/register", async (req, res, next) => {
     const user = await createEmailAuth(req.body.email, req.body.password);
     res.json({ success: true, user });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
