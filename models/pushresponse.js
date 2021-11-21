@@ -9,8 +9,9 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       PushResponse.addScope("byPushId", (pushId) => ({
+        limit: 1,
         where: { pushId },
-        order: [["createdAt", "DESC"]],
+        order: [["id", "DESC"]],
       }));
     }
   }

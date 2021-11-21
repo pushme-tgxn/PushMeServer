@@ -70,6 +70,8 @@ const createPushRequest = async (request, response, next) => {
 const recordPushResponse = async (request, response) => {
   const push = await getPushByIdent(request.params.pushIdent);
 
+  console.log("recordPushResponse push", push);
+
   const created = await PushResponse.create(
     {
       pushId: push.id,
@@ -100,11 +102,15 @@ const getPushStatus = async (request, response) => {
 
   const push = await getPushByIdent(request.params.pushIdent);
 
+  console.log("getPushStatus push", push);
+
   response.json({
     success: true,
     pushData: JSON.parse(push.pushData),
     serviceRequest: JSON.parse(push.serviceRequest),
-    serviceResponse: JSON.parse(push.serviceResponse),
+    serviceResponses: JSON.parse(
+      push.PushResponses.map((item) => item.serviceResponse)
+    ),
   });
 };
 
@@ -159,7 +165,7 @@ const getPushByIdent = async (pushIdent) => {
   const push = await Push.scope("withResponses").findOne({
     where: { pushIdent },
   });
-  return push;
+  return push.toJSON();
 };
 
 const updatePush = async (pushId, updateData) => {

@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Push.addScope("withResponses", {
-        include: [{ model: models.PushResponse, as: "pushResponses" }],
+        include: [{ model: models.PushResponse, as: "PushResponses" }],
         // include: [{ model: models.User, as: "targetUser" }],
         attributes: {},
       });

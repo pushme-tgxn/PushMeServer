@@ -94,9 +94,10 @@ const updateTopic = async (topicId, requestBody) => {
   if (requestBody.deviceIds) {
     deviceIds = requestBody.deviceIds;
   }
+
   const allowedFields = ["name"];
   Object.keys(requestBody).forEach((key) => {
-    if (allowedFields.indexOf(key) !== -1) delete requestBody[key];
+    if (allowedFields.indexOf(key) === -1) delete requestBody[key];
   });
 
   const topic = await Topic.scope("withDevices").findOne({
@@ -109,18 +110,23 @@ const updateTopic = async (topicId, requestBody) => {
   await topic.update(requestBody);
 
   if (deviceIds) {
-    console.log(`updateTopic`, topicId, deviceIds);
+    console.log(`setDevices`, deviceIds);
     await topic.setDevices(deviceIds);
   }
 
   await topic.save();
 
-  console.log("updateTopic", deviceIds, topic);
-  return topic;
+  console.log("updateTopic", topic.toJSON());
+  return topic.toJSON();
 };
 
 const deleteTopic = async (topicId) => {
-  return await Topic.destroy({ where: { id: topicId } });
+  const deletedTopic = await Topic.destroy(
+    { where: { id: topicId } },
+    { return: true }
+  );
+  console.log(`deleteTopic`, deletedTopic);
+  return deletedTopic;
 };
 
 const getTopicBySecretKey = async (topicSecret) => {
