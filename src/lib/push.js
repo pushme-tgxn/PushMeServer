@@ -1,8 +1,39 @@
+// contains code that uses the expo api to send push notifications to a device token
+
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 
-// const { listDevices } = require("../service/device");
+/**
+ * Send a push message to a single push token.
+ * @param {*} toToken
+ * @param {*} requestBody
+ *
+ * @returns {Promise}
+ */
+const triggerPushSingle = async (toToken, requestBody) => {
+  console.log("triggerPushSingle", toToken, requestBody);
 
+  if (!Expo.isExpoPushToken(toToken)) {
+    console.error(`Push token ${toToken} is not a valid Expo push token`);
+    throw new Error(`Push token ${toToken} is not a valid Expo push token`);
+  }
+
+  const pushPayload = {
+    to: toToken,
+    ...requestBody,
+  };
+
+  const response = await sendNotificationsArray([pushPayload]);
+  return response;
+};
+
+/**
+ * Send a push message to multiple push tokens at once.
+ * @param {string} toTokens
+ * @param {string} requestBody
+ *
+ * @returns {Promise}
+ */
 const triggerMultiPush = async (toTokens, requestBody) => {
   let notifications = [];
 
@@ -25,23 +56,6 @@ const triggerMultiPush = async (toTokens, requestBody) => {
   }
 
   const response = await sendNotificationsArray(notifications);
-  return response;
-};
-
-const triggerPushSingle = async (toToken, requestBody) => {
-  console.log("triggerPushSingle", toToken, requestBody);
-
-  if (!Expo.isExpoPushToken(toToken)) {
-    console.error(`Push token ${toToken} is not a valid Expo push token`);
-    throw new Error(`Push token ${toToken} is not a valid Expo push token`);
-  }
-
-  const pushPayload = {
-    to: toToken,
-    ...requestBody,
-  };
-
-  const response = await sendNotificationsArray([pushPayload]);
   return response;
 };
 
@@ -104,7 +118,6 @@ const sendNotificationsArray = async (notifications) => {
 };
 
 module.exports = {
-  // triggerPush,
-  triggerMultiPush,
   triggerPushSingle,
+  triggerMultiPush,
 };

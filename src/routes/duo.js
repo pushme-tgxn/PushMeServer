@@ -2,7 +2,6 @@ const express = require("express");
 const { createHmac } = require("crypto");
 
 const { getTopicById } = require("../service/topic");
-const { getSystemErrorMap } = require("util");
 
 const router = express.Router();
 
@@ -17,6 +16,12 @@ router.get("/ping", (request, response) => {
   });
 });
 
+/**
+ * Use the Duo method of authenticating requests.
+ * @param {*} request
+ * @param {*} response
+ * @param {*} next
+ */
 const validateDuoSignature = async (request, response, next) => {
   const b64auth = (request.headers.authorization || "").split(" ")[1] || "";
   const strauth = Buffer.from(b64auth, "base64").toString();
