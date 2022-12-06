@@ -21,7 +21,7 @@ router.get("/ping", (request, response) => {
 
 router.post("/preauth", (request, response) => {
   const { username } = request.body;
-  console.log("preauth", request.body);
+  console.log("preauth", request.body, request.query);
 
   return response.json({
     stat: "OK",
@@ -31,7 +31,7 @@ router.post("/preauth", (request, response) => {
           capabilities: ["auto", "push"],
           device: "DPFZRS9FB0D46QFTM891",
           display_name: "iOS (XXX-XXX-0100)",
-          name: "",
+          name: "test",
           number: "XXX-XXX-0100",
           type: "phone",
         },
@@ -44,7 +44,7 @@ router.post("/preauth", (request, response) => {
 
 router.post("/auth", (request, response) => {
   const { username, factor } = request.body;
-  console.log("auth", username, factor);
+  console.log("auth", request.body, request.query);
 
   return response.json({
     stat: "OK",
@@ -56,7 +56,7 @@ router.post("/auth", (request, response) => {
 
 router.post("/auth_status", (request, response) => {
   const { username, factor } = request.body;
-  console.log("auth", username, factor);
+  console.log("auth_status", request.body, request.query);
 
   // return response.json({
   //   stat: "OK",
