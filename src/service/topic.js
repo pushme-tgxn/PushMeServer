@@ -23,7 +23,7 @@ const listTopics = async (request, response, next) => {
 };
 const getTopicForUser = async (request, response, next) => {
   try {
-    const topic = await getTopic(request.params.topicId);
+    const topic = await getTopicById(request.params.topicId);
     response.json({
       success: true,
       topic,
@@ -135,8 +135,8 @@ const getTopicBySecretKey = async (topicSecret) => {
   }).findOne();
 };
 
-const getTopic = async (topicId) => {
-  console.log(`getTopic`, topicId);
+const getTopicById = async (topicId) => {
+  console.log(`getTopicById`, topicId);
 
   const topic = await Topic.scope("withDevices").findOne({
     where: { id: topicId },
@@ -146,6 +146,7 @@ const getTopic = async (topicId) => {
 
 module.exports = {
   listTopics,
+  getTopicById,
   getTopicForUser,
   createUserTopic,
   updateUserTopic,

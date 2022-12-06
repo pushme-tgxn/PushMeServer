@@ -13,6 +13,9 @@ copy `.env.example`
 ### view logs
 `docker-compose logs -f pushme`
 
+### build and view logs
+`docker-compose up --build -d pushme && docker-compose logs -f`
+
 
 ### full docker recreate
 `docker-compose stop && sudo rm ./.data/ -R && docker-compose up --build -d && docker-compose exec pushme npx sequelize-cli db:migrate`

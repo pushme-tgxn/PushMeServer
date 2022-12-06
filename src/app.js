@@ -10,7 +10,16 @@ const app = express();
 app.use(cors());
 app.use(express.static("public"));
 
-app.use(express.json());
+// support json and urlencoded values
+const rawBodySaver = (req, res, buf, encoding) => {
+  if (buf && buf.length) {
+    req.rawBody = buf.toString(encoding || "utf8");
+  }
+};
+app.use(express.json({ verify: rawBodySaver }));
+app.use(express.urlencoded({ verify: rawBodySaver, extended: true }));
+
+// setup normal routes
 app.use("/", routes);
 
 // global error handler last

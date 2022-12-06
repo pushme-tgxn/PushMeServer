@@ -10,10 +10,10 @@ function authorize() {
 
     // attach full user record to request object
     async (req, res, next) => {
-      console.log("attempted auth", req.user);
+      console.log("attempted auth", req.auth);
 
       // get user with id from token 'sub' (subject) property
-      const user = await User.findByPk(req.user.sub);
+      const user = await User.findByPk(req.auth.sub);
 
       // check user still exists
       if (!user)
@@ -22,7 +22,7 @@ function authorize() {
           .json({ success: false, message: "Unauthorized" });
 
       // authorization successful
-      req.UserReq = req.user;
+      // req.auth = req.auth;
       req.UserDb = user;
       req.user = user.get();
       next();
