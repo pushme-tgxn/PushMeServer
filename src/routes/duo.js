@@ -21,24 +21,19 @@ router.get("/ping", (request, response) => {
 
 router.post("/preauth", (request, response) => {
   const { username } = request.body;
-  console.log("preauth", username);
+  console.log("preauth", request.body);
 
   return response.json({
     stat: "OK",
     response: {
       devices: [
         {
-          capabilities: ["auto", "push", "sms", "phone", "mobile_otp"],
+          capabilities: ["auto", "push"],
           device: "DPFZRS9FB0D46QFTM891",
           display_name: "iOS (XXX-XXX-0100)",
           name: "",
           number: "XXX-XXX-0100",
           type: "phone",
-        },
-        {
-          device: "DHEKH0JJIYC1LX3AZWO4",
-          name: "0",
-          type: "token",
         },
       ],
       result: "auth",

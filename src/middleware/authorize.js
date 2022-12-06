@@ -1,4 +1,4 @@
-const jwt = require("express-jwt");
+const { expressjwt: jwt } = require("express-jwt");
 const secret = process.env.SECRET;
 
 const { User } = require("../../models/index.js");
