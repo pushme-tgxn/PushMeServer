@@ -2,15 +2,17 @@ const express = require("express");
 const { createHmac } = require("crypto");
 
 const { getTopicById } = require("../service/topic");
+const { getSystemErrorMap } = require("util");
 
 const router = express.Router();
 
+// The /ping endpoint acts as a "liveness check" that can be called to verify that Duo is up before trying to call other Auth API endpoints.
 router.get("/ping", (request, response) => {
-  console.log("ping");
   return response.json({
     stat: "OK",
     response: {
-      time: 1357020061,
+      time: Math.round(Date.now() / 1000),
+      validation: process.env.NO_DUO_AUTH ? "skipped" : "enabled", // added to indicate if we're currently validating cert
     },
   });
 });
@@ -25,6 +27,13 @@ const validateDuoSignature = async (request, response, next) => {
 
   const topic = await getTopicById(topicId);
   console.log("topicID", topicId, topicHash);
+
+  // if `NO_DUO_AUTH` is set, skip signature validation
+  if (process.env.NO_DUO_AUTH) {
+    console.log("skipping duo signature validation");
+    request.topic = topic;
+    return next();
+  }
 
   // payload to hash for
   const duoAuthHash = [
@@ -53,10 +62,12 @@ const validateDuoSignature = async (request, response, next) => {
   }
 };
 
+// The /preauth endpoint determines whether a user is authorized to log in, and (if so) returns the user's available authentication factors.
 router.post("/preauth", validateDuoSignature, async (request, response) => {
   console.log("preauth", request.body);
-  console.log("preauth HEADERS", request.headers);
   const { username } = request.body;
+
+  // TODO lookup topic, return array of devices linked to it
 
   return response.json({
     stat: "OK",
@@ -78,8 +89,8 @@ router.post("/preauth", validateDuoSignature, async (request, response) => {
 });
 
 router.post("/auth", validateDuoSignature, async (request, response) => {
+  console.log("auth", request.body);
   const { device, username, factor, ipaddr, async } = request.body;
-  console.log("auth", { device, username, factor, ipaddr });
 
   // non-async
   if (!async) {
@@ -103,7 +114,7 @@ router.post("/auth", validateDuoSignature, async (request, response) => {
 });
 
 // unused for async
-router.get("/auth_status", validateSignature, (request, response) => {
+router.get("/auth_status", validateDuoSignature, (request, response) => {
   console.log("auth_status", request.query);
 
   return response.json({
