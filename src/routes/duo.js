@@ -64,30 +64,44 @@ const validateDuoSignature = async (request, response, next) => {
 
 // The /preauth endpoint determines whether a user is authorized to log in, and (if so) returns the user's available authentication factors.
 router.post("/preauth", validateDuoSignature, async (request, response) => {
-  console.log("preauth", request.body);
+  console.log("preauth", request.body, request.topic);
   const { username } = request.body;
 
-  // TODO lookup topic, return array of devices linked to it
+  // no devices in topic, deny
+  if (!request?.topic?.devices) {
+    return response.json({
+      stat: "OK",
+      response: {
+        devices: [],
+        result: "deny",
+        status_msg: "No devices in topic",
+      },
+    });
+  }
+
+  // loop devices, create array
+  const devices = request.topic.devices.map((device) => {
+    return {
+      capabilities: ["auto", "push"],
+      device: `DEVICE-${device.id}`,
+      display_name: `${device.name}`,
+      name: "",
+      number: "",
+      type: "phone",
+    };
+  });
 
   return response.json({
     stat: "OK",
     response: {
-      devices: [
-        {
-          capabilities: ["auto", "push"],
-          device: "DPFZRS9FB0D46QFTM891", // TODO Random
-          display_name: "WowPhone1 (XXX-XXX-6969)", // to get from token
-          name: "",
-          number: "XXX-XXX-6969", // to get from token
-          type: "phone",
-        },
-      ],
-      result: "auth",
+      devices: devices,
+      result: "auth", // TODO this should take into account lockouts, etc.
       status_msg: "Account is active",
     },
   });
 });
 
+// The /auth endpoint performs second-factor authentication for a user by sending a push notification to the user's smartphone app, verifying a passcode, or placing a phone call.
 router.post("/auth", validateDuoSignature, async (request, response) => {
   console.log("auth", request.body);
   const { device, username, factor, ipaddr, async } = request.body;
