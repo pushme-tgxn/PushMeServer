@@ -1,7 +1,7 @@
 const express = require("express");
 
 const { authorize } = require("../middleware/authorize");
-const { listPushes } = require("../service/push");
+const { listPushesForUserId } = require("../service/push");
 
 const router = express.Router();
 
@@ -18,7 +18,7 @@ router.get("/", authorize(), async (request, response, next) => {
 });
 
 router.get("/history", authorize(), async (request, response) => {
-  const pushList = await listPushes(request.user.id);
+  const pushList = await listPushesForUserId(request.user.id);
   response.json({
     success: true,
     pushes: pushList,

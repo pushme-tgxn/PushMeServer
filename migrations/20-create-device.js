@@ -11,6 +11,10 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
       },
+      deviceKey: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
       name: {
         type: Sequelize.STRING,
       },

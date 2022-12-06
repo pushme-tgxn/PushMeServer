@@ -1,7 +1,16 @@
 const express = require("express");
 const { createHmac } = require("crypto");
 
-const { getTopicById, getTopicByKey } = require("../service/topic");
+const { getTopicById, getTopicByKey } = require("../controllers/topic");
+
+const { validateDuoSignature } = require("../middleware/validate-duo");
+
+const {
+  createPushToTopic,
+  pushToTopicDevices,
+  getPushByIdent,
+  getPushResponse,
+} = require("../service/push");
 
 const router = express.Router();
 
@@ -15,61 +24,6 @@ router.get("/ping", (request, response) => {
     },
   });
 });
-
-/**
- * Use the Duo method of authenticating requests.
- * @param {*} request
- * @param {*} response
- * @param {*} next
- */
-const validateDuoSignature = async (request, response, next) => {
-  const b64auth = (request.headers.authorization || "").split(" ")[1] || "";
-  const strauth = Buffer.from(b64auth, "base64").toString();
-  const splitIndex = strauth.indexOf(":");
-
-  const topicKey = strauth.substring(0, splitIndex);
-  const topicHash = strauth.substring(splitIndex + 1);
-
-  const topic = await getTopicByKey(topicKey);
-  console.log("topicKey", topicKey, topicHash);
-
-  // if `NO_DUO_AUTH` is set, assume password is the secret
-  if (process.env.NO_DUO_AUTH) {
-    console.log("skipping duo signature validation, checking secret first");
-
-    if (topicHash === topic.secretKey) {
-      console.log("secret matches, continuing");
-      request.topic = topic;
-      return next();
-    }
-  }
-
-  // payload to hash for
-  const duoAuthHash = [
-    request.headers.date,
-    request.method,
-    request.hostname,
-    `/auth/v2${request.path}`,
-    request.method == "GET" ? request.headers.query : request.rawBody,
-  ].join("\n");
-
-  const calculatedHash = createHmac("sha512", topic.secretKey) // the golang api uses sha512, docs are wrong
-    .update(duoAuthHash)
-    .digest("hex");
-
-  // test hash matched
-
-  if (calculatedHash === topicHash) {
-    console.log("hash matched");
-    request.topic = topic;
-    next();
-  } else {
-    console.log("hash mismatch", calculatedHash, topicHash);
-    return response.json({
-      error: "duo hash mismatch",
-    });
-  }
-};
 
 // The /preauth endpoint determines whether a user is authorized to log in, and (if so) returns the user's available authentication factors.
 router.post("/preauth", validateDuoSignature, async (request, response) => {
@@ -92,9 +46,9 @@ router.post("/preauth", validateDuoSignature, async (request, response) => {
   const devices = request.topic.devices.map((device) => {
     return {
       capabilities: ["auto", "push"],
-      device: `DEVICE-${device.id}`,
+      device: `${device.deviceKey}`,
       display_name: `${device.name}`,
-      name: "",
+      name: `${device.name}`,
       number: "",
       type: "phone",
     };
@@ -117,15 +71,68 @@ router.post("/auth", validateDuoSignature, async (request, response) => {
 
   // non-async
   if (!async) {
-    // wait for push response here
+    const pushPayload = {
+      categoryId: "button.approve_deny",
+      title: "Test notification title!",
+      body: "Test body.",
+    };
 
-    return response.json({
-      stat: "OK",
-      response: {
-        result: "allow",
-        status: "allow",
-      },
-    });
+    const createdPush = await createPushToTopic(request.topic, pushPayload);
+    console.log("createdPush", pushPayload, createdPush);
+
+    await pushToTopicDevices(request.topic, createdPush, pushPayload);
+
+    // **wait** for push response here
+
+    const waitForResponse = async (pushId, waitTime = 30) => {
+      var totalLoops = 0; //  set your counter to 1
+
+      function timeout(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      async function checkForResponse() {
+        const response = await getPushResponse(pushId);
+
+        if (response) {
+          console.log("checkForResponse", response);
+          return response;
+        }
+
+        await timeout(1000);
+        totalLoops++; // increment the counter (seconds)
+        if (totalLoops < waitTime) {
+          return await checkForResponse();
+        } else {
+          return false;
+        }
+      }
+
+      return checkForResponse();
+    };
+
+    const result = await waitForResponse(createdPush.dataValues.id);
+    console.log("result", result);
+
+    if (JSON.parse(result.serviceResponse).actionIdentifier === "approve") {
+      return response.json({
+        stat: "OK",
+        response: {
+          result: "allow",
+          status: "allow",
+        },
+        serviceData: JSON.parse(result.serviceResponse),
+      });
+    } else {
+      return response.json({
+        stat: "OK",
+        response: {
+          result: "deny",
+          status: "deny",
+        },
+        serviceData: JSON.parse(result.serviceResponse),
+      });
+    }
   } else {
     return response.json({
       stat: "OK",

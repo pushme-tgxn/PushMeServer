@@ -53,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
   Device.init(
     {
       userId: DataTypes.INTEGER,
+      deviceKey: DataTypes.STRING,
       name: DataTypes.STRING,
       token: DataTypes.STRING,
     },

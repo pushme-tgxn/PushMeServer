@@ -8,7 +8,7 @@ const {
   createUserTopic,
   updateUserTopic,
   deleteUserTopic,
-} = require("../service/topic");
+} = require("../controllers/topic");
 
 const router = express.Router();
 

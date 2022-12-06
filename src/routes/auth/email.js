@@ -8,7 +8,7 @@ const {
   updateEmail,
   updatePassword,
   createEmailAuth,
-} = require("../../service/auth/email");
+} = require("../../controllers/auth/email");
 
 router.post("/login", async (request, response, next) => {
   console.log(request.body);

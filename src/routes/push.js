@@ -5,7 +5,7 @@ const {
   recordPushResponse,
   getPushStatus,
   getPushStatusPoll,
-} = require("../service/push");
+} = require("../controllers/push");
 
 const router = express.Router();
 

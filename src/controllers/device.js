@@ -1,10 +1,14 @@
 const { Expo } = require("expo-server-sdk");
 // const expo = new Expo();
 
+const { v4: uuidv4 } = require("uuid");
 const { Device } = require("../../models/index.js");
 
 const createDevice = async (createDeviceData) => {
   console.log("createDevice", createDeviceData);
+
+  // add new device identifier
+  createDeviceData.deviceKey = uuidv4();
 
   if (!Expo.isExpoPushToken(createDeviceData.token)) {
     console.error(

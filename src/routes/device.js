@@ -9,7 +9,7 @@ const {
   getDevice,
   removeDevice,
   findDeviceByToken,
-} = require("../service/device");
+} = require("../controllers/device");
 
 const router = express.Router();
 
