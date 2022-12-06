@@ -64,6 +64,8 @@ router.post("/preauth", validateDuoSignature, async (request, response) => {
   });
 });
 
+const WAIT_TIME = 30; // seconds
+
 // The /auth endpoint performs second-factor authentication for a user by sending a push notification to the user's smartphone app, verifying a passcode, or placing a phone call.
 router.post("/auth", validateDuoSignature, async (request, response) => {
   console.log("auth", request.body);
@@ -73,8 +75,11 @@ router.post("/auth", validateDuoSignature, async (request, response) => {
   if (!async) {
     const pushPayload = {
       categoryId: "button.approve_deny",
-      title: "Test notification title!",
-      body: "Test body.",
+      title: `Login Approval Request`,
+      subtitle: `Request from ${ipaddr}`,
+      body: `Approve login request for ${username}?`,
+      priority: "high",
+      ttl: WAIT_TIME,
     };
 
     const createdPush = await createPushToTopic(request.topic, pushPayload);
@@ -84,7 +89,7 @@ router.post("/auth", validateDuoSignature, async (request, response) => {
 
     // **wait** for push response here
 
-    const waitForResponse = async (pushId, waitTime = 30) => {
+    const waitForResponse = async (pushId) => {
       var totalLoops = 0; //  set your counter to 1
 
       function timeout(ms) {
@@ -101,7 +106,7 @@ router.post("/auth", validateDuoSignature, async (request, response) => {
 
         await timeout(1000);
         totalLoops++; // increment the counter (seconds)
-        if (totalLoops < waitTime) {
+        if (totalLoops < WAIT_TIME) {
           return await checkForResponse();
         } else {
           return false;
