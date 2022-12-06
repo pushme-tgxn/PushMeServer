@@ -1,7 +1,7 @@
 const { expressjwt: jwt } = require("express-jwt");
 const secret = process.env.SECRET;
 
-const { User } = require("../../models/index.js");
+const { User, UserAuthMethod } = require("../../models/index.js");
 
 function authorize() {
   return [
@@ -22,8 +22,14 @@ function authorize() {
           .json({ success: false, message: "Unauthorized" });
 
       // authorization successful
+
+      let userAuthMethods = await UserAuthMethod.scope("noUser").findAll({
+        where: { userId: user.id },
+      });
+
       // req.auth = req.auth;
-      req.UserDb = user;
+      // req.UserDb = user;
+      req.methods = userAuthMethods;
       req.user = user.get();
       next();
     },

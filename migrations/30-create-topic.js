@@ -14,6 +14,10 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
+      topicKey: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
       secretKey: {
         type: Sequelize.STRING,
         unique: true,

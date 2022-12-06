@@ -13,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
           {
             model: models.User,
             as: "user",
-            attributes: { exclude: ["methodSecret"] },
           },
         ],
+        attributes: { exclude: ["methodSecret"] },
       });
     }
   }
@@ -31,8 +31,8 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "UserAuthMethod",
       scopes: {
-        // include secret with this scope
-        withSecret: { attributes: {} },
+        noUser: { attributes: { exclude: ["methodSecret"] } }, // dont return user data
+        withSecret: { attributes: {} }, // include secret with this scope
       },
     }
   );

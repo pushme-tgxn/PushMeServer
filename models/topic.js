@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Topic.addScope("defaultScope", {
         // include: [{ model: models.Device, as: "devices" }],
-        attributes: { exclude: ["secretKey"] },
+        attributes: { exclude: ["secretKey", "TopicDevices"] },
       });
 
       Topic.addScope("withDevices", {
@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: DataTypes.INTEGER,
       name: DataTypes.STRING,
+      topicKey: DataTypes.STRING,
       secretKey: DataTypes.STRING,
     },
     {

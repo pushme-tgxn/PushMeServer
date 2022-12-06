@@ -9,8 +9,8 @@ router.get("/", authorize(), async (request, response, next) => {
   try {
     response.json({
       success: true,
-      ureq: request.UserReq,
       user: request.user,
+      methods: request.methods,
     });
   } catch (error) {
     next(error);

@@ -1,7 +1,7 @@
 const express = require("express");
 const { createHmac } = require("crypto");
 
-const { getTopicById } = require("../service/topic");
+const { getTopicById, getTopicByKey } = require("../service/topic");
 
 const router = express.Router();
 
@@ -27,17 +27,21 @@ const validateDuoSignature = async (request, response, next) => {
   const strauth = Buffer.from(b64auth, "base64").toString();
   const splitIndex = strauth.indexOf(":");
 
-  const topicId = strauth.substring(0, splitIndex);
+  const topicKey = strauth.substring(0, splitIndex);
   const topicHash = strauth.substring(splitIndex + 1);
 
-  const topic = await getTopicById(topicId);
-  console.log("topicID", topicId, topicHash);
+  const topic = await getTopicByKey(topicKey);
+  console.log("topicKey", topicKey, topicHash);
 
-  // if `NO_DUO_AUTH` is set, skip signature validation
+  // if `NO_DUO_AUTH` is set, assume password is the secret
   if (process.env.NO_DUO_AUTH) {
-    console.log("skipping duo signature validation");
-    request.topic = topic;
-    return next();
+    console.log("skipping duo signature validation, checking secret first");
+
+    if (topicHash === topic.secretKey) {
+      console.log("secret matches, continuing");
+      request.topic = topic;
+      return next();
+    }
   }
 
   // payload to hash for
@@ -73,7 +77,7 @@ router.post("/preauth", validateDuoSignature, async (request, response) => {
   const { username } = request.body;
 
   // no devices in topic, deny
-  if (!request?.topic?.devices) {
+  if (!request?.topic?.devices || request.topic.devices.length === 0) {
     return response.json({
       stat: "OK",
       response: {

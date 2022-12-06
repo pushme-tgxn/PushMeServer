@@ -2,6 +2,7 @@ const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 
 const { v4: uuidv4 } = require("uuid");
+const short = require("short-uuid");
 
 const { Topic } = require("../../models/index.js");
 
@@ -21,6 +22,7 @@ const listTopics = async (request, response, next) => {
     next(error);
   }
 };
+
 const getTopicForUser = async (request, response, next) => {
   try {
     const topic = await getTopicById(request.params.topicId);
@@ -68,7 +70,7 @@ const deleteUserTopic = async (request, response, next) => {
     const savedToken = await deleteTopic(request.params.topicId);
 
     response.json({
-      success: savedToken,
+      success: true,
     });
   } catch (error) {
     next(error);
@@ -80,7 +82,8 @@ const createTopic = async (userId, deviceIds) => {
 
   const createData = {
     userId: userId,
-    secretKey: uuidv4(),
+    topicKey: uuidv4(),
+    secretKey: short.generate(),
   };
 
   const createdTopic = await Topic.create(createData);
@@ -135,6 +138,15 @@ const getTopicBySecretKey = async (topicSecret) => {
   }).findOne();
 };
 
+const getTopicByKey = async (topicKey) => {
+  console.log(`getTopicByKey`, topicKey);
+
+  const topic = await Topic.scope("withDevices").findOne({
+    where: { topicKey },
+  });
+  return topic;
+};
+
 const getTopicById = async (topicId) => {
   console.log(`getTopicById`, topicId);
 
@@ -151,5 +163,6 @@ module.exports = {
   createUserTopic,
   updateUserTopic,
   deleteUserTopic,
+  getTopicByKey,
   getTopicBySecretKey,
 };

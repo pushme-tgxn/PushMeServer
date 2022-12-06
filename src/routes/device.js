@@ -23,7 +23,7 @@ router.get("/", authorize(), async (request, response) => {
 });
 
 router.get("/:deviceId", authorize(), async (request, response) => {
-  console.log(`listDevices`, request.user);
+  console.log(`getDevice`, request.user);
 
   const foundDevice = await getDevice(request.params.deviceId);
   if (!foundDevice) {

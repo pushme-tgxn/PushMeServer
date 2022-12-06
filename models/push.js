@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Push.addScope("byTargetUser", (userId) => ({
+        include: [{ model: models.PushResponse, as: "PushResponses" }],
         where: { targetUserId: userId },
         // attributes: {},
       }));
