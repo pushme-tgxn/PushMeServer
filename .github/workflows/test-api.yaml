@@ -21,7 +21,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "postman-env.json"
-          json: '{"email":"test@tgxn.net", "password":"${{ secrets.TEST_PASSWORD }}"}'
+          json: '{"password":"${{ secrets.TEST_PASSWORD }}"}'
 
       - name: Run API tests
         run: |
