@@ -42,6 +42,19 @@
 										],
 										"type": "text/javascript"
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "ee076525-188a-45a4-9b38-f47185f098ba",
+										"exec": [
+											"var email = pm.variables.replaceIn('{{$randomEmail}}')\r",
+											"\r",
+											"pm.globals.set(\"email\", email);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
 								}
 							],
 							"id": "b8e481a2-d524-4364-a9c7-e82307de5200",
@@ -186,7 +199,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"changed-{{email}}\"\r\n}",
+									"raw": "{\r\n    \"email\": \"{{email}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1538,47 +1551,47 @@
 	],
 	"variable": [
 		{
-			"id": "96004e15-9712-4238-8853-45a129acf291",
+			"id": "478f24f4-b2b5-4cb0-81b1-929344e55136",
 			"key": "env_url",
 			"value": "https://pushme.tgxn.net"
 		},
 		{
-			"id": "772d2dda-6a89-403b-8db4-a197499485a7",
+			"id": "0208c2cb-49b6-4d5a-8735-84455743f610",
 			"key": "jwtToken",
 			"value": "{{access_token}}"
 		},
 		{
-			"id": "80c1d505-3175-45c7-9834-36f1363839b7",
+			"id": "fdfe86d3-095d-47eb-aaef-97897e6364c1",
 			"key": "webhookSecret",
 			"value": ""
 		},
 		{
-			"id": "efd41b3a-d599-4829-b903-5ef82a6e084f",
+			"id": "9957e4f5-d10f-4a8c-8107-694cb940fdc4",
 			"key": "topicSecret",
 			"value": ""
 		},
 		{
-			"id": "578b6c97-a481-4d70-ac33-7db7c843db4f",
+			"id": "653632ab-b1b3-449c-954b-7f7a92cd4f65",
 			"key": "deviceId",
 			"value": ""
 		},
 		{
-			"id": "153c36b9-343b-43ae-95f5-8c6f343548e6",
+			"id": "fcd2168e-5b31-497b-8ee0-87eb2e9a372d",
 			"key": "topicId",
 			"value": ""
 		},
 		{
-			"id": "a87f7c7a-b8fc-49b7-b3fb-200f65e27230",
+			"id": "32a1ad96-a14b-4359-bb7c-01c7c9ba6a86",
 			"key": "topicKey",
 			"value": ""
 		},
 		{
-			"id": "d9f7fa59-ccae-428c-9c6b-300fa408ff28",
+			"id": "e4e1dab9-65d6-4158-8bd8-8a6492fef8aa",
 			"key": "duoDeviceKey",
 			"value": ""
 		},
 		{
-			"id": "1ac4db30-8856-4dfc-ac3e-38b8ce022c6e",
+			"id": "db978825-1e10-4825-b9b2-a5382567960a",
 			"key": "env_url1",
 			"value": "http://localhost:3000",
 			"type": "string"
