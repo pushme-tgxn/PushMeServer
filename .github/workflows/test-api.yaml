@@ -25,6 +25,6 @@ jobs:
 
       - name: Run API tests
         run: |
-          postman collection run "${{ github.workspace }}/.postman/api/PushMe.json" --environment ./postman-env.json
-
+          postman collection run "${{ github.workspace }}/postman/collections/PushMe.json" --environment ./postman-env.json
+          
  
