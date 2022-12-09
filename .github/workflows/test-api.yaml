@@ -1,0 +1,30 @@
+name: Automated API tests using Postman CLI
+
+on: push
+
+jobs:
+  automated-api-tests:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+
+      - name: Create Postman Test JSON
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "postman-env.json"
+          json: '{"email":"test@tgxn.net", "password":"${{ secrets.TEST_PASSWORD }}"}'
+
+      - name: Run API tests
+        run: |
+          postman collection run "${{ github.workspace }}/.postman/api/PushMe.json" --environment ./postman-env.json
+
+ 
