@@ -1,0 +1,1454 @@
+{
+	"info": {
+		"_postman_id": "5578f1c7-59c0-485b-acf5-af9aa0d1ca76",
+		"name": "PushMe",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "5262446-5578f1c7-59c0-485b-acf5-af9aa0d1ca76"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "AuthEmail",
+					"item": [
+						{
+							"name": "Register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d0d1808d-2623-435d-9da5-7170b5e93faa",
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"",
+											"pm.test(\"response should be json\", () => {",
+											"    pm.response.to.not.be.error;",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"",
+											"pm.test(\"result returned\", function () {",
+											"    pm.expect(jsonData.result.result).to.deep.equal(true);",
+											"});",
+											"",
+											"pm.test(\"correct user returned\", function () {",
+											"    if(jsonData.success) {",
+											"        pm.expect(jsonData.user.username).to.deep.equal(\"tgxn\");",
+											"        pm.response.to.have.status(200);",
+											"    } else {",
+											"        pm.expect(jsonData.message).to.deep.equal(\"Username or email is already taken\");",
+											"        pm.response.to.have.status(400);",
+											"    }",
+											"    ",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "b8e481a2-d524-4364-a9c7-e82307de5200",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@tgxn.net\",\r\n    \"password\": \"lol\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/auth/email/register",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"auth",
+										"email",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "26a417cd-82ee-40a9-b249-7676a33d9231",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"pm.collectionVariables.set(\"jwtToken\", jsonData.user.token);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "6e7bdb8d-24c9-429f-9d3e-211efda19587",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@tgxn.net\",\r\n    \"password\": \"lol\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/auth/email/login",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"auth",
+										"email",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4db26f04-0d1c-4e91-bbfd-fc1edbf1754e",
+										"exec": [
+											"// var jsonData = JSON.parse(responseBody);",
+											"",
+											"// pm.collectionVariables.set(\"jwtToken\", jsonData.user.token);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "5801b326-cbe1-410e-8a90-c4dd1692e270",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@tgxn.net\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/auth/email/email",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"auth",
+										"email",
+										"email"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4c7f9a8f-2dff-4930-b5bb-4a50f1be7602",
+										"exec": [
+											"// var jsonData = JSON.parse(responseBody);",
+											"",
+											"// pm.collectionVariables.set(\"jwtToken\", jsonData.user.token);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "e740c8fb-b982-4895-b194-a9d4ad95664c",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"lol\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/auth/email/password",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"auth",
+										"email",
+										"password"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "413532cb-54e1-44c9-a833-bb68415a60a4"
+				},
+				{
+					"name": "Current User",
+					"id": "9f09a19f-2b04-4b6d-a77c-f0e5d48e04bd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{env_url}}/user",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Push History",
+					"id": "71fb39c3-8429-4949-ab1a-53dd43af77fb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{env_url}}/user/history",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"user",
+								"history"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "578cfe36-9bf6-425e-abde-db65aacd75e8"
+		},
+		{
+			"name": "Device",
+			"item": [
+				{
+					"name": "List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6687f96b-1c38-437c-ad59-3aed808c50e2",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"// pm.test(\"response should be json\", () => {",
+									"//     pm.response.to.not.be.error;",
+									"//     pm.response.to.be.withBody;",
+									"//     pm.response.to.be.json;",
+									"// });",
+									"",
+									"pm.collectionVariables.set(\"deviceId\", jsonData.devices[0].id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "1707c623-c9a1-4de2-90f4-e148dec1da80",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{env_url}}/device",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"device"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f2ac4cc2-d478-458e-b318-5a5cb9e11f57",
+								"exec": [
+									"// var jsonData = pm.response.json();",
+									"",
+									"// pm.test(\"response should be json\", () => {",
+									"//     pm.response.to.not.be.error;",
+									"//     pm.response.to.be.withBody;",
+									"//     pm.response.to.be.json;",
+									"// });",
+									"",
+									"// pm.collectionVariables.set(\"webhookSecret\", jsonData[0].webhooks[0].secretKey);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "b4d07bdc-6ca2-47fa-8c72-698c2ca04ccb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{env_url}}/device/{{deviceId}}",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"device",
+								"{{deviceId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "9dded4b8-4cd0-4c66-9c77-7992789439e5"
+		},
+		{
+			"name": "Topic",
+			"item": [
+				{
+					"name": "Create Topic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ca2ea0ba-467d-4201-8173-4def39472058",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.collectionVariables.set(\"topicSecret\", jsonData.topic.secretKey);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "b71b8511-4f36-443e-a791-dc0fd983ed89",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"deviceIds\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env_url}}/topic",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"topic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Topics",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7060990-a558-4dd9-9ef8-fc9d7572da52",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.collectionVariables.set(\"topicKey\", jsonData.topics[0].topicKey);\r",
+									"pm.collectionVariables.set(\"topicSecret\", jsonData.topics[0].secretKey);\r",
+									"pm.collectionVariables.set(\"topicId\", jsonData.topics[0].id);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "090691bd-d7e8-4bf1-aefe-c955499495f9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env_url}}/topic",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"topic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Topic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e608609-ae18-42cc-9237-843d9eff8f5b",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.collectionVariables.set(\"topicKey\", jsonData.topic.topicKey);\r",
+									"pm.collectionVariables.set(\"topicSecret\", jsonData.topic.secretKey);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "f28c39f8-5257-4fd8-8cf6-07241ef20255",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env_url}}/topic/{{topicId}}",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"topic",
+								"{{topicId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Topic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9ec1d1bc-0971-488d-bb39-f62bd954ad7e",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "a29b19e4-1e5c-42ef-aed3-5c73b6e016f7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"deviceIds\": [1],\r\n    \"name\": \"testing\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env_url}}/topic/{{topicId}}",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"topic",
+								"{{topicId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Topic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa5953c6-17e2-4927-848e-616517e64112",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "23ce0a15-cbb9-48cd-96b6-1254652dc65a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{env_url}}/topic/{{topicId}}",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"topic",
+								"{{topicId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "71374e49-f3f3-4831-add7-78f16adc6f2e"
+		},
+		{
+			"name": "Push",
+			"item": [
+				{
+					"name": "DuoAPI",
+					"item": [
+						{
+							"name": "Check Ping",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "bc7a6a73-1045-4324-ad24-9a4a5ef9c30f",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "6c767806-f1dd-4a7e-97a9-a76ca8267a6d",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/auth/v2/ping",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"auth",
+										"v2",
+										"ping"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "af91929d-2b8e-4be5-8c8e-a01ac1fa249f",
+									"name": "Push To Webhook",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{env_url}}/webhook/push/{{webhookSecret}}",
+											"host": [
+												"{{env_url}}"
+											],
+											"path": [
+												"webhook",
+												"push",
+												"{{webhookSecret}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Length",
+											"value": "298"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 16 Sep 2021 14:07:44 GMT"
+										},
+										{
+											"key": "Etag",
+											"value": "W/\"12a-GCKy9fa16Rgv5HJNd/F2Pe/wCSI\""
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"createRequest\": {\n        \"id\": 14,\n        \"webhookId\": 4,\n        \"webhookRequest\": \"{\\\"title\\\":\\\"big test\\\",\\\"description\\\":\\\"testing testing testing!!! 123\\\"}\",\n        \"updatedAt\": \"2021-09-16T14:07:33.939Z\",\n        \"createdAt\": \"2021-09-16T14:07:33.939Z\"\n    },\n    \"requested\": {\n        \"cb87576f-e91f-47e3-97d4-c6969b400542\": {\n            \"status\": \"ok\"\n        }\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Duo PreAuth",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "09521e10-95d7-4f5a-a473-689ecdd88f1c",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"pm.collectionVariables.set(\"duoDeviceKey\", jsonData.response.devices[0].device);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "c63354ca-2887-4565-8782-c831cd922b17",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{topicSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{topicKey}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/auth/v2/preauth",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"auth",
+										"v2",
+										"preauth"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "c088ed95-9816-469a-be1f-6b0adb5c070e",
+									"name": "Push To Webhook",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{env_url}}/webhook/push/{{webhookSecret}}",
+											"host": [
+												"{{env_url}}"
+											],
+											"path": [
+												"webhook",
+												"push",
+												"{{webhookSecret}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Length",
+											"value": "298"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 16 Sep 2021 14:07:44 GMT"
+										},
+										{
+											"key": "Etag",
+											"value": "W/\"12a-GCKy9fa16Rgv5HJNd/F2Pe/wCSI\""
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"createRequest\": {\n        \"id\": 14,\n        \"webhookId\": 4,\n        \"webhookRequest\": \"{\\\"title\\\":\\\"big test\\\",\\\"description\\\":\\\"testing testing testing!!! 123\\\"}\",\n        \"updatedAt\": \"2021-09-16T14:07:33.939Z\",\n        \"createdAt\": \"2021-09-16T14:07:33.939Z\"\n    },\n    \"requested\": {\n        \"cb87576f-e91f-47e3-97d4-c6969b400542\": {\n            \"status\": \"ok\"\n        }\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Duo Auth",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "85716a94-96ab-4c4f-b829-a5fa3ba96ba8",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "6c856587-3e1f-414b-9748-b1c7921d8305",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{topicSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{topicKey}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"device\": \"{{duoDeviceKey}}\",\r\n    \"username\": \"tgxn\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/auth/v2/auth",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"auth",
+										"v2",
+										"auth"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "4a2a6324-3443-4ca7-8120-40d0a037e6fd",
+									"name": "Push To Webhook",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{env_url}}/webhook/push/{{webhookSecret}}",
+											"host": [
+												"{{env_url}}"
+											],
+											"path": [
+												"webhook",
+												"push",
+												"{{webhookSecret}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Length",
+											"value": "298"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 16 Sep 2021 14:07:44 GMT"
+										},
+										{
+											"key": "Etag",
+											"value": "W/\"12a-GCKy9fa16Rgv5HJNd/F2Pe/wCSI\""
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"createRequest\": {\n        \"id\": 14,\n        \"webhookId\": 4,\n        \"webhookRequest\": \"{\\\"title\\\":\\\"big test\\\",\\\"description\\\":\\\"testing testing testing!!! 123\\\"}\",\n        \"updatedAt\": \"2021-09-16T14:07:33.939Z\",\n        \"createdAt\": \"2021-09-16T14:07:33.939Z\"\n    },\n    \"requested\": {\n        \"cb87576f-e91f-47e3-97d4-c6969b400542\": {\n            \"status\": \"ok\"\n        }\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Duo Auth Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5fd4d6cd-40c5-4cbb-b53f-8516480328c5",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "96bf139f-1d27-4aeb-a0a3-9edaacc7c574",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{topicSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{topicKey}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/auth/v2/auth_status",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"auth",
+										"v2",
+										"auth_status"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "e5438674-b46c-4374-9171-28f07ae2c7b2",
+									"name": "Push To Webhook",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{env_url}}/webhook/push/{{webhookSecret}}",
+											"host": [
+												"{{env_url}}"
+											],
+											"path": [
+												"webhook",
+												"push",
+												"{{webhookSecret}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Length",
+											"value": "298"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 16 Sep 2021 14:07:44 GMT"
+										},
+										{
+											"key": "Etag",
+											"value": "W/\"12a-GCKy9fa16Rgv5HJNd/F2Pe/wCSI\""
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"createRequest\": {\n        \"id\": 14,\n        \"webhookId\": 4,\n        \"webhookRequest\": \"{\\\"title\\\":\\\"big test\\\",\\\"description\\\":\\\"testing testing testing!!! 123\\\"}\",\n        \"updatedAt\": \"2021-09-16T14:07:33.939Z\",\n        \"createdAt\": \"2021-09-16T14:07:33.939Z\"\n    },\n    \"requested\": {\n        \"cb87576f-e91f-47e3-97d4-c6969b400542\": {\n            \"status\": \"ok\"\n        }\n    }\n}"
+								}
+							]
+						}
+					],
+					"id": "b98a9b94-76c1-49b9-91b9-259c3df9a698"
+				},
+				{
+					"name": "Push To Webhook Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9132500e-e16d-4f80-b9f4-67b45fa27ae6",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "02bb7b1a-362e-41df-b055-0458b0b38c5d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env_url}}/push/{{topicSecret}}",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"push",
+								"{{topicSecret}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "650ae578-c6ca-448f-88ec-e9444d12a0a7",
+							"name": "Push To Webhook",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/webhook/push/{{webhookSecret}}",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"webhook",
+										"push",
+										"{{webhookSecret}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Length",
+									"value": "298"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 16 Sep 2021 14:07:44 GMT"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"12a-GCKy9fa16Rgv5HJNd/F2Pe/wCSI\""
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"createRequest\": {\n        \"id\": 14,\n        \"webhookId\": 4,\n        \"webhookRequest\": \"{\\\"title\\\":\\\"big test\\\",\\\"description\\\":\\\"testing testing testing!!! 123\\\"}\",\n        \"updatedAt\": \"2021-09-16T14:07:33.939Z\",\n        \"createdAt\": \"2021-09-16T14:07:33.939Z\"\n    },\n    \"requested\": {\n        \"cb87576f-e91f-47e3-97d4-c6969b400542\": {\n            \"status\": \"ok\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Push To Webhook Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "daed66ff-e429-41b4-bf69-2e2493cdcc39",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "d2b4c37f-f3f1-422f-a801-89c0bd3eb607",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{env_url}}/push/0222edd0-930e-4368-998d-014e0bc5b5ef/status",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"push",
+								"0222edd0-930e-4368-998d-014e0bc5b5ef",
+								"status"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "2850ab73-285b-4447-900d-6716887443e2",
+							"name": "Push To Webhook",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/webhook/push/{{webhookSecret}}",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"webhook",
+										"push",
+										"{{webhookSecret}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Length",
+									"value": "298"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 16 Sep 2021 14:07:44 GMT"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"12a-GCKy9fa16Rgv5HJNd/F2Pe/wCSI\""
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"createRequest\": {\n        \"id\": 14,\n        \"webhookId\": 4,\n        \"webhookRequest\": \"{\\\"title\\\":\\\"big test\\\",\\\"description\\\":\\\"testing testing testing!!! 123\\\"}\",\n        \"updatedAt\": \"2021-09-16T14:07:33.939Z\",\n        \"createdAt\": \"2021-09-16T14:07:33.939Z\"\n    },\n    \"requested\": {\n        \"cb87576f-e91f-47e3-97d4-c6969b400542\": {\n            \"status\": \"ok\"\n        }\n    }\n}"
+						}
+					]
+				}
+			],
+			"id": "b985543d-a5f3-4d19-b652-6c68b41f307f"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "6f3c0f3d-9adc-4b46-a7ac-43d5c0f01b89",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6948b80d-0032-4642-bae0-e296dc65cc85",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "d87ae6a0-322b-413d-988d-2a46c2923657",
+			"key": "env_url",
+			"value": "https://pushme.tgxn.net"
+		},
+		{
+			"id": "8dcfde4c-485e-4aae-94c2-82f4e8bd01bb",
+			"key": "jwtToken",
+			"value": "{{access_token}}"
+		},
+		{
+			"id": "0d981b3f-bd61-44ea-988f-3097584e13a4",
+			"key": "webhookSecret",
+			"value": ""
+		},
+		{
+			"id": "0de521fb-0f39-485b-a4a7-17d86cac6d16",
+			"key": "topicSecret",
+			"value": ""
+		},
+		{
+			"id": "2af9108c-b8ca-4970-84e2-f3b31e6b7d2e",
+			"key": "deviceId",
+			"value": ""
+		},
+		{
+			"id": "33df1f96-c93b-4834-9b1b-afcd80ed2f1a",
+			"key": "topicId",
+			"value": ""
+		},
+		{
+			"id": "09dffc67-8850-40f8-b073-88677d010978",
+			"key": "topicKey",
+			"value": ""
+		},
+		{
+			"id": "869fe21e-2eec-47bb-8e26-879c584627fb",
+			"key": "duoDeviceKey",
+			"value": ""
+		},
+		{
+			"id": "6661b47f-475a-455b-9e92-ea35f5b0b36e",
+			"key": "env_url1",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
