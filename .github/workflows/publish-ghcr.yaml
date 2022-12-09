@@ -2,7 +2,7 @@ name: Create Release to GitHub Container Registry
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   REGISTRY: ghcr.io
