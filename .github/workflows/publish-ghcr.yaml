@@ -2,14 +2,14 @@ name: Create Release to GitHub Container Registry
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: pushme-tgxn/pushme
 
 jobs:
-  build-and-push-image:
+  build-and-publish-ghcr:
     runs-on: ubuntu-latest
     permissions:
       contents: read
