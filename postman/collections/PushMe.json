@@ -846,61 +846,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Delete Topic",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "aa5953c6-17e2-4927-848e-616517e64112",
-								"exec": [
-									"pm.test(\"response should be json\", () => {\r",
-									"    pm.response.to.not.be.error;\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"var jsonData = pm.response.json();\r",
-									"\r",
-									"pm.test(\"success returned\", function () {\r",
-									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"id": "23ce0a15-cbb9-48cd-96b6-1254652dc65a",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwtToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{env_url}}/topic/{{topicId}}",
-							"host": [
-								"{{env_url}}"
-							],
-							"path": [
-								"topic",
-								"{{topicId}}"
-							]
-						}
-					},
-					"response": []
 				}
 			],
 			"id": "71374e49-f3f3-4831-add7-78f16adc6f2e"
@@ -1160,19 +1105,29 @@
 									"script": {
 										"id": "09521e10-95d7-4f5a-a473-689ecdd88f1c",
 										"exec": [
-											"pm.test(\"response should be json\", () => {\r",
-											"    pm.response.to.not.be.error;\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
+											"// pm.test(\"response should be json\", () => {\r",
+											"//     pm.response.to.not.be.error;\r",
+											"//     pm.response.to.be.withBody;\r",
+											"//     pm.response.to.be.json;\r",
+											"// });\r",
 											"\r",
-											"var jsonData = pm.response.json();\r",
+											"// var jsonData = pm.response.json();\r",
 											"\r",
-											"pm.test(\"OK returned\", function () {\r",
-											"    pm.expect(jsonData.stat).to.deep.equal(\"OK\");\r",
-											"});\r",
+											"// pm.test(\"OK returned\", function () {\r",
+											"//     pm.expect(jsonData.stat).to.deep.equal(\"OK\");\r",
+											"// });\r",
 											"\r",
-											"pm.collectionVariables.set(\"duoDeviceKey\", jsonData.response.devices[0].device);\r",
+											"// pm.collectionVariables.set(\"duoDeviceKey\", jsonData.response.devices[0].device);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "7c2d9b0e-9bf6-4f62-ba68-4bd5e08e1071",
+										"exec": [
 											""
 										],
 										"type": "text/javascript"
@@ -1527,6 +1482,122 @@
 				}
 			],
 			"id": "b985543d-a5f3-4d19-b652-6c68b41f307f"
+		},
+		{
+			"name": "Clean Up",
+			"item": [
+				{
+					"name": "Delete Topic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa5953c6-17e2-4927-848e-616517e64112",
+								"exec": [
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "23ce0a15-cbb9-48cd-96b6-1254652dc65a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{env_url}}/topic/{{topicId}}",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"topic",
+								"{{topicId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa5953c6-17e2-4927-848e-616517e64112",
+								"exec": [
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "ebe8043b-e0c5-46b9-bddc-9f300dba5bbe",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{env_url}}/device/{{deviceId}}",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"device",
+								"{{deviceId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "6ff6c523-ca50-4274-b484-4f4a5ba42695"
 		}
 	],
 	"event": [
@@ -1553,47 +1624,47 @@
 	],
 	"variable": [
 		{
-			"id": "478f24f4-b2b5-4cb0-81b1-929344e55136",
+			"id": "e4476ba4-64da-47e4-b57f-7c3b96a01560",
 			"key": "env_url",
 			"value": "https://pushme.tgxn.net"
 		},
 		{
-			"id": "0208c2cb-49b6-4d5a-8735-84455743f610",
+			"id": "3edb4e8a-f511-49c0-bcff-f2b0da67a485",
 			"key": "jwtToken",
 			"value": "{{access_token}}"
 		},
 		{
-			"id": "fdfe86d3-095d-47eb-aaef-97897e6364c1",
+			"id": "49149408-b93c-40b6-99e1-24ca52eabf5d",
 			"key": "webhookSecret",
 			"value": ""
 		},
 		{
-			"id": "9957e4f5-d10f-4a8c-8107-694cb940fdc4",
+			"id": "9774c9ec-9de3-45db-a0dd-6147819176d9",
 			"key": "topicSecret",
 			"value": ""
 		},
 		{
-			"id": "653632ab-b1b3-449c-954b-7f7a92cd4f65",
+			"id": "bfdf332a-a2d4-42dd-9974-abe9edec8c6f",
 			"key": "deviceId",
 			"value": ""
 		},
 		{
-			"id": "fcd2168e-5b31-497b-8ee0-87eb2e9a372d",
+			"id": "65be9b45-ff84-4422-bfe9-9ca61a7fae66",
 			"key": "topicId",
 			"value": ""
 		},
 		{
-			"id": "32a1ad96-a14b-4359-bb7c-01c7c9ba6a86",
+			"id": "e7e4d195-edd2-4f94-9c3d-97f179ecaa06",
 			"key": "topicKey",
 			"value": ""
 		},
 		{
-			"id": "e4e1dab9-65d6-4158-8bd8-8a6492fef8aa",
+			"id": "546a2dd0-6851-4195-a938-317d899a6603",
 			"key": "duoDeviceKey",
 			"value": ""
 		},
 		{
-			"id": "db978825-1e10-4825-b9b2-a5382567960a",
+			"id": "b1d5e096-c6e2-4e68-964e-958b4cab793c",
 			"key": "env_url1",
 			"value": "http://localhost:3000",
 			"type": "string"
