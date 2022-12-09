@@ -6,7 +6,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: tgxn/pushme
+  IMAGE_NAME: pushme-tgxn/pushme
 
 jobs:
   build-and-push-image:
