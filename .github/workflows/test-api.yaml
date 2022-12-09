@@ -2,7 +2,7 @@ name: Automated API tests using Postman CLI
 on: push
 
 jobs:
-  automated-api-tests:
+  test-api:
     runs-on: ubuntu-latest
     steps:
 

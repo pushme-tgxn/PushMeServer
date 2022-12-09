@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: pushme-tgxn/pushme
 
 jobs:
-  build-and-push-image:
+  build-and-publish-ghcr:
     runs-on: ubuntu-latest
     permissions:
       contents: read
