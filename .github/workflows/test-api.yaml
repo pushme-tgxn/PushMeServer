@@ -16,15 +16,6 @@ jobs:
       - name: Login to Postman CLI
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
 
-      - name: Create Postman Test JSON
-        id: create-json
-        uses: jsdaniell/create-json@v1.2.2
-        with:
-          name: "postman-env.json"
-          json: '{"password":"${{ secrets.TEST_PASSWORD }}"}'
-
       - name: Run API tests
         run: |
-          postman collection run "${{ github.workspace }}/postman/collections/PushMe.json" --environment ./postman-env.json
-          
- 
+          postman collection run "${{ github.workspace }}/postman/collections/PushMe.json"
