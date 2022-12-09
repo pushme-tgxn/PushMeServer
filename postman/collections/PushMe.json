@@ -49,8 +49,10 @@
 										"id": "ee076525-188a-45a4-9b38-f47185f098ba",
 										"exec": [
 											"var email = pm.variables.replaceIn('{{$randomEmail}}')\r",
-											"\r",
 											"pm.globals.set(\"email\", email);\r",
+											"\r",
+											"var password = pm.variables.replaceIn('{{$randomPas}}')\r",
+											"pm.globals.set(\"password\", password);\r",
 											""
 										],
 										"type": "text/javascript"
