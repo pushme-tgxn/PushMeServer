@@ -20,27 +20,23 @@
 									"script": {
 										"id": "d0d1808d-2623-435d-9da5-7170b5e93faa",
 										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
 											"pm.test(\"response should be json\", () => {",
 											"    pm.response.to.not.be.error;",
 											"    pm.response.to.be.withBody;",
 											"    pm.response.to.be.json;",
 											"});",
 											"",
-											"pm.test(\"result returned\", function () {",
-											"    pm.expect(jsonData.result.result).to.deep.equal(true);",
+											"var jsonData = pm.response.json();",
+											"",
+											"pm.test(\"success returned\", function () {",
+											"    pm.expect(jsonData.success).to.deep.equal(true);",
 											"});",
 											"",
 											"pm.test(\"correct user returned\", function () {",
 											"    if(jsonData.success) {",
-											"        pm.expect(jsonData.user.username).to.deep.equal(\"tgxn\");",
+											"        pm.expect(jsonData.user.id).to.exist.and.be.a(\"number\")",
 											"        pm.response.to.have.status(200);",
-											"    } else {",
-											"        pm.expect(jsonData.message).to.deep.equal(\"Username or email is already taken\");",
-											"        pm.response.to.have.status(400);",
 											"    }",
-											"    ",
 											"});",
 											""
 										],
@@ -60,7 +56,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"test@tgxn.net\",\r\n    \"password\": \"lol\"\r\n}",
+									"raw": "{\r\n    \"email\": \"new-{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -89,8 +85,23 @@
 									"script": {
 										"id": "26a417cd-82ee-40a9-b249-7676a33d9231",
 										"exec": [
-											"var jsonData = JSON.parse(responseBody);",
+											"pm.test(\"response should be json\", () => {",
+											"    pm.response.to.not.be.error;",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
 											"",
+											"var jsonData = pm.response.json();",
+											"",
+											"pm.test(\"success returned\", function () {",
+											"    pm.expect(jsonData.success).to.deep.equal(true);",
+											"});",
+											"",
+											"pm.test(\"jsonData.user.token returned\", function () {",
+											"    pm.expect(jsonData.user.token).to.exist.and.be.a(\"string\");",
+											"});",
+											"",
+											"// set auth variable",
 											"pm.collectionVariables.set(\"jwtToken\", jsonData.user.token);",
 											""
 										],
@@ -110,7 +121,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"test@tgxn.net\",\r\n    \"password\": \"lol\"\r\n}",
+									"raw": "{\r\n    \"email\": \"new-{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -139,9 +150,17 @@
 									"script": {
 										"id": "4db26f04-0d1c-4e91-bbfd-fc1edbf1754e",
 										"exec": [
-											"// var jsonData = JSON.parse(responseBody);",
+											"pm.test(\"response should be json\", () => {",
+											"    pm.response.to.not.be.error;",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
 											"",
-											"// pm.collectionVariables.set(\"jwtToken\", jsonData.user.token);",
+											"var jsonData = pm.response.json();",
+											"",
+											"pm.test(\"success returned\", function () {",
+											"    pm.expect(jsonData.success).to.deep.equal(true);",
+											"});",
 											""
 										],
 										"type": "text/javascript"
@@ -167,7 +186,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"test@tgxn.net\"\r\n}",
+									"raw": "{\r\n    \"email\": \"changed-{{email}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -196,9 +215,17 @@
 									"script": {
 										"id": "4c7f9a8f-2dff-4930-b5bb-4a50f1be7602",
 										"exec": [
-											"// var jsonData = JSON.parse(responseBody);",
+											"pm.test(\"response should be json\", () => {",
+											"    pm.response.to.not.be.error;",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
 											"",
-											"// pm.collectionVariables.set(\"jwtToken\", jsonData.user.token);",
+											"var jsonData = pm.response.json();",
+											"",
+											"pm.test(\"success returned\", function () {",
+											"    pm.expect(jsonData.success).to.deep.equal(true);",
+											"});",
 											""
 										],
 										"type": "text/javascript"
@@ -250,6 +277,29 @@
 				},
 				{
 					"name": "Current User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d8ef157f-4fee-424d-b528-ea570cb46756",
+								"exec": [
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"id": "9f09a19f-2b04-4b6d-a77c-f0e5d48e04bd",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -281,6 +331,29 @@
 				},
 				{
 					"name": "User Push History",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dfa359ae-cfa9-4ea0-a1b8-d01d647239f2",
+								"exec": [
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"id": "71fb39c3-8429-4949-ab1a-53dd43af77fb",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -318,21 +391,92 @@
 			"name": "Device",
 			"item": [
 				{
-					"name": "List",
+					"name": "Create Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f2ac4cc2-d478-458e-b318-5a5cb9e11f57",
+								"exec": [
+									"pm.test(\"response should be json\", () => {",
+									"    pm.response.to.not.be.error;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"success returned\", function () {",
+									"    pm.expect(jsonData.success).to.deep.equal(true);",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"deviceId\", jsonData.device.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "173347fb-47ea-4f65-a3e1-a47853886550",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"ExponentPushToken[{{$randomLoremSlug}}]\",\r\n    \"name\": \"TestingFakeDevice\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env_url}}/device/create",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"device",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Devices",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"id": "6687f96b-1c38-437c-ad59-3aed808c50e2",
 								"exec": [
+									"pm.test(\"response should be json\", () => {",
+									"    pm.response.to.not.be.error;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
 									"var jsonData = pm.response.json();",
 									"",
-									"// pm.test(\"response should be json\", () => {",
-									"//     pm.response.to.not.be.error;",
-									"//     pm.response.to.be.withBody;",
-									"//     pm.response.to.be.json;",
-									"// });",
+									"pm.test(\"success returned\", function () {",
+									"    pm.expect(jsonData.success).to.deep.equal(true);",
+									"});",
 									"",
+									"// probs wont have deviceid",
 									"pm.collectionVariables.set(\"deviceId\", jsonData.devices[0].id);",
 									""
 								],
@@ -377,15 +521,17 @@
 							"script": {
 								"id": "f2ac4cc2-d478-458e-b318-5a5cb9e11f57",
 								"exec": [
-									"// var jsonData = pm.response.json();",
+									"pm.test(\"response should be json\", () => {",
+									"    pm.response.to.not.be.error;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
 									"",
-									"// pm.test(\"response should be json\", () => {",
-									"//     pm.response.to.not.be.error;",
-									"//     pm.response.to.be.withBody;",
-									"//     pm.response.to.be.json;",
-									"// });",
+									"var jsonData = pm.response.json();",
 									"",
-									"// pm.collectionVariables.set(\"webhookSecret\", jsonData[0].webhooks[0].secretKey);",
+									"pm.test(\"success returned\", function () {",
+									"    pm.expect(jsonData.success).to.deep.equal(true);",
+									"});",
 									""
 								],
 								"type": "text/javascript"
@@ -436,9 +582,21 @@
 							"script": {
 								"id": "ca2ea0ba-467d-4201-8173-4def39472058",
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
 									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"topicKey\", jsonData.topic.topicKey);\r",
 									"pm.collectionVariables.set(\"topicSecret\", jsonData.topic.secretKey);\r",
+									"pm.collectionVariables.set(\"topicId\", jsonData.topic.id);\r",
 									""
 								],
 								"type": "text/javascript"
@@ -491,11 +649,17 @@
 							"script": {
 								"id": "f7060990-a558-4dd9-9ef8-fc9d7572da52",
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
 									"\r",
-									"pm.collectionVariables.set(\"topicKey\", jsonData.topics[0].topicKey);\r",
-									"pm.collectionVariables.set(\"topicSecret\", jsonData.topics[0].secretKey);\r",
-									"pm.collectionVariables.set(\"topicId\", jsonData.topics[0].id);\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript"
@@ -548,10 +712,17 @@
 							"script": {
 								"id": "5e608609-ae18-42cc-9237-843d9eff8f5b",
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
 									"\r",
-									"pm.collectionVariables.set(\"topicKey\", jsonData.topic.topicKey);\r",
-									"pm.collectionVariables.set(\"topicSecret\", jsonData.topic.secretKey);\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript"
@@ -605,6 +776,17 @@
 							"script": {
 								"id": "9ec1d1bc-0971-488d-bb39-f62bd954ad7e",
 								"exec": [
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript"
@@ -630,7 +812,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"deviceIds\": [1],\r\n    \"name\": \"testing\"\r\n}",
+							"raw": "{\r\n    \"deviceIds\": [{{deviceId}}],\r\n    \"name\": \"testing\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -658,6 +840,17 @@
 							"script": {
 								"id": "aa5953c6-17e2-4927-848e-616517e64112",
 								"exec": [
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript"
@@ -701,6 +894,129 @@
 			"name": "Push",
 			"item": [
 				{
+					"name": "Webhook",
+					"item": [
+						{
+							"name": "Push To Webhook",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9132500e-e16d-4f80-b9f4-67b45fa27ae6",
+										"exec": [
+											"pm.test(\"response should be json\", () => {\r",
+											"    pm.response.to.not.be.error;\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"success returned\", function () {\r",
+											"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "02bb7b1a-362e-41df-b055-0458b0b38c5d",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/push/{{topicSecret}}",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"push",
+										"{{topicSecret}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "650ae578-c6ca-448f-88ec-e9444d12a0a7",
+									"name": "Push To Webhook",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{env_url}}/webhook/push/{{webhookSecret}}",
+											"host": [
+												"{{env_url}}"
+											],
+											"path": [
+												"webhook",
+												"push",
+												"{{webhookSecret}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Length",
+											"value": "298"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 16 Sep 2021 14:07:44 GMT"
+										},
+										{
+											"key": "Etag",
+											"value": "W/\"12a-GCKy9fa16Rgv5HJNd/F2Pe/wCSI\""
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"createRequest\": {\n        \"id\": 14,\n        \"webhookId\": 4,\n        \"webhookRequest\": \"{\\\"title\\\":\\\"big test\\\",\\\"description\\\":\\\"testing testing testing!!! 123\\\"}\",\n        \"updatedAt\": \"2021-09-16T14:07:33.939Z\",\n        \"createdAt\": \"2021-09-16T14:07:33.939Z\"\n    },\n    \"requested\": {\n        \"cb87576f-e91f-47e3-97d4-c6969b400542\": {\n            \"status\": \"ok\"\n        }\n    }\n}"
+								}
+							]
+						}
+					],
+					"id": "783519ad-2bdf-46d3-9d58-47bb92db1ba8"
+				},
+				{
 					"name": "DuoAPI",
 					"item": [
 						{
@@ -711,6 +1027,17 @@
 									"script": {
 										"id": "bc7a6a73-1045-4324-ad24-9a4a5ef9c30f",
 										"exec": [
+											"pm.test(\"response should be json\", () => {\r",
+											"    pm.response.to.not.be.error;\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"OK returned\", function () {\r",
+											"    pm.expect(jsonData.stat).to.deep.equal(\"OK\");\r",
+											"});\r",
 											""
 										],
 										"type": "text/javascript"
@@ -818,7 +1145,17 @@
 									"script": {
 										"id": "09521e10-95d7-4f5a-a473-689ecdd88f1c",
 										"exec": [
-											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.test(\"response should be json\", () => {\r",
+											"    pm.response.to.not.be.error;\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"OK returned\", function () {\r",
+											"    pm.expect(jsonData.stat).to.deep.equal(\"OK\");\r",
+											"});\r",
 											"\r",
 											"pm.collectionVariables.set(\"duoDeviceKey\", jsonData.response.devices[0].device);\r",
 											""
@@ -1172,210 +1509,6 @@
 						}
 					],
 					"id": "b98a9b94-76c1-49b9-91b9-259c3df9a698"
-				},
-				{
-					"name": "Push To Webhook Copy",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "9132500e-e16d-4f80-b9f4-67b45fa27ae6",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"id": "02bb7b1a-362e-41df-b055-0458b0b38c5d",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{env_url}}/push/{{topicSecret}}",
-							"host": [
-								"{{env_url}}"
-							],
-							"path": [
-								"push",
-								"{{topicSecret}}"
-							]
-						}
-					},
-					"response": [
-						{
-							"id": "650ae578-c6ca-448f-88ec-e9444d12a0a7",
-							"name": "Push To Webhook",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{env_url}}/webhook/push/{{webhookSecret}}",
-									"host": [
-										"{{env_url}}"
-									],
-									"path": [
-										"webhook",
-										"push",
-										"{{webhookSecret}}"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								},
-								{
-									"key": "Content-Length",
-									"value": "298"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Thu, 16 Sep 2021 14:07:44 GMT"
-								},
-								{
-									"key": "Etag",
-									"value": "W/\"12a-GCKy9fa16Rgv5HJNd/F2Pe/wCSI\""
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"success\": true,\n    \"createRequest\": {\n        \"id\": 14,\n        \"webhookId\": 4,\n        \"webhookRequest\": \"{\\\"title\\\":\\\"big test\\\",\\\"description\\\":\\\"testing testing testing!!! 123\\\"}\",\n        \"updatedAt\": \"2021-09-16T14:07:33.939Z\",\n        \"createdAt\": \"2021-09-16T14:07:33.939Z\"\n    },\n    \"requested\": {\n        \"cb87576f-e91f-47e3-97d4-c6969b400542\": {\n            \"status\": \"ok\"\n        }\n    }\n}"
-						}
-					]
-				},
-				{
-					"name": "Push To Webhook Copy",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "daed66ff-e429-41b4-bf69-2e2493cdcc39",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"id": "d2b4c37f-f3f1-422f-a801-89c0bd3eb607",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{env_url}}/push/0222edd0-930e-4368-998d-014e0bc5b5ef/status",
-							"host": [
-								"{{env_url}}"
-							],
-							"path": [
-								"push",
-								"0222edd0-930e-4368-998d-014e0bc5b5ef",
-								"status"
-							]
-						}
-					},
-					"response": [
-						{
-							"id": "2850ab73-285b-4447-900d-6716887443e2",
-							"name": "Push To Webhook",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"title\": \"big test\",\r\n    \"description\": \"testing testing testing!!! 123\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{env_url}}/webhook/push/{{webhookSecret}}",
-									"host": [
-										"{{env_url}}"
-									],
-									"path": [
-										"webhook",
-										"push",
-										"{{webhookSecret}}"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								},
-								{
-									"key": "Content-Length",
-									"value": "298"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Thu, 16 Sep 2021 14:07:44 GMT"
-								},
-								{
-									"key": "Etag",
-									"value": "W/\"12a-GCKy9fa16Rgv5HJNd/F2Pe/wCSI\""
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"success\": true,\n    \"createRequest\": {\n        \"id\": 14,\n        \"webhookId\": 4,\n        \"webhookRequest\": \"{\\\"title\\\":\\\"big test\\\",\\\"description\\\":\\\"testing testing testing!!! 123\\\"}\",\n        \"updatedAt\": \"2021-09-16T14:07:33.939Z\",\n        \"createdAt\": \"2021-09-16T14:07:33.939Z\"\n    },\n    \"requested\": {\n        \"cb87576f-e91f-47e3-97d4-c6969b400542\": {\n            \"status\": \"ok\"\n        }\n    }\n}"
-						}
-					]
 				}
 			],
 			"id": "b985543d-a5f3-4d19-b652-6c68b41f307f"
@@ -1405,47 +1538,47 @@
 	],
 	"variable": [
 		{
-			"id": "d87ae6a0-322b-413d-988d-2a46c2923657",
+			"id": "96004e15-9712-4238-8853-45a129acf291",
 			"key": "env_url",
 			"value": "https://pushme.tgxn.net"
 		},
 		{
-			"id": "8dcfde4c-485e-4aae-94c2-82f4e8bd01bb",
+			"id": "772d2dda-6a89-403b-8db4-a197499485a7",
 			"key": "jwtToken",
 			"value": "{{access_token}}"
 		},
 		{
-			"id": "0d981b3f-bd61-44ea-988f-3097584e13a4",
+			"id": "80c1d505-3175-45c7-9834-36f1363839b7",
 			"key": "webhookSecret",
 			"value": ""
 		},
 		{
-			"id": "0de521fb-0f39-485b-a4a7-17d86cac6d16",
+			"id": "efd41b3a-d599-4829-b903-5ef82a6e084f",
 			"key": "topicSecret",
 			"value": ""
 		},
 		{
-			"id": "2af9108c-b8ca-4970-84e2-f3b31e6b7d2e",
+			"id": "578b6c97-a481-4d70-ac33-7db7c843db4f",
 			"key": "deviceId",
 			"value": ""
 		},
 		{
-			"id": "33df1f96-c93b-4834-9b1b-afcd80ed2f1a",
+			"id": "153c36b9-343b-43ae-95f5-8c6f343548e6",
 			"key": "topicId",
 			"value": ""
 		},
 		{
-			"id": "09dffc67-8850-40f8-b073-88677d010978",
+			"id": "a87f7c7a-b8fc-49b7-b3fb-200f65e27230",
 			"key": "topicKey",
 			"value": ""
 		},
 		{
-			"id": "869fe21e-2eec-47bb-8e26-879c584627fb",
+			"id": "d9f7fa59-ccae-428c-9c6b-300fa408ff28",
 			"key": "duoDeviceKey",
 			"value": ""
 		},
 		{
-			"id": "6661b47f-475a-455b-9e92-ea35f5b0b36e",
+			"id": "1ac4db30-8856-4dfc-ac3e-38b8ce022c6e",
 			"key": "env_url1",
 			"value": "http://localhost:3000",
 			"type": "string"
