@@ -9,6 +9,7 @@ async function loginAuthMethod(method, methodIdent, methodData = {}) {
     nest: true,
   });
 
+  // create google account
   let userRecord, userId;
   if (!userAuthMethod) {
     // throw "Username does not exist";

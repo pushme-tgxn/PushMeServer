@@ -3,38 +3,29 @@ const router = express.Router();
 
 const { google } = require("googleapis");
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const { GOOGLE_CLIENT_ID_WEB } = process.env;
 
-// const { loginAuthMethod } = require("../../service/user");
 const { loginAuthMethod } = require("../../controllers/auth/google");
 
-async function getUserInfoFromAccessToken(accessToken) {
+async function getUserInfoFromIdToken(idToken) {
   const oauth2Client = new google.auth.OAuth2();
-  oauth2Client.setCredentials({ access_token: accessToken });
 
-  const oauth2 = google.oauth2({
-    auth: oauth2Client,
-    version: "v2",
+  const ticket = await oauth2Client.verifyIdToken({
+    idToken: idToken,
+    audience: GOOGLE_CLIENT_ID_WEB,
   });
 
-  const res = await oauth2.userinfo.get();
-
-  console.log(res.data);
-
-  return res.data;
+  return ticket.payload;
 }
 
 router.post("/token", async (request, response, next) => {
   console.log(request.body);
 
-  const googleUserInfo = await getUserInfoFromAccessToken(
-    request.body.accessToken
-  );
+  const googleUserInfo = await getUserInfoFromIdToken(request.body.idToken);
 
   const userLoggedIn = await loginAuthMethod(
     "google",
-    googleUserInfo.id,
+    googleUserInfo.sub,
     googleUserInfo
   );
   if (userLoggedIn) {
