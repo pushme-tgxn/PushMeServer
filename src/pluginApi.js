@@ -22,14 +22,3 @@ async function loadPlugins(router) {
 }
 
 module.exports = loadPlugins;
-
-function addPluginsRecusively(router, plugins) {
-  for (const plugin of plugins) {
-    const pluginPath = `../plugins/${plugin}/index.js`;
-
-    console.error(`Loading plugin: ${pluginPath}`);
-    const pluginRoutes = require(pluginPath);
-
-    router.use(pluginRoutes.routes());
-  }
-}
