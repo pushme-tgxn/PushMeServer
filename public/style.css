@@ -10,6 +10,11 @@ body {
   margin: 2em;
 }
 
+.play-store {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 h1 {
   font-style: bold;
   color: #373fff;
