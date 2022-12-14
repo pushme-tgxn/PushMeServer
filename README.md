@@ -47,3 +47,15 @@ services:
       - "traefik.http.routers.pushme.rule=Host(`pushme.example.org`)"
       - "traefik.http.routers.pushme.entrypoints=http"
 ```
+
+
+# Sequelize Commands
+
+create table
+`npx sequelize-cli model:generate --name Token --attributes token:string,userId:string`
+
+create migration
+`npx sequelize migration:create --name add_push_response`
+
+run all migrations
+`npx sequelize-cli db:migrate`
