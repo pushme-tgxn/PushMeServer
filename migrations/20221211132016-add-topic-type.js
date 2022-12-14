@@ -7,9 +7,14 @@ module.exports = {
       type: Sequelize.STRING,
       defaultValue: "webhook",
     });
+    await queryInterface.addColumn("Topics", "nativeToken", {
+      type: Sequelize.STRING,
+      defaultValue: "webhook",
+    });
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.removeColumn("Topics", "type");
+    await queryInterface.removeColumn("Topics", "nativeToken");
   },
 };
