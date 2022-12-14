@@ -49,6 +49,12 @@ const recordPushResponse = async (request, response) => {
 
   console.log("recordPushResponse push", push);
 
+  if (!push) {
+    return response.json({
+      success: false,
+    });
+  }
+
   const created = await PushResponse.create(
     {
       pushId: push.id,
@@ -79,15 +85,30 @@ const getPushStatus = async (request, response) => {
 
   const push = await getPushByIdent(request.params.pushIdent);
 
+  if (!push) {
+    return response.json({
+      success: false,
+    });
+  }
+
   console.log("getPushStatus push", push);
+
+  const validResponses = push.PushResponses.filter((item) => {
+    return item.serviceResponse !== null;
+  }).sort(function (a, b) {
+    // Turn your strings into dates, and then subtract them
+    // to get a value that is either negative, positive, or zero.
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+
+  const firstValidResponse = validResponses[0];
 
   response.json({
     success: true,
     pushData: JSON.parse(push.pushData),
     serviceRequest: JSON.parse(push.serviceRequest),
-    serviceResponses: JSON.parse(
-      push.PushResponses.map((item) => item.serviceResponse)
-    ),
+    serviceResponses: validResponses,
+    firstValidResponse: JSON.parse(firstValidResponse.serviceResponse),
   });
 };
 

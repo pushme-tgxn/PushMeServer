@@ -52,19 +52,24 @@ router.post("/create", authorize(), async (request, response, next) => {
     });
   }
 
-  const deviceResult = await createDevice({
-    token,
-    name, // include name on create
-    // type,
-    deviceKey,
-    userId: request.user.id,
-    nativeToken: JSON.stringify(nativeToken),
-  });
+  try {
+    const deviceResult = await createDevice({
+      token,
+      name, // include name on create
+      // type,
+      deviceKey,
+      userId: request.user.id,
+      nativeToken: JSON.stringify(nativeToken),
+    });
 
-  response.json({
-    success: true,
-    device: deviceResult,
-  });
+    response.json({
+      success: true,
+      device: deviceResult,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 });
 
 // upsert device
@@ -113,7 +118,27 @@ router.post(
       console.log("nativeToken", nativeTokenData);
 
       if (nativeTokenData.type == "android") {
-        const ddd = await triggerPushSingle(nativeTokenData.data);
+        const message = {
+          token: nativeTokenData.data,
+          android: {
+            priority: "high",
+          },
+          data: {
+            experienceId: "@tgxn/pushme",
+            scopeKey: "@tgxn/pushme",
+            categoryId: "button.approve_deny",
+            title: "📧 You've got mail",
+            message: "Hello world! 🌐",
+            pushId: "111",
+            pushIdent: "abc123",
+            body: JSON.stringify({
+              pushId: "111",
+              pushIdent: "abc123",
+            }),
+          },
+        };
+
+        const ddd = await triggerPushSingle(message);
 
         return response.json({
           success: true,

@@ -3,6 +3,10 @@ const { v4: uuidv4 } = require("uuid");
 const { Push, PushResponse } = require("../../models/index.js");
 
 const { triggerMultiPush, triggerPushSingle } = require("../lib/push");
+const {
+  triggerMultiPushFCM,
+  triggerPushSingleFCM,
+} = require("../lib/push-fcm");
 
 const { getDevice } = require("../controllers/device");
 
@@ -27,15 +31,50 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
   pushPayload.data.pushIdent = createdPush.dataValues.pushIdent;
 
   const deviceTokens = [];
+  const fcmPushMesages = [];
   for (const item in foundTopic.dataValues.devices) {
     const device = foundTopic.dataValues.devices[item];
+
     const tokenData = await getDevice(device.dataValues.id);
     console.log("device", item, tokenData.dataValues.token);
-    deviceTokens.push(tokenData.dataValues.token);
+
+    if (tokenData.dataValues.nativeToken) {
+      const nativeTokenData = JSON.parse(tokenData.dataValues.nativeToken);
+      console.log("nativeToken", nativeTokenData);
+
+      if (nativeTokenData.type == "android") {
+        // nativeTokens.push(nativeTokenData.data);
+
+        fcmPushMesages.push({
+          token: nativeTokenData.data,
+          android: {
+            priority: "high",
+          },
+          data: {
+            experienceId: "@tgxn/pushme",
+            scopeKey: "@tgxn/pushme",
+            categoryId: pushPayload.categoryId,
+            title: pushPayload.title,
+            message: pushPayload.body,
+            body: JSON.stringify({
+              pushId: createdPush.dataValues.id,
+              pushIdent: createdPush.dataValues.pushIdent,
+            }),
+          },
+        });
+      } else {
+        deviceTokens.push(tokenData.dataValues.token);
+      }
+    } else {
+      deviceTokens.push(tokenData.dataValues.token);
+    }
   }
 
   const requested = await triggerMultiPush(deviceTokens, pushPayload);
   console.log("requested", requested);
+
+  const requestedFCM = await triggerMultiPushFCM(fcmPushMesages);
+  console.log("requested FCM", requestedFCM);
 
   await updatePush(createdPush.dataValues.id, {
     pushPayload: JSON.stringify(pushPayload),
@@ -73,6 +112,9 @@ const getPushByIdent = async (pushIdent) => {
   const push = await Push.scope("withResponses").findOne({
     where: { pushIdent },
   });
+  if (!push) {
+    return null;
+  }
   return push.toJSON();
 };
 
