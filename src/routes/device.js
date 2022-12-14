@@ -2,6 +2,8 @@ const express = require("express");
 
 const { authorize } = require("../middleware/authorize");
 
+const { triggerPushSingle } = require("../lib/push-fcm");
+
 const {
   createDevice,
   updateDevice,
@@ -94,6 +96,37 @@ router.post("/:deviceKey", authorize(), async (request, response, next) => {
     device: deviceResult,
   });
 });
+
+router.post(
+  "/:deviceKey/test",
+  authorize(),
+  async (request, response, next) => {
+    const foundDevice = await findDeviceByKey(
+      request.user.id,
+      request.params.deviceKey
+    );
+
+    if (foundDevice) {
+      console.log("foundDevice", foundDevice.nativeToken);
+
+      const nativeTokenData = JSON.parse(foundDevice.nativeToken);
+      console.log("nativeToken", nativeTokenData);
+
+      if (nativeTokenData.type == "android") {
+        const ddd = await triggerPushSingle(nativeTokenData.data);
+
+        return response.json({
+          success: true,
+          response: ddd,
+        });
+      }
+    }
+
+    response.json({
+      success: false,
+    });
+  }
+);
 
 router.post("/:deviceId", authorize(), async (request, response, next) => {
   const { token, name } = request.body;
