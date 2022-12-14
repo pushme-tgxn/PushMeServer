@@ -8,6 +8,7 @@ const {
   listDevices,
   getDevice,
   removeDevice,
+  findDeviceByKey,
   findDeviceByToken,
 } = require("../controllers/device");
 
@@ -38,8 +39,8 @@ router.get("/:deviceId", authorize(), async (request, response) => {
 
 // create device
 router.post("/create", authorize(), async (request, response, next) => {
-  const { token, name } = request.body;
-  console.log(`Received push token, ${token}, ${name}`);
+  const { token, name, deviceKey, nativeToken } = request.body;
+  console.log(`create device push token`, token, name, deviceKey, nativeToken);
 
   const foundDevice = await findDeviceByToken(request.user.id, token);
   if (foundDevice) {
@@ -50,10 +51,14 @@ router.post("/create", authorize(), async (request, response, next) => {
   }
 
   const deviceResult = await createDevice({
-    userId: request.user.id,
     token,
-    name,
+    name, // include name on create
+    type,
+    deviceKey,
+    userId: request.user.id,
+    nativeToken: JSON.stringify(nativeToken),
   });
+
   response.json({
     success: true,
     device: deviceResult,
@@ -61,13 +66,17 @@ router.post("/create", authorize(), async (request, response, next) => {
 });
 
 // upsert device
-router.post("/", authorize(), async (request, response, next) => {
-  const { token, name } = request.body;
-  console.log(`Received push token, ${token}, ${name}`);
+router.post("/:deviceKey", authorize(), async (request, response, next) => {
+  const { name } = request.body;
+  console.log(`upsert device push token`, name);
 
-  const foundDevice = await findDeviceByToken(request.user.id, token);
+  const foundDevice = await findDeviceByKey(
+    request.user.id,
+    request.params.deviceKey
+  );
+
   if (foundDevice) {
-    const deviceResult = await updateDevice({ token, name });
+    const deviceResult = await updateDevice(foundDevice.id, { name });
     return response.json({
       success: true,
       device: deviceResult,
@@ -75,10 +84,11 @@ router.post("/", authorize(), async (request, response, next) => {
   }
 
   const deviceResult = await createDevice({
-    userId: request.user.id,
     token,
     name, // include name on create
+    userId: request.user.id,
   });
+
   response.json({
     success: true,
     device: deviceResult,

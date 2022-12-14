@@ -21,24 +21,17 @@ const createDevice = async (createDeviceData) => {
     );
   }
 
+  console.log("createDevice", createDeviceData);
   const created = await Device.create(createDeviceData);
   return created;
 };
 
-const updateDevice = async ({ token, name }) => {
-  console.log("updateDevice", token, name);
+const updateDevice = async (id, deviceData) => {
+  console.log("updateDevice", deviceData);
 
-  if (!Expo.isExpoPushToken(token)) {
-    console.error(`Push token ${token} is not a valid Expo push token`);
-    throw new Error(`Push token ${token} is not a valid Expo push token`);
-  }
-
-  const updated = await Device.update(
-    { token, name },
-    {
-      where: { token: token },
-    }
-  );
+  const updated = await Device.update(deviceData, {
+    where: { id },
+  });
   return updated;
 };
 
@@ -65,6 +58,11 @@ const removeDevice = async (deviceId) => {
   return removed;
 };
 
+const findDeviceByKey = async (userId, deviceKey) => {
+  const device = await Device.findOne({ where: { userId, deviceKey } });
+  return device;
+};
+
 const findDeviceByToken = async (userId, pushToken) => {
   const device = await Device.findOne({ where: { userId, token: pushToken } });
   return device;
@@ -76,5 +74,6 @@ module.exports = {
   listDevices,
   getDevice,
   removeDevice,
+  findDeviceByKey,
   findDeviceByToken,
 };
