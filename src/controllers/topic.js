@@ -98,7 +98,7 @@ const updateTopic = async (topicId, requestBody) => {
     deviceIds = requestBody.deviceIds;
   }
 
-  const allowedFields = ["name"];
+  const allowedFields = ["name", "type"];
   Object.keys(requestBody).forEach((key) => {
     if (allowedFields.indexOf(key) === -1) delete requestBody[key];
   });

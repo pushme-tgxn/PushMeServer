@@ -55,7 +55,9 @@ module.exports = (sequelize, DataTypes) => {
       userId: DataTypes.INTEGER,
       deviceKey: DataTypes.STRING,
       name: DataTypes.STRING,
+      type: DataTypes.STRING,
       token: DataTypes.STRING,
+      nativeToken: DataTypes.STRING,
     },
     {
       sequelize,
