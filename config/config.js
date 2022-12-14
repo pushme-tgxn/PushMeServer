@@ -10,6 +10,6 @@ module.exports = {
     dialectOptions: {
       ssl: false,
     },
-    // logging: false,
+    logging: false,
   },
 };

@@ -55,7 +55,7 @@ router.post("/create", authorize(), async (request, response, next) => {
   const deviceResult = await createDevice({
     token,
     name, // include name on create
-    type,
+    // type,
     deviceKey,
     userId: request.user.id,
     nativeToken: JSON.stringify(nativeToken),
