@@ -1,5 +1,5 @@
 const { expressjwt: jwt } = require("express-jwt");
-const secret = process.env.SECRET;
+const secret = process.env.JWT_SECRET;
 
 const { User, UserAuthMethod } = require("../../models/index.js");
 
