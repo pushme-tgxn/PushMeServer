@@ -8,7 +8,9 @@ const createDevice = async (createDeviceData) => {
   console.log("createDevice", createDeviceData);
 
   // add new device identifier
-  createDeviceData.deviceKey = uuidv4();
+  if (createDeviceData.deviceKey == undefined) {
+    createDeviceData.deviceKey = uuidv4();
+  }
 
   if (!Expo.isExpoPushToken(createDeviceData.token)) {
     console.error(
