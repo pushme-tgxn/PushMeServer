@@ -58,7 +58,7 @@ const recordPushResponse = async (request, response) => {
   const created = await PushResponse.create(
     {
       pushId: push.id,
-      serviceResponse: JSON.stringify(request.body.response),
+      serviceResponse: JSON.stringify(request.body),
     },
     {
       return: true,
@@ -101,14 +101,19 @@ const getPushStatus = async (request, response) => {
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
-  const firstValidResponse = validResponses[0];
+  let firstValidResponse = null;
+  if (validResponses.length > 0) {
+    firstValidResponse = validResponses[0];
+  }
 
   response.json({
     success: true,
     pushData: JSON.parse(push.pushData),
     serviceRequest: JSON.parse(push.serviceRequest),
     serviceResponses: validResponses,
-    firstValidResponse: JSON.parse(firstValidResponse.serviceResponse),
+    firstValidResponse: firstValidResponse
+      ? JSON.parse(firstValidResponse.serviceResponse)
+      : null,
   });
 };
 

@@ -118,16 +118,26 @@ router.post("/auth", validateDuoSignature, async (request, response) => {
 
     const result = await waitForResponse(createdPush.dataValues.id);
     console.log("result", result);
-
-    if (JSON.parse(result.serviceResponse).actionIdentifier === "approve") {
-      return response.json({
-        stat: "OK",
-        response: {
-          result: "allow",
-          status: "allow",
-        },
-        serviceData: JSON.parse(result.serviceResponse),
-      });
+    if (result.serviceResponse) {
+      if (JSON.parse(result.serviceResponse).actionIdentifier === "approve") {
+        return response.json({
+          stat: "OK",
+          response: {
+            result: "allow",
+            status: "allow",
+          },
+          serviceData: JSON.parse(result.serviceResponse),
+        });
+      } else {
+        return response.json({
+          stat: "OK",
+          response: {
+            result: "deny",
+            status: "deny",
+          },
+          serviceData: JSON.parse(result.serviceResponse),
+        });
+      }
     } else {
       return response.json({
         stat: "OK",
@@ -135,7 +145,9 @@ router.post("/auth", validateDuoSignature, async (request, response) => {
           result: "deny",
           status: "deny",
         },
-        serviceData: JSON.parse(result.serviceResponse),
+        serviceData: {
+          actionIdentifier: "noresponse",
+        },
       });
     }
   } else {
