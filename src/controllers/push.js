@@ -58,7 +58,7 @@ const recordPushResponse = async (request, response) => {
   const created = await PushResponse.create(
     {
       pushId: push.id,
-      serviceResponse: JSON.stringify(request.body.response),
+      serviceResponse: JSON.stringify(request.body),
     },
     {
       return: true,
