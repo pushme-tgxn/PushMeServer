@@ -51,7 +51,7 @@
 											"var email = pm.variables.replaceIn('{{$randomEmail}}')\r",
 											"pm.globals.set(\"email\", email);\r",
 											"\r",
-											"var password = pm.variables.replaceIn('{{$randomPas}}')\r",
+											"var password = pm.variables.replaceIn('{{$randomPassword}}')\r",
 											"pm.globals.set(\"password\", password);\r",
 											""
 										],
@@ -451,7 +451,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"ExponentPushToken[{{$randomLoremSlug}}]\",\r\n    \"name\": \"TestingFakeDevice\"\r\n}",
+							"raw": "{   \r\n    \"deviceKey\": \"$guid\",\r\n    \"name\": \"TestingFakeDevice\",\r\n    \"token\": \"ExponentPushToken[{{$randomLoremSlug}}]\",\r\n    \"nativeToken\": {\r\n        \"type\": \"android\",\r\n        \"data\": \"abc123\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -875,6 +875,8 @@
 											"pm.test(\"success returned\", function () {\r",
 											"    pm.expect(jsonData.success).to.deep.equal(true);\r",
 											"});\r",
+											"\r",
+											"pm.collectionVariables.set(\"pushIdent\", jsonData.pushIdent);\r",
 											""
 										],
 										"type": "text/javascript"
@@ -942,7 +944,6 @@
 									"status": "OK",
 									"code": 200,
 									"_postman_previewlanguage": "json",
-									"_postman_previewtype": "html",
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -1067,7 +1068,6 @@
 									"status": "OK",
 									"code": 200,
 									"_postman_previewlanguage": "json",
-									"_postman_previewtype": "html",
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -1210,7 +1210,6 @@
 									"status": "OK",
 									"code": 200,
 									"_postman_previewlanguage": "json",
-									"_postman_previewtype": "html",
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -1330,7 +1329,6 @@
 									"status": "OK",
 									"code": 200,
 									"_postman_previewlanguage": "json",
-									"_postman_previewtype": "html",
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -1450,7 +1448,6 @@
 									"status": "OK",
 									"code": 200,
 									"_postman_previewlanguage": "json",
-									"_postman_previewtype": "html",
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -1484,6 +1481,76 @@
 						}
 					],
 					"id": "2d42ee92-5a5a-4492-978b-8be4737b71c8"
+				},
+				{
+					"name": "Responses",
+					"item": [
+						{
+							"name": "Record Response",
+							"id": "4dbe1639-eca2-4851-a647-bfed03a560eb",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"response\":{\r\n        \"test\": \"bar\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/push/{{pushIdent}}/response",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"push",
+										"{{pushIdent}}",
+										"response"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Response",
+							"id": "a0b2d29f-ad8f-445f-b5d1-d40f8e98432b",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"response\":{\r\n        \"test\": \"bar\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{env_url}}/push/{{pushIdent}}/response",
+									"host": [
+										"{{env_url}}"
+									],
+									"path": [
+										"push",
+										"{{pushIdent}}",
+										"response"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "230126c7-53bf-478a-9490-e599e5dd6cd4"
 				}
 			],
 			"id": "95dd3b14-a796-4863-ac2f-5ad3c4886e17"
@@ -1600,6 +1667,60 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete Current User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "90fe801a-e457-4c42-952c-9538640ab1a8",
+								"exec": [
+									"pm.test(\"response should be json\", () => {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"success returned\", function () {\r",
+									"    pm.expect(jsonData.success).to.deep.equal(true);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "2e8e5de7-1bfb-4060-9f00-cfc2e216c991",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{env_url}}/user",
+							"host": [
+								"{{env_url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"id": "a02344c4-dc81-4ffe-8214-482b2a3c9dc4"
@@ -1609,7 +1730,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "a494b2bf-8ab0-4e44-b81c-a93273d0aa03",
+				"id": "88b369ee-143f-4949-8e35-21466420de0a",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1619,7 +1740,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "fd41b4ea-7d37-441e-be38-129f29238002",
+				"id": "97f53826-7fce-48fe-8033-dc323d9dc755",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1629,50 +1750,55 @@
 	],
 	"variable": [
 		{
-			"id": "e4476ba4-64da-47e4-b57f-7c3b96a01560",
+			"id": "051b3371-ab00-4f28-b3a3-e10d7210212d",
 			"key": "env_url",
 			"value": "https://pushme.tgxn.net"
 		},
 		{
-			"id": "3edb4e8a-f511-49c0-bcff-f2b0da67a485",
+			"id": "9cd3eeac-6ff3-46ca-b35b-79be1a53314f",
 			"key": "jwtToken",
 			"value": "{{access_token}}"
 		},
 		{
-			"id": "49149408-b93c-40b6-99e1-24ca52eabf5d",
+			"id": "ae8d68a1-35d2-4c43-b6ca-2df581e64c10",
 			"key": "webhookSecret",
 			"value": ""
 		},
 		{
-			"id": "9774c9ec-9de3-45db-a0dd-6147819176d9",
+			"id": "d7aba1ca-a479-4887-9473-7d8575eb2a1d",
 			"key": "topicSecret",
 			"value": ""
 		},
 		{
-			"id": "bfdf332a-a2d4-42dd-9974-abe9edec8c6f",
+			"id": "3f532022-9ab9-4287-a484-cdf84b1a4011",
 			"key": "deviceId",
 			"value": ""
 		},
 		{
-			"id": "65be9b45-ff84-4422-bfe9-9ca61a7fae66",
+			"id": "21c9a6d0-9400-497a-8a97-0e8d0947e75c",
 			"key": "topicId",
 			"value": ""
 		},
 		{
-			"id": "e7e4d195-edd2-4f94-9c3d-97f179ecaa06",
+			"id": "ddf922ae-5614-4b9e-908d-c21449187ba9",
 			"key": "topicKey",
 			"value": ""
 		},
 		{
-			"id": "546a2dd0-6851-4195-a938-317d899a6603",
+			"id": "cea17841-1312-45a8-9b5d-aa51057bcd11",
 			"key": "duoDeviceKey",
 			"value": ""
 		},
 		{
-			"id": "b1d5e096-c6e2-4e68-964e-958b4cab793c",
+			"id": "257ed08a-59e3-42b6-aa50-142235ac1299",
 			"key": "env_url1",
 			"value": "http://localhost:3000",
 			"type": "string"
+		},
+		{
+			"id": "a2f7cbf7-913b-4d85-a8b1-aa9c7f124ef6",
+			"key": "pushIdent",
+			"value": ""
 		}
 	]
 }
