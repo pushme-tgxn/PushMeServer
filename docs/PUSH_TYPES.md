@@ -1,12 +1,25 @@
 # Push Types
 
+## Notification Category Types Overview
+
+| Category ID | Description |
+| --- | --- | --- |
+| `push.simple` | Simple Push |
+| `button.approve_deny` | Approve / Deny Buttons |
+| `button.yes_no` | Yes/No Buttons |
+| `button.acknowledge` | Acknowledge Button |
+| `button.open_link` | Open Link Button |
+| `input.reply` | Input Field: Reply |
+| `input.submit` | Input Field: Submit |
+
+
 ## Simple Push
 
 Simple push just has a message and a title.
-No action will be performed on click.
+No action will be performed on click, though the response will be recorded if it is tapped.
 
 Request:
-POST `/webhook/push/{{webhookSecret}}`
+POST `/push/{{webhookSecret}}`
 ```json
 {
     title: "Notification Title", // required
