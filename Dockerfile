@@ -1,5 +1,8 @@
 FROM node:16-alpine
 
+## for tests
+RUN mkdir -p /data
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
