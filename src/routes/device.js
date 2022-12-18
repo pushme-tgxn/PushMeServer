@@ -2,7 +2,7 @@ const express = require("express");
 
 const { authorize } = require("../middleware/authorize");
 
-const { triggerPushSingle } = require("../lib/push-fcm");
+const { triggerPushSingleFCM } = require("../lib/push-fcm");
 
 const {
   createDevice,
@@ -25,7 +25,7 @@ router.get("/", authorize(), async (request, response) => {
   });
 });
 
-router.get("/:deviceId", authorize(), async (request, response) => {
+router.get("/:deviceId", authorize(), async (request, response, next) => {
   console.log(`getDevice`, request.user);
 
   const foundDevice = await getDevice(request.params.deviceId);
@@ -72,10 +72,10 @@ router.post("/create", authorize(), async (request, response, next) => {
   }
 });
 
-// upsert device
+// update device
 router.post("/:deviceKey", authorize(), async (request, response, next) => {
   const { name } = request.body;
-  console.log(`upsert device push token`, name);
+  console.log(`update device push token`, request.params.deviceKey, name);
 
   const foundDevice = await findDeviceByKey(
     request.user.id,
@@ -90,15 +90,9 @@ router.post("/:deviceKey", authorize(), async (request, response, next) => {
     });
   }
 
-  const deviceResult = await createDevice({
-    token,
-    name, // include name on create
-    userId: request.user.id,
-  });
-
   response.json({
-    success: true,
-    device: deviceResult,
+    success: false,
+    message: "Device not found",
   });
 });
 
@@ -138,7 +132,7 @@ router.post(
           },
         };
 
-        const ddd = await triggerPushSingle(message);
+        const ddd = await triggerPushSingleFCM(message);
 
         return response.json({
           success: true,

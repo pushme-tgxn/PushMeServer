@@ -3,7 +3,7 @@ FROM node:16-alpine
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-RUN npm install -g sequelize-cli sqlite3
+RUN npm install --global --unsafe-perm sequelize-cli sqlite3 
 
 COPY package*.json ./
 
