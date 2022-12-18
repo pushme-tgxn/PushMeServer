@@ -38,7 +38,7 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
     const tokenData = await getDevice(device.dataValues.id);
     console.log("device", item, tokenData.dataValues.token);
 
-    if (tokenData.dataValues.nativeToken) {
+    if (true === false && tokenData.dataValues.nativeToken) {
       const nativeTokenData = JSON.parse(tokenData.dataValues.nativeToken);
       console.log("nativeToken", nativeTokenData);
 
