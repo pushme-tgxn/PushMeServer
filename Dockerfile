@@ -1,12 +1,10 @@
 FROM node:16-alpine
 
-## for tests
-RUN mkdir -p /data
-
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-RUN npm install --global --unsafe-perm sequelize-cli sqlite3
+RUN apk update && apk upgrade
+RUN apk add --no-cache sqlite
 
 COPY package*.json ./
 
