@@ -6,11 +6,10 @@ WORKDIR /usr/src/app
 RUN apk update && apk upgrade
 RUN apk add --no-cache sqlite
 
-RUN npm install --global --unsafe-perm sequelize-cli
-
 COPY package*.json ./
 
-RUN npm ci --omit=dev
+RUN npm ci
+## --omit=dev
 
 COPY . .
 
