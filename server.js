@@ -2,8 +2,10 @@ require("dotenv").config();
 
 const app = require("./src/app.js");
 
+const { appLogger } = require("./src/middleware/logging.js");
+
 const PORT_NUMBER = process.env.PORT || 3000;
 
 app.listen(PORT_NUMBER, () => {
-  console.log(`Server Online on Port ${PORT_NUMBER}`);
+  appLogger.debug(`Server Online on Port ${PORT_NUMBER}`);
 });

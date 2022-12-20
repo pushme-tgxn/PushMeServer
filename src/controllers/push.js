@@ -1,6 +1,6 @@
 const { Push, PushResponse } = require("../../models/index.js");
 
-const { getTopicBySecretKey, getTopic } = require("../controllers/topic");
+const { getTopicBySecretKey } = require("../services/topic");
 // const { getDevice } = require("../controllers/device");
 
 const {
@@ -8,7 +8,7 @@ const {
   pushToTopicDevices,
   getPushByIdent,
   // updatePushByIdent,
-} = require("../service/push");
+} = require("../services/push");
 
 const pollingResponses = {};
 
@@ -20,15 +20,12 @@ const createPushRequest = async (request, response, next) => {
     if (!foundTopic) {
       return next(new Error("Topic secret key does not exist"));
     }
-    console.log(
-      "foundTopic",
-      request.params.topicSecret,
-      foundTopic.dataValues
-    );
+    console.debug("foundTopic", foundTopic.dataValues.id);
 
     const createdPush = await createPushToTopic(foundTopic, pushPayload);
-    console.log("createdPush", pushPayload, createdPush);
+    console.info("createPush", pushPayload);
 
+    // respond early
     response
       .status(200)
       .json({
@@ -36,8 +33,11 @@ const createPushRequest = async (request, response, next) => {
         pushIdent: createdPush.dataValues.pushIdent,
       })
       .send();
-
-    await pushToTopicDevices(foundTopic, createdPush, pushPayload);
+    if (process.env.DISABLE_PUSHING != "true") {
+      await pushToTopicDevices(foundTopic, createdPush, pushPayload);
+    } else {
+      console.warn("Pushing is disabled (DISABLE_PUSHING)");
+    }
   } catch (error) {
     console.log("error", error);
     next(error);

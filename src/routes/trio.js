@@ -3,30 +3,31 @@ const { createHmac } = require("crypto");
 
 const { getTopicById, getTopicByKey } = require("../controllers/topic");
 
-const { validateDuoSignature } = require("../middleware/validate-duo");
+const { validateSignature } = require("../middleware/validate-signature");
 
 const {
   createPushToTopic,
   pushToTopicDevices,
   getPushByIdent,
   getPushResponse,
-} = require("../service/push");
+} = require("../services/push");
 
 const router = express.Router();
 
-// The /ping endpoint acts as a "liveness check" that can be called to verify that Duo is up before trying to call other Auth API endpoints.
+// The /ping endpoint acts as a health check
 router.get("/ping", (request, response) => {
   return response.json({
     stat: "OK",
     response: {
       time: Math.round(Date.now() / 1000),
-      validation: process.env.NO_DUO_AUTH ? "skipped" : "enabled", // added to indicate if we're currently validating cert
+      // added to indicate if we're currently validating signatures
+      validation: process.env.NO_TRIO_AUTH ? "skipped" : "enabled",
     },
   });
 });
 
-// The /preauth endpoint determines whether a user is authorized to log in, and (if so) returns the user's available authentication factors.
-router.post("/preauth", validateDuoSignature, async (request, response) => {
+// The /preauth endpoint determines whether a user is authorized to log in.
+router.post("/preauth", validateSignature, async (request, response) => {
   console.log("preauth", request.body, request.topic);
   const { username } = request.body;
 
@@ -66,8 +67,8 @@ router.post("/preauth", validateDuoSignature, async (request, response) => {
 
 const WAIT_TIME = 30; // seconds
 
-// The /auth endpoint performs second-factor authentication for a user by sending a push notification to the user's smartphone app, verifying a passcode, or placing a phone call.
-router.post("/auth", validateDuoSignature, async (request, response) => {
+// The /auth endpoint performs second-factor authentication for a user by sending a push notification.
+router.post("/auth", validateSignature, async (request, response) => {
   console.log("auth", request.body);
   const { device, username, factor, ipaddr, async } = request.body;
 
@@ -161,7 +162,7 @@ router.post("/auth", validateDuoSignature, async (request, response) => {
 });
 
 // unused for async
-router.get("/auth_status", validateDuoSignature, (request, response) => {
+router.get("/auth_status", validateSignature, (request, response) => {
   console.log("auth_status", request.query);
 
   return response.json({

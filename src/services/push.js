@@ -8,11 +8,9 @@ const {
   triggerPushSingleFCM,
 } = require("../lib/push-fcm");
 
-const { getDevice } = require("../controllers/device");
+const { getDeviceById } = require("../services/device");
 
 const createPushToTopic = async (foundTopic, pushPayload) => {
-  console.log("createPushToTopic", foundTopic.dataValues);
-
   const createdPush = await Push.create({
     pushIdent: uuidv4(),
     targetUserId: foundTopic.dataValues.userId,
@@ -35,10 +33,10 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
   for (const item in foundTopic.dataValues.devices) {
     const device = foundTopic.dataValues.devices[item];
 
-    const tokenData = await getDevice(device.dataValues.id);
+    const tokenData = await getDeviceById(device.dataValues.id);
     console.log("device", item, tokenData.dataValues.token);
 
-    if (true === false && tokenData.dataValues.nativeToken) {
+    if (tokenData.dataValues.nativeToken) {
       const nativeTokenData = JSON.parse(tokenData.dataValues.nativeToken);
       console.log("nativeToken", nativeTokenData);
 
@@ -70,15 +68,24 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
     }
   }
 
-  const requested = await triggerMultiPush(deviceTokens, pushPayload);
-  console.log("requested", requested);
+  let requestedExpo, requestedFCM;
+  if (deviceTokens.length > 0) {
+    requestedExpo = await triggerMultiPush(deviceTokens, pushPayload);
+    console.log("requested", requestedExpo);
+  } else {
+    console.log("no expo push tokens");
+  }
 
-  const requestedFCM = await triggerMultiPushFCM(fcmPushMesages);
-  console.log("requested FCM", requestedFCM);
+  if (fcmPushMesages.length > 0) {
+    requestedFCM = await triggerMultiPushFCM(fcmPushMesages);
+    console.log("requested FCM", requestedFCM);
+  } else {
+    console.log("no FCM push tokens");
+  }
 
   await updatePush(createdPush.dataValues.id, {
     pushPayload: JSON.stringify(pushPayload),
-    serviceRequest: JSON.stringify(requested),
+    serviceRequest: JSON.stringify(requestedExpo),
   });
 };
 
