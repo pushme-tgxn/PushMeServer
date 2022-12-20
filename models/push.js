@@ -44,8 +44,6 @@ module.exports = (sequelize, DataTypes) => {
       pushData: DataTypes.TEXT,
       pushPayload: DataTypes.TEXT,
       serviceRequest: DataTypes.TEXT,
-      // serviceResponse: DataTypes.TEXT,
-      // handler: DataTypes.TEXT,
     },
     {
       sequelize,
