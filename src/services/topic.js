@@ -1,3 +1,6 @@
+const { v4: uuidv4 } = require("uuid");
+const short = require("short-uuid");
+
 const { Topic } = require("../../models/index.js");
 
 const createTopic = async (userId, deviceIds) => {
