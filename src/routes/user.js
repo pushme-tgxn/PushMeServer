@@ -1,9 +1,9 @@
 const express = require("express");
 
 const { authorize } = require("../middleware/authorize");
-const { listPushesForUserId } = require("../service/push");
 
-const { deleteUserAccount } = require("../service/user");
+const { listPushesForUserId } = require("../services/push");
+const { deleteUserAccount } = require("../services/user");
 
 const router = express.Router();
 

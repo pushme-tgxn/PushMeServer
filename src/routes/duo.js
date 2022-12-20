@@ -10,7 +10,7 @@ const {
   pushToTopicDevices,
   getPushByIdent,
   getPushResponse,
-} = require("../service/push");
+} = require("../services/push");
 
 const router = express.Router();
 

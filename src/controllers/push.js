@@ -1,6 +1,6 @@
 const { Push, PushResponse } = require("../../models/index.js");
 
-const { getTopicBySecretKey, getTopic } = require("../controllers/topic");
+const { getTopicBySecretKey } = require("../services/topic");
 // const { getDevice } = require("../controllers/device");
 
 const {
@@ -8,7 +8,7 @@ const {
   pushToTopicDevices,
   getPushByIdent,
   // updatePushByIdent,
-} = require("../service/push");
+} = require("../services/push");
 
 const pollingResponses = {};
 

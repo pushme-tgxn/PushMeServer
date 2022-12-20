@@ -1,7 +1,7 @@
 const express = require("express");
 const { createHmac } = require("crypto");
 
-const { getTopicById, getTopicByKey } = require("../controllers/topic");
+const { getTopicByKey } = require("../services/topic");
 
 /**
  * Use the Duo method of authenticating requests.
