@@ -9,7 +9,7 @@ const { getTopicByKey } = require("../services/topic");
  * @param {*} response
  * @param {*} next
  */
-const validateDuoSignature = async (request, response, next) => {
+const validateSignature = async (request, response, next) => {
   const b64auth = (request.headers.authorization || "").split(" ")[1] || "";
   const strauth = Buffer.from(b64auth, "base64").toString();
   const splitIndex = strauth.indexOf(":");
@@ -20,9 +20,9 @@ const validateDuoSignature = async (request, response, next) => {
   const topic = await getTopicByKey(topicKey);
   console.log("topicKey", topicKey, topicHash);
 
-  // if `NO_DUO_AUTH` is set, assume password is the secret
-  if (process.env.NO_DUO_AUTH) {
-    console.log("skipping duo signature validation, checking secret first");
+  // if `NO_TRIO_AUTH` is set, assume password is the secret
+  if (process.env.NO_TRIO_AUTH) {
+    console.log("skipping signature validation, checking secret first");
 
     if (topicHash === topic.secretKey) {
       console.log("secret matches, continuing");
@@ -32,7 +32,7 @@ const validateDuoSignature = async (request, response, next) => {
   }
 
   // payload to hash for
-  const duoAuthHash = [
+  const authHashString = [
     request.headers.date,
     request.method,
     request.hostname,
@@ -41,7 +41,7 @@ const validateDuoSignature = async (request, response, next) => {
   ].join("\n");
 
   const calculatedHash = createHmac("sha512", topic.secretKey) // the golang api uses sha512, docs are wrong
-    .update(duoAuthHash)
+    .update(authHashString)
     .digest("hex");
 
   // test hash matched
@@ -53,9 +53,9 @@ const validateDuoSignature = async (request, response, next) => {
   } else {
     console.log("hash mismatch", calculatedHash, topicHash);
     return response.json({
-      error: "duo hash mismatch",
+      error: "signature hash mismatch",
     });
   }
 };
 
-module.exports = { validateDuoSignature };
+module.exports = { validateSignature };
