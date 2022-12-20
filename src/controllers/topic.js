@@ -1,9 +1,3 @@
-const { Expo } = require("expo-server-sdk");
-const expo = new Expo();
-
-const { v4: uuidv4 } = require("uuid");
-const short = require("short-uuid");
-
 const { Topic } = require("../../models/index.js");
 
 const {
