@@ -4,7 +4,7 @@ function errorHandler(err, req, res, next) {
   if (res.headersSent) {
     return next(err);
   }
-  console.log("Error: ", err);
+
   switch (true) {
     case typeof err === "string":
       // custom application error

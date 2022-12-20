@@ -49,27 +49,33 @@ async function createEmailAuth(email, password) {
   console.log("userAuthMethod", userAuthMethod);
 
   // validate
+  if (password == "" || password == null) {
+    throw "password is required";
+  }
+
   if (userAuthMethod) {
     throw "email is already registered";
   }
 
   // hash password
   const passwordHash = await bcrypt.hash(password, 10);
-  console.log("ceate", email, passwordHash);
+  console.log("create user", email, passwordHash);
 
+  // TODO use transaction so we can rollback if creating the UserAuthMethod fails
   const userRecord = await User.create({});
   userAuthMethod = await UserAuthMethod.create({
     userId: userRecord.id,
     method: "email",
     methodIdent: email,
     methodSecret: passwordHash,
-    // methodData: JSON.stringify(methodData),
   });
 
-  // save user
-  // const createdUser = await User.create(params);
-
-  console.log("createdUser", userRecord, userAuthMethod);
+  console.log(
+    "createdUser",
+    userRecord.id,
+    userAuthMethod.id,
+    userAuthMethod.userId
+  );
   return userRecord;
 }
 
