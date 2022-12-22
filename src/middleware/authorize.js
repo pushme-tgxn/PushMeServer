@@ -1,4 +1,7 @@
-const { expressjwt: jwt } = require("express-jwt");
+const { expressjwt: jwt, UnauthorizedError } = require("express-jwt");
+
+// const { UnauthorizedError } = require("express-jwt");
+
 const secret = process.env.JWT_SECRET;
 
 const { User, UserAuthMethod } = require("../../models/index.js");
@@ -18,7 +21,7 @@ function authorize() {
       // check user still exists
       if (!user) {
         appLogger.warn("unauthorized", `user: ${req.auth.sub}`);
-        return next("unauthorized");
+        return next(new UnauthorizedError("unauthorized", new Error("a")));
       }
 
       // authorization successful

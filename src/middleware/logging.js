@@ -75,9 +75,9 @@ function getRequestLogFormatter() {
       const { req, res } = info.message;
       const colorPrefix = colorizer.colorize(
         info.level,
-        `${info.timestamp} ${info.level} ${req.path}`
+        `${info.timestamp} ${info.level} ${req.method}`
       );
-      return `${colorPrefix} ${req.method}`;
+      return `${colorPrefix} ${req.path}`;
     })
   );
 }
