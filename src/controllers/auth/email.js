@@ -8,6 +8,7 @@ const { generateToken } = require("./token");
 const errorMessages = {
   emailpasswordIncorrect: "email or password is incorrect",
   passwordIsRequired: "password is required",
+  emailIsRequired: "email is required",
   emailMethodNotFound: "email method not found",
   emailAlreadyRegistered: "email already registered",
   emailNotChanged: "email not changed",
@@ -59,6 +60,10 @@ async function createEmailAuth(email, password) {
   console.log("userAuthMethod", userAuthMethod);
 
   // validate
+  if (email == "" || email == null) {
+    throw errorMessages.emailIsRequired;
+  }
+
   if (password == "" || password == null) {
     throw errorMessages.passwordIsRequired;
   }
@@ -95,6 +100,11 @@ async function updateEmail(userId, newEmail) {
   // validate this user has email login
   if (!userAuthMethod) {
     throw errorMessages.emailMethodNotFound;
+  }
+
+  // validate
+  if (newEmail == "" || newEmail == null) {
+    throw errorMessages.emailIsRequired;
   }
 
   // check email is not already set

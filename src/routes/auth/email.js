@@ -40,11 +40,9 @@ router.post("/register", async (req, res, next) => {
 router.post("/email", authorize(), async (req, res, next) => {
   try {
     console.debug(req.user.id);
-    if (req.body.email) {
-      await updateEmail(req.user.id, req.body.email);
-    } else {
-      throw "email not provided";
-    }
+
+    await updateEmail(req.user.id, req.body.email);
+
     res.json({ success: true, userId: req.user.id });
   } catch (error) {
     console.log(error);
@@ -55,11 +53,9 @@ router.post("/email", authorize(), async (req, res, next) => {
 router.post("/password", authorize(), async (req, res, next) => {
   try {
     console.debug(req.user.id);
-    if (req.body.password) {
-      await updatePassword(req.user.id, req.body.password);
-    } else {
-      throw "password not provided";
-    }
+
+    await updatePassword(req.user.id, req.body.password);
+
     res.json({ success: true, userId: req.user.id });
   } catch (error) {
     console.log(error);

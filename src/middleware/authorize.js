@@ -18,9 +18,7 @@ function authorize() {
       // check user still exists
       if (!user) {
         appLogger.warn("unauthorized", `user: ${req.auth.sub}`);
-        return res
-          .status(401)
-          .json({ success: false, message: "Unauthorized" });
+        return next("unauthorized");
       }
 
       // authorization successful
