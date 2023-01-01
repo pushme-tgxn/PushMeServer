@@ -21,7 +21,12 @@ function authorize() {
       // check user still exists
       if (!user) {
         appLogger.warn("unauthorized", `user: ${req.auth.sub}`);
-        return next(new UnauthorizedError("unauthorized", new Error("a")));
+        return next(
+          new UnauthorizedError(
+            "unauthorized",
+            new Error("invalid user in token")
+          )
+        );
       }
 
       // authorization successful
