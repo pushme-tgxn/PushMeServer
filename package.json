@@ -1,6 +1,6 @@
 {
   "name": "pushme-server",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "Push Service backend",
   "main": "server.js",
   "scripts": {
@@ -14,9 +14,9 @@
     "dotenv": "^16.0.3",
     "expo-server-sdk": "^3.7.0",
     "express": "^4.18.2",
-    "express-jwt": "^7.7.7",
-    "firebase-admin": "^11.4.0",
-    "googleapis": "^109.0.1",
+    "express-jwt": "^8.2.1",
+    "firebase-admin": "^11.4.1",
+    "googleapis": "^110.0.0",
     "mariadb": "^3.0.2",
     "sequelize": "^6.28.0",
     "short-uuid": "^4.2.2",
