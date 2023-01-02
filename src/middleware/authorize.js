@@ -1,12 +1,10 @@
 const { expressjwt: jwt, UnauthorizedError } = require("express-jwt");
 
-// const { UnauthorizedError } = require("express-jwt");
-
-const secret = process.env.JWT_SECRET;
-
 const { User, UserAuthMethod } = require("../../models/index.js");
 
 const { appLogger } = require("./logging.js");
+
+const secret = process.env.JWT_SECRET;
 
 function authorize() {
   return [
