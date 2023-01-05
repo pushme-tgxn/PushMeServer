@@ -4,6 +4,7 @@ const { getTopicBySecretKey } = require("../services/topic");
 // const { getDevice } = require("../controllers/device");
 
 const {
+  listPushesForUserId,
   createPushToTopic,
   pushToTopicDevices,
   getPushByIdent,
@@ -11,6 +12,15 @@ const {
 } = require("../services/push");
 
 const pollingResponses = {};
+
+// map same as array of statuses
+const getUserPushHistory = async (request, response) => {
+  const pushList = await listPushesForUserId(request.user.id);
+  response.json({
+    success: true,
+    pushes: pushList,
+  });
+};
 
 const createPushRequest = async (request, response, next) => {
   try {
@@ -153,6 +163,7 @@ const postPoll = (pushIdent, push, serviceResponse) => {
 };
 
 module.exports = {
+  getUserPushHistory,
   createPushRequest,
   recordPushResponse,
   getPushStatus,

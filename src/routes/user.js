@@ -2,7 +2,6 @@ const express = require("express");
 
 const { authorize } = require("../middleware/authorize");
 
-const { listPushesForUserId } = require("../services/push");
 const { deleteUserAccount } = require("../services/user");
 
 const router = express.Router();
@@ -28,14 +27,6 @@ router.delete("/", authorize(), async (request, response, next) => {
   } catch (error) {
     next(error);
   }
-});
-
-router.get("/history", authorize(), async (request, response) => {
-  const pushList = await listPushesForUserId(request.user.id);
-  response.json({
-    success: true,
-    pushes: pushList,
-  });
 });
 
 module.exports = router;

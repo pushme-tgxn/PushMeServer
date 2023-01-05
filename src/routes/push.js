@@ -1,6 +1,9 @@
 const express = require("express");
 
+const { authorize } = require("../middleware/authorize");
+
 const {
+  getUserPushHistory,
   createPushRequest,
   recordPushResponse,
   getPushStatus,
@@ -8,6 +11,9 @@ const {
 } = require("../controllers/push");
 
 const router = express.Router();
+
+// push history
+router.get("/", authorize(), getUserPushHistory);
 
 // push to topic with secret
 router.post("/:topicSecret", createPushRequest);
