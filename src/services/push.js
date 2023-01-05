@@ -122,6 +122,37 @@ const getPushByIdent = async (pushIdent) => {
   return push.toJSON();
 };
 
+const generatePushData = (push) => {
+  console.log(`generatePushData`, push);
+
+  const validResponses = push.PushResponses.filter((item) => {
+    return item.serviceResponse !== null;
+  }).sort(function (a, b) {
+    // Turn your strings into dates, and then subtract them
+    // to get a value that is either negative, positive, or zero.
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+
+  let firstValidResponse = null;
+  if (validResponses.length > 0) {
+    firstValidResponse = validResponses[0];
+  }
+
+  return {
+    success: true,
+    id: push.id,
+    pushIdent: push.pushIdent,
+    createdAt: push.createdAt,
+    pushData: JSON.parse(push.pushData), // TODO DEPRECATE PROPERTY
+    pushPayload: JSON.parse(push.pushPayload),
+    serviceRequest: JSON.parse(push.serviceRequest),
+    serviceResponses: validResponses,
+    firstValidResponse: firstValidResponse
+      ? JSON.parse(firstValidResponse.serviceResponse)
+      : null,
+  };
+};
+
 // const updatePushByIdent = async (pushIdent, updateData) => {
 //   console.log("updatePushByIdent", pushIdent, updateData);
 //   const updated = await Push.update(updateData, {
@@ -157,4 +188,6 @@ module.exports = {
   getPushResponse,
   // updatePush,
   // updatePushByIdent,
+
+  generatePushData,
 };

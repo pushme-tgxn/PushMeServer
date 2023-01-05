@@ -37,7 +37,7 @@ async function getDevice(request, response, next) {
 }
 
 async function createDeviceRoute(request, response, next) {
-  const { token, name, deviceKey, nativeToken } = request.body;
+  const { token, name, type, deviceKey, nativeToken } = request.body;
   console.log(`create device push token`, token, name, deviceKey, nativeToken);
 
   const foundDevice = await findDeviceByToken(request.user.id, token);
@@ -52,7 +52,7 @@ async function createDeviceRoute(request, response, next) {
     const deviceResult = await createDevice({
       token,
       name, // include name on create
-      // type,
+      type,
       deviceKey,
       userId: request.user.id,
       nativeToken: JSON.stringify(nativeToken),

@@ -4,13 +4,27 @@ const { getTopicBySecretKey } = require("../services/topic");
 // const { getDevice } = require("../controllers/device");
 
 const {
+  listPushesForUserId,
   createPushToTopic,
   pushToTopicDevices,
   getPushByIdent,
   // updatePushByIdent,
+  generatePushData,
 } = require("../services/push");
 
 const pollingResponses = {};
+
+// map same as array of statuses
+const getUserPushHistory = async (request, response) => {
+  const pushList = await listPushesForUserId(request.user.id);
+
+  response.json({
+    success: true,
+    pushes: pushList.map((push) => {
+      return generatePushData(push);
+    }),
+  });
+};
 
 const createPushRequest = async (request, response, next) => {
   try {
@@ -91,30 +105,7 @@ const getPushStatus = async (request, response) => {
     });
   }
 
-  console.log("getPushStatus push", push);
-
-  const validResponses = push.PushResponses.filter((item) => {
-    return item.serviceResponse !== null;
-  }).sort(function (a, b) {
-    // Turn your strings into dates, and then subtract them
-    // to get a value that is either negative, positive, or zero.
-    return new Date(b.createdAt) - new Date(a.createdAt);
-  });
-
-  let firstValidResponse = null;
-  if (validResponses.length > 0) {
-    firstValidResponse = validResponses[0];
-  }
-
-  response.json({
-    success: true,
-    pushData: JSON.parse(push.pushData),
-    serviceRequest: JSON.parse(push.serviceRequest),
-    serviceResponses: validResponses,
-    firstValidResponse: firstValidResponse
-      ? JSON.parse(firstValidResponse.serviceResponse)
-      : null,
-  });
+  response.json(generatePushData(push));
 };
 
 const getPushStatusPoll = async (request, response) => {
@@ -153,6 +144,7 @@ const postPoll = (pushIdent, push, serviceResponse) => {
 };
 
 module.exports = {
+  getUserPushHistory,
   createPushRequest,
   recordPushResponse,
   getPushStatus,
