@@ -46,6 +46,20 @@ services:
 
       - "traefik.http.routers.pushme.rule=Host(`pushme.example.org`)"
       - "traefik.http.routers.pushme.entrypoints=http"
+      
+  # phpmyadmin:
+  #   image: lscr.io/linuxserver/phpmyadmin:latest
+  #   restart: always
+  #   expose:
+  #     - "40001"
+  #   ports:
+  #     - "40001:80"
+  #   environment:
+  #     - PMA_HOST=mariadb
+  #     - PMA_PORT=3306
+  #   networks:
+  #     - traefik-net
+  #     - pushme-net
 ```
 
 
