@@ -77,7 +77,7 @@ const recordPushResponse = async (request, response) => {
     created,
   });
 
-  postPoll(request.params.pushIdent, push);
+  postPoll(request.params.pushIdent, push, request.body);
 };
 
 const getPushStatus = async (request, response) => {
@@ -127,7 +127,7 @@ const getPushStatusPoll = async (request, response) => {
   pollingResponses[request.params.pushIdent].push(response);
 };
 
-const postPoll = (pushIdent, push) => {
+const postPoll = (pushIdent, push, serviceResponse) => {
   if (pollingResponses.hasOwnProperty(pushIdent)) {
     console.log(
       `postPoll`,
@@ -135,13 +135,15 @@ const postPoll = (pushIdent, push) => {
       push,
       pollingResponses[pushIdent].length
     );
+
     pollingResponses[pushIdent].map((response) => {
       response
         .json({
           success: true,
           pushData: JSON.parse(push.pushData),
           serviceRequest: JSON.parse(push.serviceRequest),
-          serviceResponse: JSON.parse(push.serviceResponse),
+          serviceResponses: [serviceResponse],
+          firstValidResponse: serviceResponse,
         })
         .send()
         .end();

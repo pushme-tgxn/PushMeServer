@@ -1,9 +1,10 @@
-const { expressjwt: jwt } = require("express-jwt");
-const secret = process.env.JWT_SECRET;
+const { expressjwt: jwt, UnauthorizedError } = require("express-jwt");
 
 const { User, UserAuthMethod } = require("../../models/index.js");
 
 const { appLogger } = require("./logging.js");
+
+const secret = process.env.JWT_SECRET;
 
 function authorize() {
   return [
@@ -18,9 +19,12 @@ function authorize() {
       // check user still exists
       if (!user) {
         appLogger.warn("unauthorized", `user: ${req.auth.sub}`);
-        return res
-          .status(401)
-          .json({ success: false, message: "Unauthorized" });
+        return next(
+          new UnauthorizedError(
+            "unauthorized",
+            new Error("invalid user in token")
+          )
+        );
       }
 
       // authorization successful

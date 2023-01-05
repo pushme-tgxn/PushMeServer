@@ -4,6 +4,8 @@ const { User, UserAuthMethod } = require("../../../models/index.js");
 
 const { generateToken } = require("./token");
 
+const { ErrorMessages } = require("../../const.js");
+
 async function loginAuthPair(email, password) {
   let userAuthMethod = await UserAuthMethod.scope("withSecret").findOne({
     where: { method: "email", methodIdent: email },
@@ -13,7 +15,7 @@ async function loginAuthPair(email, password) {
     !userAuthMethod ||
     !(await bcrypt.compare(password, userAuthMethod.methodSecret))
   )
-    throw "Email or password is incorrect";
+    throw ErrorMessages.EmailPasswordIncorrect;
 
   const user = await getUser(userAuthMethod.userId);
 
@@ -49,12 +51,16 @@ async function createEmailAuth(email, password) {
   console.log("userAuthMethod", userAuthMethod);
 
   // validate
+  if (email == "" || email == null) {
+    throw ErrorMessages.EmailIsRequired;
+  }
+
   if (password == "" || password == null) {
-    throw "password is required";
+    throw ErrorMessages.PasswordIsRequired;
   }
 
   if (userAuthMethod) {
-    throw "email is already registered";
+    throw ErrorMessages.EmailAlreadyRegistered;
   }
 
   // hash password
@@ -84,18 +90,23 @@ async function updateEmail(userId, newEmail) {
 
   // validate this user has email login
   if (!userAuthMethod) {
-    throw `Email method not found for ${userId}`;
+    throw ErrorMessages.EmailMethodNotFound;
+  }
+
+  // validate
+  if (newEmail == "" || newEmail == null) {
+    throw ErrorMessages.EmailIsRequired;
   }
 
   // check email is not already set
   if (userAuthMethod.methodIdent == newEmail) {
-    throw `Email is already set to ${newEmail}`;
+    throw ErrorMessages.EmailNotChanged;
   }
 
   // validate email is not already taken
   const userByEmail = await findAuthMethodByEmail(newEmail);
   if (userByEmail) {
-    throw "Email is already registered";
+    throw ErrorMessages.EmailAlreadyRegistered;
   }
 
   console.debug("updateEmail OK", userId, newEmail);
@@ -109,7 +120,12 @@ async function updatePassword(userId, newPassword) {
 
   // validate this user has email login
   if (!userAuthMethod) {
-    throw `Email method not found for ${userId}`;
+    throw ErrorMessages.EmailMethodNotFound;
+  }
+
+  // validate
+  if (newPassword == "" || newPassword == null) {
+    throw ErrorMessages.PasswordIsRequired;
   }
 
   // copy params to user and save
@@ -122,7 +138,10 @@ async function updatePassword(userId, newPassword) {
 
 async function getUser(id, scope = "defaultScope") {
   const user = await User.scope(scope).findByPk(id, { raw: true });
-  if (!user) throw "User not found";
+  if (!user) {
+    throw ErrorMessages.UserNotFound;
+  }
+
   return user;
 }
 

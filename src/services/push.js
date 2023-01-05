@@ -54,10 +54,7 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
             categoryId: pushPayload.categoryId,
             title: pushPayload.title,
             message: pushPayload.body,
-            body: JSON.stringify({
-              pushId: createdPush.dataValues.id,
-              pushIdent: createdPush.dataValues.pushIdent,
-            }),
+            body: JSON.stringify(pushPayload.data),
           },
         });
       } else {
