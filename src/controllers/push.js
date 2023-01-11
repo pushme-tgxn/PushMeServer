@@ -65,11 +65,8 @@ const createPushRequest = async (request, response, next) => {
         pushIdent: createdPush.dataValues.pushIdent,
       })
       .send();
-    if (process.env.DISABLE_PUSHING != "true") {
-      await pushToTopicDevices(foundTopic, createdPush, pushPayload);
-    } else {
-      console.warn("Pushing is disabled (DISABLE_PUSHING)");
-    }
+
+    await pushToTopicDevices(foundTopic, createdPush, pushPayload);
   } catch (error) {
     console.log("error", error);
     next(error);
