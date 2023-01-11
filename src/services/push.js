@@ -20,6 +20,33 @@ const createPushToTopic = async (foundTopic, pushPayload) => {
 };
 
 const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
+  if (process.env.DISABLE_PUSHING === "true") {
+    console.warn("Pushing is disabled (DISABLE_PUSHING)");
+
+    // create mock reponse
+    if (process.env.MOCK_RESPONSE === "true") {
+      console.warn("Mocking response (MOCK_RESPONSE)");
+      const created = await PushResponse.create(
+        {
+          pushId: createdPush.dataValues.id,
+          serviceResponse: JSON.stringify({
+            pushIdent: "33d2b1cb-fd8f-48ff-acde-e45d35ed7f1f",
+            pushId: 268,
+            actionIdentifier: "noresponse",
+            categoryIdentifier: "button.acknowledge",
+            responseText: null,
+          }),
+        },
+        {
+          return: true,
+          raw: true,
+        }
+      );
+    }
+
+    return;
+  }
+
   // attach data payload for callback
   if (!pushPayload.data) {
     pushPayload.data = {};

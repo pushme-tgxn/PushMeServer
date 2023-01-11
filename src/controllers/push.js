@@ -28,7 +28,25 @@ const getUserPushHistory = async (request, response) => {
 
 const createPushRequest = async (request, response, next) => {
   try {
-    const pushPayload = request.body;
+    const inputPayload = request.body;
+
+    // validate push inputs
+    let allowedfields = ["title", "body", "categoryId", "data"];
+    let requiredFields = ["title", "categoryId"];
+    let pushPayload = {
+      title: "",
+      body: "",
+    };
+    for (const field of allowedfields) {
+      if (inputPayload.hasOwnProperty(field)) {
+        pushPayload[field] = inputPayload[field];
+      }
+    }
+    for (const field of requiredFields) {
+      if (!pushPayload.hasOwnProperty(field)) {
+        return next(new Error("Missing required field: " + field));
+      }
+    }
 
     const foundTopic = await getTopicBySecretKey(request.params.topicSecret);
     if (!foundTopic) {
@@ -47,11 +65,8 @@ const createPushRequest = async (request, response, next) => {
         pushIdent: createdPush.dataValues.pushIdent,
       })
       .send();
-    if (process.env.DISABLE_PUSHING != "true") {
-      await pushToTopicDevices(foundTopic, createdPush, pushPayload);
-    } else {
-      console.warn("Pushing is disabled (DISABLE_PUSHING)");
-    }
+
+    await pushToTopicDevices(foundTopic, createdPush, pushPayload);
   } catch (error) {
     console.log("error", error);
     next(error);
