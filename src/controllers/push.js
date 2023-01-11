@@ -28,7 +28,25 @@ const getUserPushHistory = async (request, response) => {
 
 const createPushRequest = async (request, response, next) => {
   try {
-    const pushPayload = request.body;
+    const inputPayload = request.body;
+
+    // validate push inputs
+    let allowedfields = ["title", "body", "categoryId", "data"];
+    let requiredFields = ["title", "categoryId"];
+    let pushPayload = {
+      title: "",
+      body: "",
+    };
+    for (const field of allowedfields) {
+      if (inputPayload.hasOwnProperty(field)) {
+        pushPayload[field] = inputPayload[field];
+      }
+    }
+    for (const field of requiredFields) {
+      if (!pushPayload.hasOwnProperty(field)) {
+        return next(new Error("Missing required field: " + field));
+      }
+    }
 
     const foundTopic = await getTopicBySecretKey(request.params.topicSecret);
     if (!foundTopic) {
