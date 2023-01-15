@@ -41,8 +41,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       pushIdent: DataTypes.STRING,
       targetUserId: DataTypes.INTEGER,
-      pushData: DataTypes.TEXT,
       pushPayload: DataTypes.TEXT,
+      serviceType: DataTypes.TEXT,
       serviceRequest: DataTypes.TEXT,
     },
     {
