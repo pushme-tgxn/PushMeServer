@@ -4,7 +4,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.addColumn("Pushes", "serviceType", {
-      type: Sequelize.ENUM("expo", "fcm"),
+      type: Sequelize.STRING,
     });
   },
 

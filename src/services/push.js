@@ -35,9 +35,16 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
   if (process.env.DISABLE_PUSHING === "true") {
     console.warn("Pushing is disabled (DISABLE_PUSHING)");
 
+    // fake service request
+    await updatePush(createdPush.dataValues.id, {
+      serviceType: "fake",
+      serviceRequest: JSON.stringify({ is: "fake" }),
+    });
+
     // create mock reponse
     if (process.env.MOCK_RESPONSE === "true") {
       console.warn("Mocking response (MOCK_RESPONSE)");
+
       await PushResponse.create(
         {
           pushId: createdPush.dataValues.id,
