@@ -54,8 +54,8 @@ const createPushRequest = async (request, response, next) => {
     }
     console.debug("foundTopic", foundTopic.dataValues.id);
 
-    const createdPush = await createPushToTopic(foundTopic, pushPayload);
-    console.info("createPush", pushPayload);
+    const createdPush = await createPushToTopic(foundTopic);
+    console.info("createPush", createdPush.dataValues);
 
     // respond early
     response
@@ -142,17 +142,9 @@ const postPoll = (pushIdent, push, serviceResponse) => {
       pollingResponses[pushIdent].length
     );
 
+    const pushDataResponse = generatePushData(push, serviceResponse);
     pollingResponses[pushIdent].map((response) => {
-      response
-        .json({
-          success: true,
-          pushData: JSON.parse(push.pushData),
-          serviceRequest: JSON.parse(push.serviceRequest),
-          serviceResponses: [serviceResponse],
-          firstValidResponse: serviceResponse,
-        })
-        .send()
-        .end();
+      response.json(pushDataResponse).send().end();
     });
     delete pollingResponses[pushIdent];
   }
