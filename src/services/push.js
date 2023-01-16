@@ -171,7 +171,7 @@ const getPushByIdent = async (pushIdent) => {
  * @returns
  */
 const generatePushData = (push, forcedResponse = false) => {
-  console.log(`generatePushData`, push);
+  // console.log(`generatePushData`, push);
 
   let validResponses;
   let firstValidResponse = null;
@@ -209,18 +209,13 @@ const updatePushByIdent = async (pushIdent, updateData) => {
   console.log("updatePushByIdent", pushIdent, updateData);
   const updated = await Push.update(updateData, {
     where: { pushIdent },
-    return: true,
-    raw: true,
   });
   console.log("updated", updated);
   const record = await Push.findOne({
     where: { pushIdent },
-    raw: true,
-    return: true,
-    raw: true,
   });
-  console.log("record", record);
-  return record;
+  console.log("record", record.toJSON());
+  return record.toJSON();
 };
 
 const getPushResponse = async (pushId) => {
