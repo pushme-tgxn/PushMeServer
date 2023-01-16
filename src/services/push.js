@@ -205,23 +205,23 @@ const generatePushData = (push, forcedResponse = false) => {
   };
 };
 
-// const updatePushByIdent = async (pushIdent, updateData) => {
-//   console.log("updatePushByIdent", pushIdent, updateData);
-//   const updated = await Push.update(updateData, {
-//     where: { pushIdent },
-//     return: true,
-//     raw: true,
-//   });
-//   console.log("updated", updated);
-//   const record = await Push.findOne({
-//     where: { pushIdent },
-//     raw: true,
-//     return: true,
-//     raw: true,
-//   });
-//   console.log("record", record);
-//   return record;
-// };
+const updatePushByIdent = async (pushIdent, updateData) => {
+  console.log("updatePushByIdent", pushIdent, updateData);
+  const updated = await Push.update(updateData, {
+    where: { pushIdent },
+    return: true,
+    raw: true,
+  });
+  console.log("updated", updated);
+  const record = await Push.findOne({
+    where: { pushIdent },
+    raw: true,
+    return: true,
+    raw: true,
+  });
+  console.log("record", record);
+  return record;
+};
 
 const getPushResponse = async (pushId) => {
   const pushResponse = await PushResponse.findOne({
@@ -238,8 +238,8 @@ module.exports = {
   pushToTopicDevices,
 
   getPushResponse,
-  // updatePush,
-  // updatePushByIdent,
+  updatePush,
+  updatePushByIdent,
 
   generatePushData,
 };

@@ -8,7 +8,8 @@ const {
   createPushToTopic,
   pushToTopicDevices,
   getPushByIdent,
-  // updatePushByIdent,
+  updatePush,
+  updatePushByIdent,
   generatePushData,
 } = require("../services/push");
 
@@ -123,6 +124,17 @@ const getPushStatus = async (request, response) => {
   response.json(generatePushData(push));
 };
 
+const recordPushReceipt = async (request, response) => {
+  console.log(`receipt`, request.body);
+
+  // set receipt in db
+  await updatePushByIdent(request.params.pushIdent, {
+    pushReceipt: JSON.stringify(request.body),
+  });
+
+  response.json({ success: true });
+};
+
 const getPushStatusPoll = async (request, response) => {
   console.log(`response`, request.body);
 
@@ -153,6 +165,7 @@ const postPoll = (pushIdent, push, serviceResponse) => {
 module.exports = {
   getUserPushHistory,
   createPushRequest,
+  recordPushReceipt,
   recordPushResponse,
   getPushStatus,
   getPushStatusPoll,
