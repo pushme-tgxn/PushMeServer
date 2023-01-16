@@ -10,23 +10,42 @@ const {
 
 const { getDeviceById } = require("../services/device");
 
-const createPushToTopic = async (foundTopic, pushPayload) => {
+const createPushToTopic = async (foundTopic) => {
   const createdPush = await Push.create({
     pushIdent: uuidv4(),
     targetUserId: foundTopic.dataValues.userId,
-    pushData: JSON.stringify(pushPayload),
   });
   return createdPush;
 };
 
 const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
+  // attach data payload for callback
+  if (!pushPayload.data) {
+    pushPayload.data = {};
+  }
+
+  pushPayload.data.pushId = createdPush.dataValues.id;
+  pushPayload.data.pushIdent = createdPush.dataValues.pushIdent;
+
+  // set final push payload
+  await updatePush(createdPush.dataValues.id, {
+    pushPayload: JSON.stringify(pushPayload),
+  });
+
   if (process.env.DISABLE_PUSHING === "true") {
     console.warn("Pushing is disabled (DISABLE_PUSHING)");
+
+    // fake service request
+    await updatePush(createdPush.dataValues.id, {
+      serviceType: "fake",
+      serviceRequest: JSON.stringify({ is: "fake" }),
+    });
 
     // create mock reponse
     if (process.env.MOCK_RESPONSE === "true") {
       console.warn("Mocking response (MOCK_RESPONSE)");
-      const created = await PushResponse.create(
+
+      await PushResponse.create(
         {
           pushId: createdPush.dataValues.id,
           serviceResponse: JSON.stringify({
@@ -46,14 +65,6 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
 
     return;
   }
-
-  // attach data payload for callback
-  if (!pushPayload.data) {
-    pushPayload.data = {};
-  }
-
-  pushPayload.data.pushId = createdPush.dataValues.id;
-  pushPayload.data.pushIdent = createdPush.dataValues.pushIdent;
 
   const deviceTokens = [];
   const fcmPushMesages = [];
@@ -92,25 +103,29 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
     }
   }
 
-  let requestedExpo, requestedFCM;
   if (deviceTokens.length > 0) {
-    requestedExpo = await triggerMultiPush(deviceTokens, pushPayload);
+    const requestedExpo = await triggerMultiPush(deviceTokens, pushPayload);
     console.log("requested", requestedExpo);
+
+    await updatePush(createdPush.dataValues.id, {
+      serviceType: "expo",
+      serviceRequest: JSON.stringify(requestedExpo),
+    });
   } else {
     console.log("no expo push tokens");
   }
 
   if (fcmPushMesages.length > 0) {
-    requestedFCM = await triggerMultiPushFCM(fcmPushMesages);
+    const requestedFCM = await triggerMultiPushFCM(fcmPushMesages);
     console.log("requested FCM", requestedFCM);
+
+    await updatePush(createdPush.dataValues.id, {
+      serviceType: "fcm",
+      serviceRequest: JSON.stringify(requestedFCM),
+    });
   } else {
     console.log("no FCM push tokens");
   }
-
-  await updatePush(createdPush.dataValues.id, {
-    pushPayload: JSON.stringify(pushPayload),
-    serviceRequest: JSON.stringify(requestedExpo),
-  });
 };
 
 const updatePush = async (pushId, updateData) => {
@@ -149,18 +164,29 @@ const getPushByIdent = async (pushIdent) => {
   return push.toJSON();
 };
 
-const generatePushData = (push) => {
-  console.log(`generatePushData`, push);
+/**
+ *
+ * @param {*} push
+ * @param {*} forcedResponse
+ * @returns
+ */
+const generatePushData = (push, forcedResponse = false) => {
+  // console.log(`generatePushData`, push);
 
-  const validResponses = push.PushResponses.filter((item) => {
-    return item.serviceResponse !== null;
-  }).sort(function (a, b) {
-    // Turn your strings into dates, and then subtract them
-    // to get a value that is either negative, positive, or zero.
-    return new Date(b.createdAt) - new Date(a.createdAt);
-  });
-
+  let validResponses;
   let firstValidResponse = null;
+  if (!forcedResponse) {
+    validResponses = push.PushResponses.filter((item) => {
+      return item.serviceResponse !== null;
+    }).sort(function (a, b) {
+      // Turn your strings into dates, and then subtract them
+      // to get a value that is either negative, positive, or zero.
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  } else {
+    validResponses = { serviceResponse: forcedResponse };
+  }
+
   if (validResponses.length > 0) {
     firstValidResponse = validResponses[0];
   }
@@ -170,7 +196,6 @@ const generatePushData = (push) => {
     id: push.id,
     pushIdent: push.pushIdent,
     createdAt: push.createdAt,
-    pushData: JSON.parse(push.pushData), // TODO DEPRECATE PROPERTY
     pushPayload: JSON.parse(push.pushPayload),
     serviceRequest: JSON.parse(push.serviceRequest),
     serviceResponses: validResponses,
@@ -180,23 +205,18 @@ const generatePushData = (push) => {
   };
 };
 
-// const updatePushByIdent = async (pushIdent, updateData) => {
-//   console.log("updatePushByIdent", pushIdent, updateData);
-//   const updated = await Push.update(updateData, {
-//     where: { pushIdent },
-//     return: true,
-//     raw: true,
-//   });
-//   console.log("updated", updated);
-//   const record = await Push.findOne({
-//     where: { pushIdent },
-//     raw: true,
-//     return: true,
-//     raw: true,
-//   });
-//   console.log("record", record);
-//   return record;
-// };
+const updatePushByIdent = async (pushIdent, updateData) => {
+  console.log("updatePushByIdent", pushIdent, updateData);
+  const updated = await Push.update(updateData, {
+    where: { pushIdent },
+  });
+  console.log("updated", updated);
+  const record = await Push.findOne({
+    where: { pushIdent },
+  });
+  console.log("record", record.toJSON());
+  return record.toJSON();
+};
 
 const getPushResponse = async (pushId) => {
   const pushResponse = await PushResponse.findOne({
@@ -213,8 +233,8 @@ module.exports = {
   pushToTopicDevices,
 
   getPushResponse,
-  // updatePush,
-  // updatePushByIdent,
+  updatePush,
+  updatePushByIdent,
 
   generatePushData,
 };

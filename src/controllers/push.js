@@ -8,7 +8,8 @@ const {
   createPushToTopic,
   pushToTopicDevices,
   getPushByIdent,
-  // updatePushByIdent,
+  updatePush,
+  updatePushByIdent,
   generatePushData,
 } = require("../services/push");
 
@@ -54,8 +55,8 @@ const createPushRequest = async (request, response, next) => {
     }
     console.debug("foundTopic", foundTopic.dataValues.id);
 
-    const createdPush = await createPushToTopic(foundTopic, pushPayload);
-    console.info("createPush", pushPayload);
+    const createdPush = await createPushToTopic(foundTopic);
+    console.info("createPush", createdPush.dataValues);
 
     // respond early
     response
@@ -123,6 +124,17 @@ const getPushStatus = async (request, response) => {
   response.json(generatePushData(push));
 };
 
+const recordPushReceipt = async (request, response) => {
+  console.log(`receipt`, request.body);
+
+  // set receipt in db
+  await updatePushByIdent(request.params.pushIdent, {
+    pushReceipt: JSON.stringify(request.body),
+  });
+
+  response.json({ success: true });
+};
+
 const getPushStatusPoll = async (request, response) => {
   console.log(`response`, request.body);
 
@@ -142,17 +154,9 @@ const postPoll = (pushIdent, push, serviceResponse) => {
       pollingResponses[pushIdent].length
     );
 
+    const pushDataResponse = generatePushData(push, serviceResponse);
     pollingResponses[pushIdent].map((response) => {
-      response
-        .json({
-          success: true,
-          pushData: JSON.parse(push.pushData),
-          serviceRequest: JSON.parse(push.serviceRequest),
-          serviceResponses: [serviceResponse],
-          firstValidResponse: serviceResponse,
-        })
-        .send()
-        .end();
+      response.json(pushDataResponse).send().end();
     });
     delete pollingResponses[pushIdent];
   }
@@ -161,6 +165,7 @@ const postPoll = (pushIdent, push, serviceResponse) => {
 module.exports = {
   getUserPushHistory,
   createPushRequest,
+  recordPushReceipt,
   recordPushResponse,
   getPushStatus,
   getPushStatusPoll,

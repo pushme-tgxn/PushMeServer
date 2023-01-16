@@ -1,6 +1,6 @@
 {
   "name": "pushme-server",
-  "version": "1.10.0",
+  "version": "1.11.2",
   "description": "Push Service backend",
   "main": "server.js",
   "scripts": {

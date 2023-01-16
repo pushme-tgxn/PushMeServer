@@ -12,8 +12,8 @@ async function loginAuthMethod(method, methodIdent, methodData = {}) {
   // create google account
   let userRecord, userId;
   if (!userAuthMethod) {
-    // throw "Username does not exist";
-    userRecord = await User.create({});
+    // create google account
+    userRecord = (await User.create({})).dataValues;
     console.log("userRecord", userRecord);
     userAuthMethod = await UserAuthMethod.create({
       userId: userRecord.id,
