@@ -6,6 +6,8 @@ WORKDIR /usr/src/app
 RUN apk update && apk upgrade
 RUN apk add --no-cache sqlite
 
+RUN npm install pm2 -g
+
 COPY package*.json ./
 
 RUN npm ci
@@ -14,4 +16,4 @@ RUN npm ci
 COPY . .
 
 EXPOSE 3000
-CMD [ "node", "server.js" ]
+CMD [ "sh", "./scripts/server-wrapper.sh" ]
