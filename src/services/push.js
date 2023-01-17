@@ -201,6 +201,7 @@ const generatePushData = (push, forcedResponse = false) => {
     pushIdent: push.pushIdent,
     createdAt: push.createdAt,
     pushPayload: JSON.parse(push.pushPayload),
+    pushReceipt: JSON.parse(push.pushReceipt),
     serviceRequest: JSON.parse(push.serviceRequest),
     serviceResponses: validResponses,
     firstValidResponse: firstValidResponse,

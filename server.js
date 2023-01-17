@@ -7,5 +7,5 @@ const { appLogger } = require("./src/middleware/logging.js");
 const PORT_NUMBER = process.env.PORT || 3000;
 
 app.listen(PORT_NUMBER, () => {
-  appLogger.debug(`Server Online on Port ${PORT_NUMBER}`);
+  appLogger.info(`Server Online on Port ${PORT_NUMBER}`);
 });
