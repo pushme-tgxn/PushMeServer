@@ -9,9 +9,11 @@ const {
   getTopicBySecretKey,
 } = require("../services/topic.js");
 
+const { appLogger } = require("../middleware/logging.js");
+
 const listTopics = async (request, response, next) => {
   try {
-    console.log(`listTopics`, request.user.id);
+    appLogger.debug(`listTopics`, request.user.id);
 
     const topics = await Topic.scope({
       method: ["byUser", request.user.id],
@@ -54,7 +56,7 @@ const createUserTopic = async (request, response, next) => {
 
 const updateUserTopic = async (request, response, next) => {
   try {
-    console.log(`response`, request.body);
+    appLogger.debug(`response`, request.body);
 
     const updatedTopic = await updateTopic(
       request.params.topicId,
@@ -71,7 +73,7 @@ const updateUserTopic = async (request, response, next) => {
 
 const deleteUserTopic = async (request, response, next) => {
   try {
-    console.log(`delete, ${request.params.topicId}`);
+    appLogger.debug(`delete, ${request.params.topicId}`);
 
     await deleteTopic(request.params.topicId);
 

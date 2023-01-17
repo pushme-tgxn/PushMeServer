@@ -15,6 +15,8 @@ const {
 
 const { findDeviceByKey } = require("../services/device");
 
+const { appLogger } = require("../middleware/logging.js");
+
 const router = express.Router();
 
 router.get("/", authorize(), listDevices);
@@ -34,10 +36,10 @@ async function testFCMPush(request, response, next) {
   );
 
   if (foundDevice) {
-    console.log("foundDevice", foundDevice.nativeToken);
+    appLogger.debug("foundDevice", foundDevice.nativeToken);
 
     const nativeTokenData = JSON.parse(foundDevice.nativeToken);
-    console.log("nativeToken", nativeTokenData);
+    appLogger.debug("nativeToken", nativeTokenData);
 
     if (nativeTokenData.type == "android") {
       const message = {

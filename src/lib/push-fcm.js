@@ -4,8 +4,10 @@ const app = admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 
+const { appLogger } = require("../middleware/logging.js");
+
 const triggerPushSingleFCM = async (requestBody) => {
-  console.log("triggerPushSingleFCM", requestBody);
+  appLogger.debug("triggerPushSingleFCM", requestBody);
 
   const returnData = await app.messaging().send(requestBody);
   return returnData;
@@ -19,7 +21,7 @@ const triggerPushSingleFCM = async (requestBody) => {
  * @returns {Promise}
  */
 const triggerMultiPushFCM = async (notifications) => {
-  console.log("triggerMultiPushFCM", notifications);
+  appLogger.debug("triggerMultiPushFCM", notifications);
 
   const returnData = await app.messaging().sendAll(notifications);
   return returnData;
