@@ -183,12 +183,14 @@ const generatePushData = (push, forcedResponse = false) => {
       // to get a value that is either negative, positive, or zero.
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
+    if (validResponses.length > 0) {
+      console.log(`generatePushData validResponses`, validResponses);
+      firstValidResponse = JSON.parse(validResponses[0].serviceResponse);
+    }
   } else {
+    console.log(`generatePushData forcedResponse`, forcedResponse);
     validResponses = [{ serviceResponse: forcedResponse }];
-  }
-
-  if (validResponses.length > 0) {
-    firstValidResponse = validResponses[0].serviceResponse;
+    firstValidResponse = forcedResponse;
   }
 
   return {

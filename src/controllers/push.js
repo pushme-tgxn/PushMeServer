@@ -16,15 +16,19 @@ const {
 const pollingResponses = {};
 
 // map same as array of statuses
-const getUserPushHistory = async (request, response) => {
-  const pushList = await listPushesForUserId(request.user.id);
+const getUserPushHistory = async (request, response, next) => {
+  try {
+    const pushList = await listPushesForUserId(request.user.id);
 
-  response.json({
-    success: true,
-    pushes: pushList.map((push) => {
-      return generatePushData(push);
-    }),
-  });
+    response.json({
+      success: true,
+      pushes: pushList.map((push) => {
+        return generatePushData(push);
+      }),
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const createPushRequest = async (request, response, next) => {
@@ -74,75 +78,91 @@ const createPushRequest = async (request, response, next) => {
   }
 };
 
-const recordPushResponse = async (request, response) => {
-  const push = await getPushByIdent(request.params.pushIdent);
+const recordPushResponse = async (request, response, next) => {
+  try {
+    const push = await getPushByIdent(request.params.pushIdent);
 
-  console.log("recordPushResponse push", push);
+    console.log("recordPushResponse push", push);
 
-  if (!push) {
-    return response.json({
-      success: false,
-    });
-  }
-
-  const created = await PushResponse.create(
-    {
-      pushId: push.id,
-      serviceResponse: JSON.stringify(request.body),
-    },
-    {
-      return: true,
-      raw: true,
+    if (!push) {
+      return response.json({
+        success: false,
+      });
     }
-  );
 
-  console.log("created", created);
+    const created = await PushResponse.create(
+      {
+        pushId: push.id,
+        serviceResponse: JSON.stringify(request.body),
+      },
+      {
+        return: true,
+        raw: true,
+      }
+    );
 
-  // const push = await updatePushByIdent(request.params.pushIdent, {
-  //   serviceResponse: JSON.stringify(request.body.response),
-  // });
+    console.log("created", created);
 
-  response.json({
-    success: true,
-    created,
-  });
+    // const push = await updatePushByIdent(request.params.pushIdent, {
+    //   serviceResponse: JSON.stringify(request.body.response),
+    // });
 
-  postPoll(request.params.pushIdent, push, request.body);
-};
-
-const getPushStatus = async (request, response) => {
-  console.log(`response`, request.body);
-
-  const push = await getPushByIdent(request.params.pushIdent);
-
-  if (!push) {
-    return response.json({
-      success: false,
+    response.json({
+      success: true,
+      created,
     });
-  }
 
-  response.json(generatePushData(push));
+    postPoll(request.params.pushIdent, push, request.body);
+  } catch (error) {
+    next(error);
+  }
 };
 
-const recordPushReceipt = async (request, response) => {
-  console.log(`receipt`, request.body);
+const getPushStatus = async (request, response, next) => {
+  try {
+    console.log(`response`, request.body);
 
-  // set receipt in db
-  await updatePushByIdent(request.params.pushIdent, {
-    pushReceipt: JSON.stringify(request.body),
-  });
+    const push = await getPushByIdent(request.params.pushIdent);
 
-  response.json({ success: true });
+    if (!push) {
+      return response.json({
+        success: false,
+      });
+    }
+
+    response.json(generatePushData(push));
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getPushStatusPoll = async (request, response) => {
-  console.log(`response`, request.body);
+const recordPushReceipt = async (request, response, next) => {
+  try {
+    console.log(`receipt`, request.body);
 
-  if (!pollingResponses[request.params.pushIdent]) {
-    pollingResponses[request.params.pushIdent] = [];
+    // set receipt in db
+    await updatePushByIdent(request.params.pushIdent, {
+      pushReceipt: JSON.stringify(request.body),
+    });
+
+    response.json({ success: true });
+  } catch (error) {
+    next(error);
   }
+};
 
-  pollingResponses[request.params.pushIdent].push(response);
+const getPushStatusPoll = async (request, response, next) => {
+  try {
+    console.log(`response`, request.body);
+
+    if (!pollingResponses[request.params.pushIdent]) {
+      pollingResponses[request.params.pushIdent] = [];
+    }
+
+    pollingResponses[request.params.pushIdent].push(response);
+  } catch (error) {
+    next(error);
+  }
 };
 
 const postPoll = (pushIdent, push, serviceResponse) => {
