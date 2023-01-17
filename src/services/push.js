@@ -184,11 +184,11 @@ const generatePushData = (push, forcedResponse = false) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
   } else {
-    validResponses = { serviceResponse: forcedResponse };
+    validResponses = [{ serviceResponse: forcedResponse }];
   }
 
   if (validResponses.length > 0) {
-    firstValidResponse = validResponses[0];
+    firstValidResponse = validResponses[0].serviceResponse;
   }
 
   return {
@@ -199,9 +199,7 @@ const generatePushData = (push, forcedResponse = false) => {
     pushPayload: JSON.parse(push.pushPayload),
     serviceRequest: JSON.parse(push.serviceRequest),
     serviceResponses: validResponses,
-    firstValidResponse: firstValidResponse
-      ? JSON.parse(firstValidResponse.serviceResponse)
-      : null,
+    firstValidResponse: firstValidResponse,
   };
 };
 
