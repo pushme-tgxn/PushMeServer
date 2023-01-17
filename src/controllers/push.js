@@ -13,6 +13,8 @@ const {
   generatePushData,
 } = require("../services/push");
 
+const { appLogger } = require("../middleware/logging.js");
+
 const pollingResponses = {};
 
 // map same as array of statuses
@@ -57,10 +59,10 @@ const createPushRequest = async (request, response, next) => {
     if (!foundTopic) {
       return next(new Error("Topic secret key does not exist"));
     }
-    console.debug("foundTopic", foundTopic.dataValues.id);
+    appLogger.debug("foundTopic", foundTopic.dataValues.id);
 
     const createdPush = await createPushToTopic(foundTopic);
-    console.info("createPush", createdPush.dataValues);
+    appLogger.info("createPush", createdPush.dataValues);
 
     // respond early
     response
@@ -73,7 +75,6 @@ const createPushRequest = async (request, response, next) => {
 
     await pushToTopicDevices(foundTopic, createdPush, pushPayload);
   } catch (error) {
-    console.log("error", error);
     next(error);
   }
 };
@@ -82,7 +83,7 @@ const recordPushResponse = async (request, response, next) => {
   try {
     const push = await getPushByIdent(request.params.pushIdent);
 
-    console.log("recordPushResponse push", push);
+    appLogger.debug("recordPushResponse push", push);
 
     if (!push) {
       return response.json({
@@ -101,7 +102,7 @@ const recordPushResponse = async (request, response, next) => {
       }
     );
 
-    console.log("created", created);
+    appLogger.debug("created", created);
 
     // const push = await updatePushByIdent(request.params.pushIdent, {
     //   serviceResponse: JSON.stringify(request.body.response),
@@ -120,7 +121,7 @@ const recordPushResponse = async (request, response, next) => {
 
 const getPushStatus = async (request, response, next) => {
   try {
-    console.log(`response`, request.body);
+    appLogger.debug(`response`, request.body);
 
     const push = await getPushByIdent(request.params.pushIdent);
 
@@ -138,7 +139,7 @@ const getPushStatus = async (request, response, next) => {
 
 const recordPushReceipt = async (request, response, next) => {
   try {
-    console.log(`receipt`, request.body);
+    appLogger.debug(`receipt`, request.body);
 
     // set receipt in db
     await updatePushByIdent(request.params.pushIdent, {
@@ -153,7 +154,7 @@ const recordPushReceipt = async (request, response, next) => {
 
 const getPushStatusPoll = async (request, response, next) => {
   try {
-    console.log(`response`, request.body);
+    appLogger.debug(`response`, request.body);
 
     if (!pollingResponses[request.params.pushIdent]) {
       pollingResponses[request.params.pushIdent] = [];
@@ -167,7 +168,7 @@ const getPushStatusPoll = async (request, response, next) => {
 
 const postPoll = (pushIdent, push, serviceResponse) => {
   if (pollingResponses.hasOwnProperty(pushIdent)) {
-    console.log(
+    appLogger.debug(
       `postPoll`,
       pushIdent,
       push,

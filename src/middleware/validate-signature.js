@@ -3,6 +3,8 @@ const { createHmac } = require("crypto");
 
 const { getTopicByKey } = require("../services/topic");
 
+const { appLogger } = require("./logging.js");
+
 /**
  * Use the Duo method of authenticating requests.
  * @param {*} request
@@ -18,14 +20,14 @@ const validateSignature = async (request, response, next) => {
   const topicHash = strauth.substring(splitIndex + 1);
 
   const topic = await getTopicByKey(topicKey);
-  console.log("topicKey", topicKey, topicHash);
+  appLogger.debug("topicKey", topicKey, topicHash);
 
   // if `NO_TRIO_AUTH` is set, assume password is the secret
   if (process.env.NO_TRIO_AUTH) {
-    console.log("skipping signature validation, checking secret first");
+    appLogger.warn("skipping signature validation, checking secret first");
 
     if (topicHash === topic.secretKey) {
-      console.log("secret matches, continuing");
+      appLogger.debug("secret matches, continuing");
       request.topic = topic;
       return next();
     }
@@ -47,11 +49,11 @@ const validateSignature = async (request, response, next) => {
   // test hash matched
 
   if (calculatedHash === topicHash) {
-    console.log("hash matched");
+    appLogger.debug("hash matched");
     request.topic = topic;
     next();
   } else {
-    console.log("hash mismatch", calculatedHash, topicHash);
+    appLogger.error("hash mismatch", calculatedHash, topicHash);
     return response.json({
       error: "signature hash mismatch",
     });

@@ -3,8 +3,10 @@ const short = require("short-uuid");
 
 const { Topic } = require("../../models/index.js");
 
+const { appLogger } = require("../middleware/logging.js");
+
 const createTopic = async (userId, deviceIds) => {
-  console.log("createTopic", deviceIds);
+  appLogger.debug("createTopic", deviceIds);
 
   const createData = {
     userId: userId,
@@ -39,13 +41,13 @@ const updateTopic = async (topicId, requestBody) => {
   await topic.update(requestBody);
 
   if (deviceIds) {
-    console.log(`setDevices`, deviceIds);
+    appLogger.debug(`setDevices`, deviceIds);
     await topic.setDevices(deviceIds);
   }
 
   await topic.save();
 
-  console.log("updateTopic", topic.toJSON());
+  appLogger.debug("updateTopic", topic.toJSON());
   return topic.toJSON();
 };
 
@@ -54,7 +56,7 @@ const deleteTopic = async (topicId) => {
     { where: { id: topicId } },
     { return: true }
   );
-  console.log(`deleteTopic`, deletedTopic);
+  appLogger.debug(`deleteTopic`, deletedTopic);
   return deletedTopic;
 };
 
@@ -65,7 +67,7 @@ const getTopicBySecretKey = async (topicSecret) => {
 };
 
 const getTopicByKey = async (topicKey) => {
-  console.log(`getTopicByKey`, topicKey);
+  appLogger.debug(`getTopicByKey`, topicKey);
 
   const topic = await Topic.scope("withDevices").findOne({
     where: { topicKey },
@@ -74,7 +76,7 @@ const getTopicByKey = async (topicKey) => {
 };
 
 const getTopicById = async (topicId) => {
-  console.log(`getTopicById`, topicId);
+  appLogger.debug(`getTopicById`, topicId);
 
   const topic = await Topic.scope("withDevices").findOne({
     where: { id: topicId },

@@ -23,11 +23,11 @@ function createAppLogger() {
   });
 
   return {
-    log: (message, ...extra) => requestLogger.info(message, { ...extra }),
-    info: (message, service) => requestLogger.info(message, { service }),
-    error: (message, service) => requestLogger.error(message, { service }),
-    warn: (message, service) => requestLogger.warn(message, { service }),
-    debug: (message, service) => requestLogger.debug(message, { service }),
+    log: (message, ...extra) => requestLogger.info(message, { extra }),
+    info: (message, ...extra) => requestLogger.info(message, { extra }),
+    error: (message, ...extra) => requestLogger.error(message, { extra }),
+    warn: (message, ...extra) => requestLogger.warn(message, { extra }),
+    debug: (message, ...extra) => requestLogger.debug(message, { extra }),
   };
 }
 
@@ -45,6 +45,9 @@ function getAppLogFormatter() {
       if (info.service && info.service !== "app") {
         // app is the default service
         return `${colorPrefix}: [${info.service}] ${info.message}`;
+      }
+      if (info.extra) {
+        return `${colorPrefix}: ${info.message} ${JSON.stringify(info.extra)}`;
       }
       return `${colorPrefix}: ${info.message}`;
     })

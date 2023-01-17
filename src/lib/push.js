@@ -3,6 +3,8 @@
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 
+const { appLogger } = require("../middleware/logging.js");
+
 /**
  * Send a push message to a single push token.
  * @param {*} toToken
@@ -11,10 +13,10 @@ const expo = new Expo();
  * @returns {Promise}
  */
 const triggerPushSingle = async (toToken, requestBody) => {
-  console.log("triggerPushSingle", toToken, requestBody);
+  appLogger.debug("triggerPushSingle", toToken, requestBody);
 
   if (!Expo.isExpoPushToken(toToken)) {
-    console.error(`Push token ${toToken} is not a valid Expo push token`);
+    appLogger.error(`Push token ${toToken} is not a valid Expo push token`);
     throw new Error(`Push token ${toToken} is not a valid Expo push token`);
   }
 
@@ -37,11 +39,11 @@ const triggerPushSingle = async (toToken, requestBody) => {
 const triggerMultiPush = async (toTokens, requestBody) => {
   let notifications = [];
 
-  console.log("send data", toTokens, requestBody);
+  appLogger.debug("send data", toTokens, requestBody);
 
   for (let pushToken of toTokens) {
     if (!Expo.isExpoPushToken(pushToken)) {
-      console.error(`Push token ${pushToken} is not a valid Expo push token`);
+      appLogger.error(`Push token ${pushToken} is not a valid Expo push token`);
       continue;
     }
 
@@ -50,7 +52,7 @@ const triggerMultiPush = async (toTokens, requestBody) => {
       ...requestBody,
     };
 
-    console.log("payload", pushPayload);
+    appLogger.debug("payload", pushPayload);
 
     notifications.push(pushPayload);
   }
@@ -66,7 +68,7 @@ const sendNotificationsArray = async (notifications) => {
   for (let chunk of chunks) {
     try {
       let receipts = await expo.sendPushNotificationsAsync(chunk);
-      // console.log(receipts);
+      appLogger.debug(receipts);
 
       let receiptIds = [];
       for (let ticket of receipts) {
@@ -84,7 +86,7 @@ const sendNotificationsArray = async (notifications) => {
       for (let chunk of receiptIdChunks) {
         try {
           let receipts = await expo.getPushNotificationReceiptsAsync(chunk);
-          // console.log(receipts);
+          appLogger.debug(receipts);
 
           // The receipts specify whether Apple or Google successfully received the
           // notification and information about an error, if one occurred.
@@ -93,27 +95,27 @@ const sendNotificationsArray = async (notifications) => {
             if (status === "ok") {
               continue;
             } else if (status === "error") {
-              console.error(
+              appLogger.error(
                 `There was an error sending a notification: ${message}`
               );
               if (details && details.error) {
                 // The error codes are listed in the Expo documentation:
                 // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
                 // You must handle the errors appropriately.
-                console.error(`The error code is ${details.error}`);
+                appLogger.error(`The error code is ${details.error}`);
               }
             }
           }
           returnData = receipts;
         } catch (error) {
-          console.error(error);
+          appLogger.error(error);
         }
       }
     } catch (error) {
-      console.error(error);
+      appLogger.error(error);
     }
   }
-  console.log("rerereerer", returnData);
+  appLogger.debug("return sendNotificationsArray data", returnData);
   return returnData;
 };
 

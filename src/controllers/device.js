@@ -8,6 +8,8 @@ const {
   findDeviceByToken,
 } = require("../services/device");
 
+const { appLogger } = require("../middleware/logging.js");
+
 async function listDevices(request, response, next) {
   try {
     const deviceList = await getDevicesForUserId(request.user.id);
@@ -23,7 +25,7 @@ async function listDevices(request, response, next) {
 
 async function getDevice(request, response, next) {
   try {
-    console.log(`getDevice`, request.user, request.params);
+    appLogger.debug(`getDevice`, request.user, request.params);
 
     const foundDevice = await getDeviceById(request.params.deviceId);
     if (!foundDevice) {
@@ -42,7 +44,7 @@ async function getDevice(request, response, next) {
 async function createDeviceRoute(request, response, next) {
   try {
     const { token, name, type, deviceKey, nativeToken } = request.body;
-    console.log(
+    appLogger.debug(
       `create device push token`,
       token,
       name,
@@ -79,7 +81,7 @@ async function createDeviceRoute(request, response, next) {
 async function updateDeviceByKey(request, response, next) {
   try {
     const { name } = request.body;
-    console.log(`update device push token`, request.params.deviceKey, name);
+    appLogger.debug(`update device push token`, request.params.deviceKey, name);
 
     const foundDevice = await findDeviceByKey(
       request.user.id,
@@ -106,7 +108,7 @@ async function updateDeviceByKey(request, response, next) {
 async function updateDeviceById(request, response, next) {
   try {
     const { token, name } = request.body;
-    console.log(`update device, ${token}, ${name}`);
+    appLogger.debug(`update device, ${token}, ${name}`);
 
     const updatePayload = {
       token: token,
@@ -132,7 +134,7 @@ async function updateDeviceById(request, response, next) {
 
 async function deleteDevice(request, response, next) {
   try {
-    console.log(
+    appLogger.debug(
       `delete device, ${request.params.deviceId}, ${request.body.name}`
     );
 

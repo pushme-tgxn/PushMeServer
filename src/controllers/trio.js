@@ -5,6 +5,8 @@ const {
   getPushResponse,
 } = require("../services/push");
 
+const { appLogger } = require("../middleware/logging.js");
+
 const WAIT_TIME = 30; // seconds
 
 // The /ping endpoint acts as a health check
@@ -26,7 +28,8 @@ const getPing = async (request, response, next) => {
 // The /preauth endpoint determines whether a user is authorized to log in.
 const postPreAuth = async (request, response, next) => {
   try {
-    console.log("preauth", request.body, request.topic);
+    appLogger.debug("preauth", request.body, request.topic);
+
     const { username } = request.body;
 
     // no devices in topic, deny
@@ -69,7 +72,7 @@ const postPreAuth = async (request, response, next) => {
 // The /auth endpoint performs second-factor authentication for a user by sending a push notification.
 const postAuth = async (request, response, next) => {
   try {
-    console.log("auth", request.body);
+    appLogger.debug("auth", request.body);
     const { device, username, factor, ipaddr, async } = request.body;
 
     // non-async
@@ -84,7 +87,7 @@ const postAuth = async (request, response, next) => {
       };
 
       const createdPush = await createPushToTopic(request.topic, pushPayload);
-      console.log("createdPush", pushPayload, createdPush);
+      appLogger.debug("createdPush", pushPayload, createdPush);
 
       await pushToTopicDevices(request.topic, createdPush, pushPayload);
 
@@ -101,7 +104,7 @@ const postAuth = async (request, response, next) => {
           const response = await getPushResponse(pushId);
 
           if (response) {
-            console.log("checkForResponse", response);
+            appLogger.debug("checkForResponse", response);
             return response;
           }
 
@@ -118,7 +121,7 @@ const postAuth = async (request, response, next) => {
       };
 
       const result = await waitForResponse(createdPush.dataValues.id);
-      console.log("result", result);
+      appLogger.debug("result", result);
       if (result.serviceResponse) {
         if (JSON.parse(result.serviceResponse).actionIdentifier === "approve") {
           return response.json({
@@ -167,7 +170,7 @@ const postAuth = async (request, response, next) => {
 // unused for async
 const postAuthStatus = async (request, response, next) => {
   try {
-    console.log("auth_status", request.query);
+    appLogger.debug("auth_status", request.query);
 
     return response.json({
       stat: "OK",

@@ -10,6 +10,8 @@ const {
 
 const { getDeviceById } = require("../services/device");
 
+const { appLogger } = require("../middleware/logging.js");
+
 const createPushToTopic = async (foundTopic) => {
   const createdPush = await Push.create({
     pushIdent: uuidv4(),
@@ -33,7 +35,7 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
   });
 
   if (process.env.DISABLE_PUSHING === "true") {
-    console.warn("Pushing is disabled (DISABLE_PUSHING)");
+    appLogger.warn("Pushing is disabled (DISABLE_PUSHING)");
 
     // fake service request
     await updatePush(createdPush.dataValues.id, {
@@ -43,7 +45,7 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
 
     // create mock reponse
     if (process.env.MOCK_RESPONSE === "true") {
-      console.warn("Mocking response (MOCK_RESPONSE)");
+      appLogger.warn("Mocking response (MOCK_RESPONSE)");
 
       await PushResponse.create(
         {
@@ -72,11 +74,11 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
     const device = foundTopic.dataValues.devices[item];
 
     const tokenData = await getDeviceById(device.dataValues.id);
-    console.log("device", item, tokenData.dataValues.token);
+    appLogger.debug("device", item, tokenData.dataValues.token);
 
     if (tokenData.dataValues.nativeToken) {
       const nativeTokenData = JSON.parse(tokenData.dataValues.nativeToken);
-      console.log("nativeToken", nativeTokenData);
+      appLogger.debug("nativeToken", nativeTokenData);
 
       if (nativeTokenData.type == "android") {
         // nativeTokens.push(nativeTokenData.data);
@@ -105,31 +107,31 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
 
   if (deviceTokens.length > 0) {
     const requestedExpo = await triggerMultiPush(deviceTokens, pushPayload);
-    console.log("requested", requestedExpo);
+    appLogger.debug("requested", requestedExpo);
 
     await updatePush(createdPush.dataValues.id, {
       serviceType: "expo",
       serviceRequest: JSON.stringify(requestedExpo),
     });
   } else {
-    console.log("no expo push tokens");
+    appLogger.warn("no expo push tokens");
   }
 
   if (fcmPushMesages.length > 0) {
     const requestedFCM = await triggerMultiPushFCM(fcmPushMesages);
-    console.log("requested FCM", requestedFCM);
+    appLogger.debug("requested FCM", requestedFCM);
 
     await updatePush(createdPush.dataValues.id, {
       serviceType: "fcm",
       serviceRequest: JSON.stringify(requestedFCM),
     });
   } else {
-    console.log("no FCM push tokens");
+    appLogger.warn("no FCM push tokens");
   }
 };
 
 const updatePush = async (pushId, updateData) => {
-  console.log("updatePush", pushId, updateData);
+  appLogger.debug("updatePush", pushId, updateData);
   const updated = await Push.update(updateData, {
     where: { id: pushId },
   });
@@ -171,7 +173,7 @@ const getPushByIdent = async (pushIdent) => {
  * @returns
  */
 const generatePushData = (push, forcedResponse = false) => {
-  // console.log(`generatePushData`, push);
+  appLogger.debug(`generatePushData`, push);
 
   let validResponses;
   let firstValidResponse = null;
@@ -184,11 +186,11 @@ const generatePushData = (push, forcedResponse = false) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     if (validResponses.length > 0) {
-      console.log(`generatePushData validResponses`, validResponses);
+      appLogger.debug(`generatePushData validResponses`, validResponses);
       firstValidResponse = JSON.parse(validResponses[0].serviceResponse);
     }
   } else {
-    console.log(`generatePushData forcedResponse`, forcedResponse);
+    appLogger.debug(`generatePushData forcedResponse`, forcedResponse);
     validResponses = [{ serviceResponse: forcedResponse }];
     firstValidResponse = forcedResponse;
   }
@@ -206,15 +208,15 @@ const generatePushData = (push, forcedResponse = false) => {
 };
 
 const updatePushByIdent = async (pushIdent, updateData) => {
-  console.log("updatePushByIdent", pushIdent, updateData);
+  appLogger.debug("updatePushByIdent", pushIdent, updateData);
   const updated = await Push.update(updateData, {
     where: { pushIdent },
   });
-  console.log("updated", updated);
+  appLogger.debug("updated", updated);
   const record = await Push.findOne({
     where: { pushIdent },
   });
-  console.log("record", record.toJSON());
+  appLogger.debug("record", record.toJSON());
   return record.toJSON();
 };
 

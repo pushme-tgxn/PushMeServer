@@ -7,6 +7,8 @@ const {
   createEmailAuth,
 } = require("../../services/auth");
 
+const { appLogger } = require("../../middleware/logging.js");
+
 const postLogin = async (request, response, next) => {
   try {
     const userLoggedIn = await loginAuthPair(
@@ -39,7 +41,7 @@ const postRegister = async (request, response, next) => {
 
 const postEmailUpdate = async (request, response, next) => {
   try {
-    console.debug(request.user.id);
+    appLogger.debug(request.user.id);
 
     await updateEmail(request.user.id, request.body.email);
 
@@ -51,7 +53,7 @@ const postEmailUpdate = async (request, response, next) => {
 
 const postUpdatePassword = async (request, response, next) => {
   try {
-    console.debug(request.user.id);
+    appLogger.debug(request.user.id);
 
     await updatePassword(request.user.id, request.body.password);
 

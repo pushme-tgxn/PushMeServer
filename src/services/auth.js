@@ -5,6 +5,8 @@ const { User, UserAuthMethod } = require("../../models/index.js");
 
 const { ErrorMessages } = require("../const.js");
 
+const { appLogger } = require("../middleware/logging.js");
+
 async function loginAuthPair(email, password) {
   let userAuthMethod = await UserAuthMethod.scope("withSecret").findOne({
     where: { method: "email", methodIdent: email },
@@ -18,7 +20,7 @@ async function loginAuthPair(email, password) {
 
   const user = await getUser(userAuthMethod.userId);
 
-  console.log("sigining userAuthMethod", userAuthMethod.userId, user);
+  appLogger.info("sigining userAuthMethod", userAuthMethod.userId, user);
 
   // authentication successful
   const token = generateToken(user.id);
@@ -47,7 +49,7 @@ async function findEmailAuthMethodForUserId(userId) {
 
 async function createEmailAuth(email, password) {
   let userAuthMethod = await findAuthMethodByEmail(email);
-  console.log("userAuthMethod", userAuthMethod);
+  appLogger.debug("userAuthMethod", userAuthMethod);
 
   // validate
   if (email == "" || email == null) {
@@ -64,7 +66,7 @@ async function createEmailAuth(email, password) {
 
   // hash password
   const passwordHash = await bcrypt.hash(password, 10);
-  console.log("create user", email, passwordHash);
+  appLogger.info("create user", email, passwordHash);
 
   // TODO use transaction so we can rollback if creating the UserAuthMethod fails
   const userRecord = await User.create({});
@@ -75,7 +77,7 @@ async function createEmailAuth(email, password) {
     methodSecret: passwordHash,
   });
 
-  console.log(
+  appLogger.debug(
     "createdUser",
     userRecord.id,
     userAuthMethod.id,
@@ -108,7 +110,7 @@ async function updateEmail(userId, newEmail) {
     throw ErrorMessages.EmailAlreadyRegistered;
   }
 
-  console.debug("updateEmail OK", userId, newEmail);
+  appLogger.debug("updateEmail OK", userId, newEmail);
 
   userAuthMethod.methodIdent = newEmail;
   await userAuthMethod.save();
@@ -130,7 +132,7 @@ async function updatePassword(userId, newPassword) {
   // copy params to user and save
   userAuthMethod.methodSecret = await bcrypt.hash(newPassword, 10);
 
-  console.debug("updatePassword OK", userId);
+  appLogger.debug("updatePassword OK", userId);
 
   await userAuthMethod.save();
 }
@@ -156,7 +158,7 @@ async function loginAuthMethod(method, methodIdent, methodData = {}) {
   if (!userAuthMethod) {
     // create google account
     userRecord = (await User.create({})).dataValues;
-    console.log("userRecord", userRecord);
+    appLogger.debug("userRecord", userRecord);
     userAuthMethod = await UserAuthMethod.create({
       userId: userRecord.id,
       method,
@@ -169,7 +171,7 @@ async function loginAuthMethod(method, methodIdent, methodData = {}) {
     userRecord = userAuthMethod.user;
   }
 
-  console.log("sigining userAuthMethod", userId, userRecord);
+  appLogger.info("sigining userAuthMethod", userId, userRecord);
 
   // authentication successful
   const token = generateToken(userId);
