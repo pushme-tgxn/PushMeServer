@@ -12,6 +12,8 @@ STATUS=$( npx sequelize db:migrate:status )
 
 if echo $STATUS | grep "down "; then # output contains down migration
   echo "There are pending migrations, please run these manually!"
+  echo "Local: \"npx sequelize-cli db:migrate\""
+  echo "Docker: \"docker-compose exec pushme npx sequelize-cli db:migrate\""
   exit 2
 else
   echo "No pending migration, starting server..."

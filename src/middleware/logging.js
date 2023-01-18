@@ -12,7 +12,7 @@ winston.addColors({
   error: "red",
 });
 
-const level = process.env.LOG_LEVEL || "debug";
+const level = process.env.LOG_LEVEL || "info";
 
 function createAppLogger() {
   const requestLogger = winston.createLogger({
