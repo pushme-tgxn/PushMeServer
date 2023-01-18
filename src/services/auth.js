@@ -184,6 +184,7 @@ async function getUserInfoFromIdToken(idToken) {
   const oauth2Client = new google.auth.OAuth2();
 
   const { GOOGLE_CLIENT_ID_WEB } = process.env;
+  appLogger.debug("GOOGLE_CLIENT_ID_WEB", GOOGLE_CLIENT_ID_WEB);
 
   const ticket = await oauth2Client.verifyIdToken({
     idToken: idToken,

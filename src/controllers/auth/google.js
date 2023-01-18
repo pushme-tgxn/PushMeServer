@@ -10,7 +10,7 @@ const { appLogger } = require("../../middleware/logging.js");
 
 const postGenerateToken = async (request, response, next) => {
   try {
-    appLogger.debug(request.body);
+    appLogger.debug("postGenerateToken", request.body);
 
     const googleUserInfo = await getUserInfoFromIdToken(request.body.idToken);
 
