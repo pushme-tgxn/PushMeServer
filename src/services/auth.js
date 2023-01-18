@@ -183,6 +183,8 @@ async function loginAuthMethod(method, methodIdent, methodData = {}) {
 async function getUserInfoFromIdToken(idToken) {
   const oauth2Client = new google.auth.OAuth2();
 
+  const { GOOGLE_CLIENT_ID_WEB } = process.env;
+
   const ticket = await oauth2Client.verifyIdToken({
     idToken: idToken,
     audience: GOOGLE_CLIENT_ID_WEB,
