@@ -28,6 +28,9 @@ services:
       GOOGLE_CLIENT_ID_WEB: ${GOOGLE_CLIENT_ID_WEB}
       JWT_SECRET: ${JWT_SECRET}
       LOG_LEVEL: ${LOG_LEVEL}
+      GOOGLE_APPLICATION_CREDENTIALS: "./service-account.json"
     networks:
       - pushme-net
+    volumes:
+      - ./service-account.json:/usr/src/app/service-account.json  ## required for FCM
     restart: unless-stopped
