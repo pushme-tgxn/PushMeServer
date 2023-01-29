@@ -6,15 +6,24 @@ const { appLogger } = require("../middleware/logging.js");
 
 const createUpTimeKumaPushRequest = async (request, response, next) => {
   try {
-    const { msg, monitor, heartbeat } = request.body;
-
+    let { msg, monitor, heartbeat } = request.body;
     console.log("inputPayload", { msg, monitor, heartbeat });
+
+    // only defined for non-tests
+    if (monitor) {
+      const isServiceUp = heartbeat.status == 1;
+      const upOrDownText = isServiceUp ? " ✅ Up" : " ❌ Down";
+      msg = `${heartbeat.time} [${monitor.name}] ${upOrDownText}`;
+    }
 
     const pushPayload = {
       categoryId: "simple.push",
-      title: monitor ? `Uptime Kuma Alert - ${monitor}` : "Uptime Kuma Alert",
+      title: monitor
+        ? `UptimeKuma Alert - ${monitor.name}`
+        : "UptimeKuma Push Test",
       body: msg,
     };
+
     const foundTopic = await getTopicBySecretKey(request.params.topicSecret);
     if (!foundTopic) {
       return next(new Error("Topic secret key does not exist"));
