@@ -13,7 +13,7 @@ const createUpTimeKumaPushRequest = async (request, response, next) => {
     if (monitor) {
       const isServiceUp = heartbeat.status == 1;
       const upOrDownText = isServiceUp ? " ✅ Up" : " ❌ Down";
-      msg = `${heartbeat.time} [${monitor.name}] ${upOrDownText}`;
+      msg = `${heartbeat.time} [ ${monitor.name} ] ${upOrDownText}`;
     }
 
     const pushPayload = {
