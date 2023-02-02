@@ -15,12 +15,8 @@ const createDevice = async (createDeviceData) => {
   }
 
   if (!Expo.isExpoPushToken(createDeviceData.token)) {
-    appLogger.error(
-      `Push token ${createDeviceData.token} is not a valid Expo push token`
-    );
-    throw new Error(
-      `Push token ${createDeviceData.token} is not a valid Expo push token`
-    );
+    appLogger.error(`Push token ${createDeviceData.token} is not a valid Expo push token`);
+    throw new Error(`Push token ${createDeviceData.token} is not a valid Expo push token`);
   }
 
   appLogger.debug("createDevice", createDeviceData);

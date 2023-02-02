@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "PushResponse",
-    }
+    },
   );
   return PushResponse;
 };

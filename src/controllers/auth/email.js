@@ -1,20 +1,12 @@
 const express = require("express");
 
-const {
-  loginAuthPair,
-  updateEmail,
-  updatePassword,
-  createEmailAuth,
-} = require("../../services/auth");
+const { loginAuthPair, updateEmail, updatePassword, createEmailAuth } = require("../../services/auth");
 
 const { appLogger } = require("../../middleware/logging.js");
 
 const postLogin = async (request, response, next) => {
   try {
-    const userLoggedIn = await loginAuthPair(
-      request.body.email,
-      request.body.password
-    );
+    const userLoggedIn = await loginAuthPair(request.body.email, request.body.password);
 
     if (userLoggedIn) {
       return response.json({ success: true, user: userLoggedIn });
@@ -28,10 +20,7 @@ const postLogin = async (request, response, next) => {
 
 const postRegister = async (request, response, next) => {
   try {
-    const user = await createEmailAuth(
-      request.body.email,
-      request.body.password
-    );
+    const user = await createEmailAuth(request.body.email, request.body.password);
 
     response.json({ success: true, user });
   } catch (error) {

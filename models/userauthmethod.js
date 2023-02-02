@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         noUser: { attributes: { exclude: ["methodSecret"] } }, // dont return user data
         withSecret: { attributes: {} }, // include secret with this scope
       },
-    }
+    },
   );
   return UserAuthMethod;
 };

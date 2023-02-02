@@ -2,12 +2,7 @@ const express = require("express");
 
 const { validateSignature } = require("../middleware/validate-signature");
 
-const {
-  getPing,
-  postPreAuth,
-  postAuth,
-  postAuthStatus,
-} = require("../controllers/trio");
+const { getPing, postPreAuth, postAuth, postAuthStatus } = require("../controllers/trio");
 
 const router = express.Router();
 

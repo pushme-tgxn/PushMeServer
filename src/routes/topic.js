@@ -2,13 +2,7 @@ const express = require("express");
 
 const { authorize } = require("../middleware/authorize");
 
-const {
-  listTopics,
-  getTopicForUser,
-  createUserTopic,
-  updateUserTopic,
-  deleteUserTopic,
-} = require("../controllers/topic");
+const { listTopics, getTopicForUser, createUserTopic, updateUserTopic, deleteUserTopic } = require("../controllers/topic");
 
 const router = express.Router();
 

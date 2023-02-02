@@ -38,10 +38,7 @@ function getAppLogFormatter() {
     winston.format.timestamp(),
     winston.format.splat(),
     winston.format.printf((info) => {
-      const colorPrefix = colorizer.colorize(
-        info.level,
-        `${info.timestamp} ${info.level}`
-      );
+      const colorPrefix = colorizer.colorize(info.level, `${info.timestamp} ${info.level}`);
       if (info.service && info.service !== "app") {
         // app is the default service
         return `${colorPrefix}: [${info.service}] ${info.message}`;
@@ -50,7 +47,7 @@ function getAppLogFormatter() {
         return `${colorPrefix}: ${info.message} ${JSON.stringify(info.extra)}`;
       }
       return `${colorPrefix}: ${info.message}`;
-    })
+    }),
   );
 }
 
@@ -76,12 +73,9 @@ function getRequestLogFormatter() {
     timestamp(),
     printf((info) => {
       const { req, res } = info.message;
-      const colorPrefix = colorizer.colorize(
-        info.level,
-        `${info.timestamp} ${info.level} ${req.method}`
-      );
+      const colorPrefix = colorizer.colorize(info.level, `${info.timestamp} ${info.level} ${req.method}`);
       return `${colorPrefix} ${req.path}`;
-    })
+    }),
   );
 }
 
@@ -107,12 +101,9 @@ function getErrorLogFormatter() {
     timestamp(),
     printf((info) => {
       const { req, res, err } = info.message;
-      const colorPrefix = colorizer.colorize(
-        info.level,
-        `${info.timestamp} ${info.level} ${req.path}`
-      );
+      const colorPrefix = colorizer.colorize(info.level, `${info.timestamp} ${info.level} ${req.path}`);
       return `${colorPrefix} ${info.level}: ${err}`;
-    })
+    }),
   );
 }
 

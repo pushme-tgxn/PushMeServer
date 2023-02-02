@@ -10,14 +10,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>PushMe - Submit Push</title>
-    <meta name="description" content="PushMe - Submit Push" />
-    <link
-      id="favicon"
-      rel="icon"
-      href="https://glitch.com/edit/favicon-app.ico"
-      type="image/x-icon"
-    />
+    <title>PushMe - Self Hosted Push Notifications</title>
+    <meta name="description" content="PushMe - Self Hosted Push Notifications" />
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon" />
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,67 +20,97 @@
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="./style.css" />
 
+    <!-- simple icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-icons-font@v5/font/simple-icons.min.css" type="text/css" />
+
     <!-- import the webpage's client-side javascript file -->
     <script src="./client.js" defer></script>
   </head>
   <body>
     <header>
       <h1>
-        Push Me
+        PushMe
         <a href="https://play.google.com/store/apps/details?id=net.tgxn.pushme">
           <img
             src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
             alt="Get it on Google Play"
             height="60"
-            class="play-store"
-          />
+            class="play-store" />
         </a>
       </h1>
     </header>
 
     <main>
+      <h4>What PushMe is</h4>
+      <p>
+        PsuhMe provides a self-host backend service to send push notifications to your (or colleagues) phones with a simple API that can be
+        used for outage notifications or authentication requests.
+      </p>
+
+      <br />
+      <h4>What we do with user datd</h4>
+      <ul>
+        <li>
+          When you login, we store the payload that is returned from Google OAuth. This payload contains data like your email address, name,
+          and profile picture. The code is
+          <a target="_blank" href="https://github.com/pushme-tgxn/PushMeServer/blob/main/src/controllers/auth/google.js">here</a>.
+        </li>
+        <li>
+          You can delete your account from the App, using the "Delete Account" button, or by using the `DELETE /user/` API directly. The
+          code is
+          <a target="_blank" href="https://github.com/pushme-tgxn/PushMeServer/blob/main/src/routes/user.js">here</a>.
+        </li>
+        <li>We store the data as per our <a target="_blank" href="https://pushme.tgxn.net/privacy">Privacy Policy</a>.</li>
+      </ul>
+
+      <br />
+      <h4>Links to Source Code</h4>
+      <a target="_blank" href="https://github.com/pushme-tgxn"><i class="si si-github"></i> Main GitHub Organization</a>
+      <ul>
+        <li>
+          Backend Server
+          <a target="_blank" href="https://github.com/pushme-tgxn/PushMeServer"><i class="si si-github"></i> Source Code</a>
+        </li>
+        <li>
+          NodeJS SDK
+          <a target="_blank" href="https://github.com/pushme-tgxn/PushMeSDK"><i class="si si-github"></i> Source Code</a> or
+          <a target="_blank" href="https://www.npmjs.com/package/@pushme-tgxn/pushmesdk"><i class="si si-npm"></i> NPM Package</a>
+        </li>
+        <li>
+          React Native App
+          <a target="_blank" href="https://github.com/pushme-tgxn/PushMeApp"><i class="si si-github"></i> Source Code</a> or
+          <a target="_blank" href="https://play.google.com/store/apps/details?id=net.tgxn.pushme"
+            ><i class="si si-googleplay"></i> Google Play Store
+          </a>
+        </li>
+      </ul>
+
+      <br />
+      <h2>Submit Test Push to API</h2>
+
       <form>
-        <input
-          name="secretKey"
-          type="text"
-          maxlength="100"
-          placeholder="secretKey"
-          value=""
-        />
+        <input name="secretKey" type="text" maxlength="100" placeholder="Topic Secret (from app)" value="" />
 
-        <input
-          name="title"
-          type="text"
-          maxlength="100"
-          placeholder="Title"
-          value="PushMe Test!"
-        />
+        <input name="title" type="text" maxlength="100" placeholder="Title" value="PushMe Test Notification!" />
 
-        <input
-          name="body"
-          type="text"
-          maxlength="100"
-          placeholder="Body"
-          value="This is a test; please ignore."
-        />
+        <input name="body" type="text" maxlength="100" placeholder="Body" value="Test, please ignore! 🎉" />
 
         <select name="intent">
           <option value="default">Default</option>
+          <option value="simple.push">Simple Push</option>
           <optgroup label="Buttons">
-            <option value="button.yes_no">button.yes_no</option>
-            <option value="button.approve_deny">button.approve_deny</option>
-            <option value="button.allow_reject">button.allow_reject</option>
-            <option value="button.acknowledge">button.acknowledge</option>
-            <option value="button.open_link">button.open_link</option>
+            <option value="button.approve_deny">Approve/Deny Buttons</option>
+            <option value="button.yes_no">Yes/No Buttons</option>
+            <option value="button.acknowledge">Acknowledge Button</option>
+            <option value="button.open_link">Open Link Button</option>
           </optgroup>
           <optgroup label="Input Fields">
-            <option value="input.submit">input.submit</option>
-            <option value="input.reply">input.reply</option>
-            <option value="input.approve_deny">input.approve_deny</option>
+            <option value="input.submit">"Submit" Input</option>
+            <option value="input.reply">"Reply" Input</option>
           </optgroup>
         </select>
 
-        <textarea name="data" placeholder="Data">{}</textarea>
+        <textarea name="data" placeholder="Data">{"optional":"data"}</textarea>
 
         <button type="submit" id="submit-dream">Submit</button>
       </form>

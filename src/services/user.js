@@ -1,11 +1,4 @@
-const {
-  User,
-  UserAuthMethod,
-  Device,
-  Topic,
-  Push,
-  PushResponse,
-} = require("../../models/index.js");
+const { User, UserAuthMethod, Device, Topic, Push, PushResponse } = require("../../models/index.js");
 
 const { listPushesForUserId } = require("./push.js");
 

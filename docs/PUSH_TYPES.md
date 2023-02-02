@@ -2,16 +2,15 @@
 
 ## Notification Category Types Overview
 
-| Category ID | Description |
-| --- | --- | --- |
-| `push.simple` | Simple Push |
+| Category ID           | Description            |
+| --------------------- | ---------------------- |
+| `push.simple`         | Simple Push            |
 | `button.approve_deny` | Approve / Deny Buttons |
-| `button.yes_no` | Yes/No Buttons |
-| `button.acknowledge` | Acknowledge Button |
-| `button.open_link` | Open Link Button |
-| `input.reply` | Input Field: Reply |
-| `input.submit` | Input Field: Submit |
-
+| `button.yes_no`       | Yes/No Buttons         |
+| `button.acknowledge`  | Acknowledge Button     |
+| `button.open_link`    | Open Link Button       |
+| `input.reply`         | Input Field: Reply     |
+| `input.submit`        | Input Field: Submit    |
 
 ## Simple Push
 
@@ -20,19 +19,21 @@ No action will be performed on click, though the response will be recorded if it
 
 Request:
 POST `/push/{{webhookSecret}}`
+
 ```json
 {
-    title: "Notification Title", // required
-    body: "Desc / Body", // required
-    callback_url: "https://example.pushme.tgxn.net/some_callback_url" // optional
+  "title": "Notification Title", // required
+  "body": "Desc / Body", // required
+  "callback_url": "https://example.pushme.tgxn.net/some_callback_url" // optional
 }
 ```
 
 Response:
+
 ```json
 {
-    success: true,
-    push_ref: "000000000-00000-00000-0000000"
+  "success": true,
+  "push_ref": "000000000-00000-00000-0000000"
 }
 ```
 
@@ -43,37 +44,41 @@ Interactive push requires a type pre-defined within the application, the followi
 This can call an outbound web service to acknowledge or action noticiations.
 
 **Webhook Payload**
+
 ```json
 {
-    title: "Notification Title", // required
-    body: "Desc / Body", // optional
-    callback_url: "https://example.pushme.tgxn.net/some_callback_url", // optional
-    category_id: "categoryId" // required
+  "title": "Notification Title", // required
+  "body": "Desc / Body", // optional
+  "callback_url": "https://example.pushme.tgxn.net/some_callback_url", // optional
+  "category_id": "categoryId" // required
 }
 ```
 
 ### Category IDs `categoryId`
 
 #### `button.yes_no` - Buttons: Yes / No
+
 Callback Format
 
 ```json
 {
-    pushId: "000000000-00000-00000-0000000",
-    categoryId: "button.yes_no",
-    userText: "uesrs text"
+  "pushId": "000000000-00000-00000-0000000",
+  "categoryId": "button.yes_no",
+  "userText": "uesrs text"
 }
 ```
 
 #### `button.approve_deny` - Buttons: Approve / Deny
+
 #### `button.acknowledge` - Button: Acknowledge
 
 Callback Format
+
 ```json
 {
-    pushId: "000000000-00000-00000-0000000",
-    categoryId: "button.acknowledge",
-    clicked: true
+  "pushId": "000000000-00000-00000-0000000",
+  "categoryId": "button.acknowledge",
+  "clicked": true
 }
 ```
 
@@ -81,51 +86,56 @@ Callback Format
 
 Request:
 POST `/webhook/push/{{webhookSecret}}`
+
 ```json
 {
-    title: "Notification Title", // required
-    body: "Desc / Body", // optional
-    categoryId: "button.open_link", // required
-    linkUrl: "https://example.pushme.tgxn.net/", // required
+  "title": "Notification Title", // required
+  "body": "Desc / Body", // optional
+  "categoryId": "button.open_link", // required
+  "linkUrl": "https://example.pushme.tgxn.net/" // required
 }
 ```
 
 Callback Format
+
 ```json
 {
-    pushId: "000000000-00000-00000-0000000",
-    clicked: true
+  "pushId": "000000000-00000-00000-0000000",
+  "clicked": true
 }
 ```
 
 #### `input.submit` - Input Field: Submit
+
 #### `input.reply` - Input Field: Reply
+
 #### `input.approve_deny` - Input Field: Approve / Deny
 
 Request:
 POST `/webhook/push/{{webhookSecret}}`
+
 ```json
 {
-    title: "Notification Title", // required
-    body: "Desc / Body", // optional
-    categoryId: "button.yes_no" // required
+  "title": "Notification Title", // required
+  "body": "Desc / Body", // optional
+  "categoryId": "button.yes_no" // required
 }
 ```
 
 Response:
+
 ```json
 {
-    pushId: "000000000-00000-00000-0000000",
-    success: true,
+  "pushId": "000000000-00000-00000-0000000",
+  "success": true
 }
 ```
-
 
 ### Callback Format
 
 ```json
 {
-    pushId: "000000000-00000-00000-0000000",
-    userText: "uesrs text"
+  "pushId": "000000000-00000-00000-0000000",
+  "userText": "uesrs text"
 }
 ```

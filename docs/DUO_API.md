@@ -1,4 +1,3 @@
-
 # Duo API
 
 PushMe supports parts of the Duo Auth API. This allows you to use your PushMe instance to recieve push approval notifications.
