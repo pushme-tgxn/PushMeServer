@@ -6,7 +6,7 @@ module.exports = {
   },
   test: {
     dialect: "sqlite",
-    storage: "/development_sqlite.db",
+    storage: "/data/development_sqlite.db",
     logging: false,
   },
   production: {
