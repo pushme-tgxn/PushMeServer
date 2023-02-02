@@ -4,14 +4,7 @@ const { authorize } = require("../middleware/authorize");
 
 const { triggerPushSingleFCM } = require("../lib/push-fcm");
 
-const {
-  createDeviceRoute,
-  updateDeviceById,
-  updateDeviceByKey,
-  listDevices,
-  getDevice,
-  deleteDevice,
-} = require("../controllers/device");
+const { createDeviceRoute, updateDeviceById, updateDeviceByKey, listDevices, getDevice, deleteDevice } = require("../controllers/device");
 
 const { findDeviceByKey } = require("../services/device");
 
@@ -30,10 +23,7 @@ router.post("/:deviceId", authorize(), updateDeviceById);
 router.delete("/:deviceId", authorize(), deleteDevice);
 
 async function testFCMPush(request, response, next) {
-  const foundDevice = await findDeviceByKey(
-    request.user.id,
-    request.params.deviceKey
-  );
+  const foundDevice = await findDeviceByKey(request.user.id, request.params.deviceKey);
 
   if (foundDevice) {
     appLogger.debug("foundDevice", foundDevice.nativeToken);

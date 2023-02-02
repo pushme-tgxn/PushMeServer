@@ -18,9 +18,7 @@ const createUpTimeKumaPushRequest = async (request, response, next) => {
 
     const pushPayload = {
       categoryId: "simple.push",
-      title: monitor
-        ? `UptimeKuma Alert - ${monitor.name}`
-        : "UptimeKuma Push Test",
+      title: monitor ? `UptimeKuma Alert - ${monitor.name}` : "UptimeKuma Push Test",
       body: msg,
     };
 

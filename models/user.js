@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       //   // include hash with this scope
       //   withHash: { attributes: {} },
       // },
-    }
+    },
   );
   return User;
 };

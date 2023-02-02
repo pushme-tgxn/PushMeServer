@@ -1,9 +1,4 @@
-const {
-  createPushToTopic,
-  pushToTopicDevices,
-  getPushByIdent,
-  getPushResponse,
-} = require("../services/push");
+const { createPushToTopic, pushToTopicDevices, getPushByIdent, getPushResponse } = require("../services/push");
 
 const { appLogger } = require("../middleware/logging.js");
 

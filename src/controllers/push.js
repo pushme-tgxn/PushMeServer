@@ -99,7 +99,7 @@ const recordPushResponse = async (request, response, next) => {
       {
         return: true,
         raw: true,
-      }
+      },
     );
 
     appLogger.debug("created", created);
@@ -168,12 +168,7 @@ const getPushStatusPoll = async (request, response, next) => {
 
 const postPoll = (pushIdent, push, serviceResponse) => {
   if (pollingResponses.hasOwnProperty(pushIdent)) {
-    appLogger.debug(
-      `postPoll`,
-      pushIdent,
-      push,
-      pollingResponses[pushIdent].length
-    );
+    appLogger.debug(`postPoll`, pushIdent, push, pollingResponses[pushIdent].length);
 
     const pushDataResponse = generatePushData(push, serviceResponse);
     pollingResponses[pushIdent].map((response) => {

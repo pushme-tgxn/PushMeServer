@@ -52,10 +52,7 @@ const updateTopic = async (topicId, requestBody) => {
 };
 
 const deleteTopic = async (topicId) => {
-  const deletedTopic = await Topic.destroy(
-    { where: { id: topicId } },
-    { return: true }
-  );
+  const deletedTopic = await Topic.destroy({ where: { id: topicId } }, { return: true });
   appLogger.debug(`deleteTopic`, deletedTopic);
   return deletedTopic;
 };

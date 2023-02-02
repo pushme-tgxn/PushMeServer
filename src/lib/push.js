@@ -95,9 +95,7 @@ const sendNotificationsArray = async (notifications) => {
             if (status === "ok") {
               continue;
             } else if (status === "error") {
-              appLogger.error(
-                `There was an error sending a notification: ${message}`
-              );
+              appLogger.error(`There was an error sending a notification: ${message}`);
               if (details && details.error) {
                 // The error codes are listed in the Expo documentation:
                 // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
