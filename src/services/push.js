@@ -3,10 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const { Push, PushResponse } = require("../../models/index.js");
 
 const { triggerMultiPush, triggerPushSingle } = require("../lib/push");
-const {
-  triggerMultiPushFCM,
-  triggerPushSingleFCM,
-} = require("../lib/push-fcm");
+const { triggerMultiPushFCM, triggerPushSingleFCM } = require("../lib/push-fcm");
 
 const { getDeviceById } = require("../services/device");
 
@@ -61,7 +58,7 @@ const pushToTopicDevices = async (foundTopic, createdPush, pushPayload) => {
         {
           return: true,
           raw: true,
-        }
+        },
       );
     }
 

@@ -32,5 +32,5 @@ services:
     networks:
       - pushme-net
     volumes:
-      - ./service-account.json:/usr/src/app/service-account.json:ro  ## required for FCM
+      - ./service-account.json:/usr/src/app/service-account.json:ro ## required for FCM
     restart: unless-stopped

@@ -14,11 +14,7 @@ async function loginAuthPair(email, password) {
     where: { method: "email", methodIdent: email },
   });
 
-  if (
-    !userAuthMethod ||
-    !(await bcrypt.compare(password, userAuthMethod.methodSecret))
-  )
-    throw ErrorMessages.EmailPasswordIncorrect;
+  if (!userAuthMethod || !(await bcrypt.compare(password, userAuthMethod.methodSecret))) throw ErrorMessages.EmailPasswordIncorrect;
 
   const user = await getUser(userAuthMethod.userId);
 
@@ -79,12 +75,7 @@ async function createEmailAuth(email, password) {
     methodSecret: passwordHash,
   });
 
-  appLogger.debug(
-    "createdUser",
-    userRecord.id,
-    userAuthMethod.id,
-    userAuthMethod.userId
-  );
+  appLogger.debug("createdUser", userRecord.id, userAuthMethod.id, userAuthMethod.userId);
   return userRecord;
 }
 

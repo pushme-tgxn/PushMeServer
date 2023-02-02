@@ -1,13 +1,6 @@
 const { Topic } = require("../../models/index.js");
 
-const {
-  createTopic,
-  updateTopic,
-  deleteTopic,
-  getTopicById,
-  getTopicByKey,
-  getTopicBySecretKey,
-} = require("../services/topic.js");
+const { createTopic, updateTopic, deleteTopic, getTopicById, getTopicByKey, getTopicBySecretKey } = require("../services/topic.js");
 
 const { appLogger } = require("../middleware/logging.js");
 
@@ -58,10 +51,7 @@ const updateUserTopic = async (request, response, next) => {
   try {
     appLogger.debug(`response`, request.body);
 
-    const updatedTopic = await updateTopic(
-      request.params.topicId,
-      request.body
-    );
+    const updatedTopic = await updateTopic(request.params.topicId, request.body);
     response.json({
       success: true,
       topic: updatedTopic,

@@ -44,13 +44,7 @@ async function getDevice(request, response, next) {
 async function createDeviceRoute(request, response, next) {
   try {
     const { token, name, type, deviceKey, nativeToken } = request.body;
-    appLogger.debug(
-      `create device push token`,
-      token,
-      name,
-      deviceKey,
-      nativeToken
-    );
+    appLogger.debug(`create device push token`, token, name, deviceKey, nativeToken);
 
     const foundDevice = await findDeviceByToken(request.user.id, token);
     if (foundDevice) {
@@ -83,10 +77,7 @@ async function updateDeviceByKey(request, response, next) {
     const { name } = request.body;
     appLogger.debug(`update device push token`, request.params.deviceKey, name);
 
-    const foundDevice = await findDeviceByKey(
-      request.user.id,
-      request.params.deviceKey
-    );
+    const foundDevice = await findDeviceByKey(request.user.id, request.params.deviceKey);
 
     if (foundDevice) {
       const deviceResult = await updateDevice(foundDevice.id, { name });
@@ -134,9 +125,7 @@ async function updateDeviceById(request, response, next) {
 
 async function deleteDevice(request, response, next) {
   try {
-    appLogger.debug(
-      `delete device, ${request.params.deviceId}, ${request.body.name}`
-    );
+    appLogger.debug(`delete device, ${request.params.deviceId}, ${request.body.name}`);
 
     const deletedDevice = await removeDevice(request.params.deviceId);
     response.json({
