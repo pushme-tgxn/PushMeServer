@@ -1,12 +1,13 @@
 {
   "name": "pushme-server",
-  "version": "1.13.6",
+  "version": "1.14.0",
   "description": "Push Service backend",
   "main": "server.js",
   "scripts": {
     "start": "nodemon --trace-warnings server.js",
     "drop": "sequelize-cli db:drop",
-    "migrate": "npx sequelize-cli db:migrate"
+    "migrate": "npx sequelize-cli db:migrate",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -18,6 +19,7 @@
     "firebase-admin": "^11.5.0",
     "googleapis": "^110.0.0",
     "mariadb": "^3.0.2",
+    "prettier": "^2.8.3",
     "sequelize": "^6.28.0",
     "short-uuid": "^4.2.2",
     "uuid": "^9.0.0",
