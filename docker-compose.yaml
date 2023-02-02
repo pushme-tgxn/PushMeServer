@@ -6,7 +6,7 @@ networks:
 
 services:
   mariadb:
-    image: ghcr.io/linuxserver/mariadb
+    image: ghcr.io/linuxserver/mariadb:10.6.11
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_DATABASE=${DB_DATABASE}
