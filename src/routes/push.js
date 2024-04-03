@@ -12,6 +12,7 @@ const {
 } = require("../controllers/push");
 
 const { createUpTimeKumaPushRequest } = require("../module/uptimekuma");
+const { createGrafanaPushRequest } = require("../module/grafana");
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router.get("/", authorize(), getUserPushHistory);
 // push to topic with secret
 router.post("/:topicSecret", createPushRequest);
 router.post("/:topicSecret/uptimekuma", createUpTimeKumaPushRequest);
+router.post("/:topicSecret/grafana", createGrafanaPushRequest);
 
 // get information on a push request
 router.post("/:pushIdent/receipt", recordPushReceipt); // when the notification is recieved
