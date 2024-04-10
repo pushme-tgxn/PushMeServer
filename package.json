@@ -16,7 +16,7 @@
     "expo-server-sdk": "^3.7.0",
     "express": "^4.18.2",
     "express-jwt": "^8.4.1",
-    "firebase-admin": "^11.5.0",
+    "firebase-admin": "^12.0.0",
     "googleapis": "^110.0.0",
     "mariadb": "^3.0.2",
     "sequelize": "^6.29.0",
